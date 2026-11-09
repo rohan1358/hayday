@@ -1,0 +1,22 @@
+{
+  "wooden_crates": [
+    512,
+    675
+  ],
+  "hay_stack": [
+    512,
+    646
+  ],
+  "flower_patch": [
+    512,
+    593
+  ],
+  "decorative_pond": [
+    512,
+    573
+  ],
+  "rustic_lamp": [
+    512,
+    751
+  ]
+}

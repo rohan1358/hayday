@@ -1,0 +1,197 @@
+{
+  "version": "11.0.0",
+  "collection": "Kebun Ceria - original decorative farm series",
+  "camera": "Blender 5.2 EEVEE, orthographic 3/4 at (7,-9,8); 1024x1024 RGBA",
+  "source": "Procedural meshes created specifically for this project",
+  "license_note": "Original geometry and materials. No Supercell assets or logos.",
+  "crop_padding_px": 28,
+  "max_export_edge_px": 768,
+  "anchor_definition": "Pixel from top-left of cropped PNG to model ground origin",
+  "use": "Static decorative drawables; integration left to farm-view programmer.",
+  "assets": [
+    {
+      "id": "pollinator_house",
+      "file": "pollinator_house.png",
+      "description_id": "Rumah Penyerbuk / Pollinator Lodge",
+      "dimensions_px": [
+        694,
+        768
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "antialiased_edge_pixels": 9996,
+      "foot_anchor_px": [
+        348,
+        583
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        168,
+        179,
+        853,
+        943
+      ],
+      "source_crop_px": [
+        140,
+        151,
+        881,
+        971
+      ],
+      "cropped_source_dimensions_px": [
+        741,
+        820
+      ],
+      "nontransparent_bounds_px": [
+        25,
+        25,
+        670,
+        743
+      ],
+      "suggested_width_px_at_450_viewport": 142,
+      "suggested_godot_scale": 0.2046,
+      "bytes": 402872,
+      "sha256": "c9ba05eccbd7fdd930788ce56dd27b02ad7c21c33713ba1c4195603be5d618dd"
+    },
+    {
+      "id": "herb_drying_rack",
+      "file": "herb_drying_rack.png",
+      "description_id": "Rak Herba / Herb Drying Rack",
+      "dimensions_px": [
+        768,
+        759
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "antialiased_edge_pixels": 18701,
+      "foot_anchor_px": [
+        392,
+        613
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        124,
+        149,
+        884,
+        899
+      ],
+      "source_crop_px": [
+        96,
+        121,
+        912,
+        927
+      ],
+      "cropped_source_dimensions_px": [
+        816,
+        806
+      ],
+      "nontransparent_bounds_px": [
+        24,
+        25,
+        743,
+        734
+      ],
+      "suggested_width_px_at_450_viewport": 152,
+      "suggested_godot_scale": 0.1979,
+      "bytes": 307610,
+      "sha256": "b97a492a7292afcfac21325808fac286db1fe7482de9e765024e5fd8fcaec5e5"
+    },
+    {
+      "id": "rainwater_collector",
+      "file": "rainwater_collector.png",
+      "description_id": "Penampung Hujan / Rainwater Collector",
+      "dimensions_px": [
+        593,
+        768
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "antialiased_edge_pixels": 14342,
+      "foot_anchor_px": [
+        309,
+        601
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        148,
+        43,
+        845,
+        963
+      ],
+      "source_crop_px": [
+        120,
+        15,
+        873,
+        991
+      ],
+      "cropped_source_dimensions_px": [
+        753,
+        976
+      ],
+      "nontransparent_bounds_px": [
+        20,
+        20,
+        573,
+        748
+      ],
+      "suggested_width_px_at_450_viewport": 144,
+      "suggested_godot_scale": 0.2428,
+      "bytes": 297576,
+      "sha256": "37469bba0c60768ff9e106172a83a2cd116130b6cb9c39bf5ff598eeb132a7a1"
+    },
+    {
+      "id": "wildflower_crescent",
+      "file": "wildflower_crescent.png",
+      "description_id": "Taman Bunga Liar / Wildflower Border",
+      "dimensions_px": [
+        728,
+        491
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "antialiased_edge_pixels": 10582,
+      "foot_anchor_px": [
+        370,
+        295
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        170,
+        372,
+        842,
+        807
+      ],
+      "source_crop_px": [
+        142,
+        344,
+        870,
+        835
+      ],
+      "cropped_source_dimensions_px": [
+        728,
+        491
+      ],
+      "nontransparent_bounds_px": [
+        28,
+        28,
+        700,
+        463
+      ],
+      "suggested_width_px_at_450_viewport": 174,
+      "suggested_godot_scale": 0.239,
+      "bytes": 249330,
+      "sha256": "0d3296a72d1fbd98bed42b5bad8d1057f9d147937a64120c93efd241c3a89210"
+    }
+  ]
+}

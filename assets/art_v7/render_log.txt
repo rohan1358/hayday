@@ -1,0 +1,10 @@
+ASSET_RENDER bakery_building anchor=[512, 738]
+00:06.110  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v7\_render_source\bakery_building.png'
+ASSET_RENDER dairy_building anchor=[512, 723]
+00:08.000  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v7\_render_source\dairy_building.png'
+ASSET_RENDER feed_mill_building anchor=[512, 714]
+00:10.891  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v7\_render_source\feed_mill_building.png'
+RENDER_COMPLETE three independent art_v7 production buildings
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit

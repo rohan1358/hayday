@@ -1,0 +1,149 @@
+{
+  "version": "7.0.0",
+  "collection": "Kebun Ceria original isometric farm art",
+  "render": "Blender 5.2 EEVEE orthographic 3/4, transparent RGBA, 1024x1024 source",
+  "crop_padding_px": 28,
+  "max_export_edge_px": 768,
+  "anchor_definition": "pixels from top-left of the trimmed PNG to the ground contact point",
+  "license_note": "Original procedural assets; no Supercell artwork used.",
+  "assets": [
+    {
+      "id": "bakery_building",
+      "file": "bakery_building.png",
+      "description_id": "Rumah Roti / Bakery",
+      "dimensions_px": [
+        664,
+        768
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "antialiased_edge_pixels": 8397,
+      "foot_anchor_px": [
+        332,
+        542
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        181,
+        179,
+        843,
+        954
+      ],
+      "source_crop_px": [
+        153,
+        151,
+        871,
+        982
+      ],
+      "cropped_source_dimensions_px": [
+        718,
+        831
+      ],
+      "nontransparent_bounds_px": [
+        24,
+        24,
+        640,
+        744
+      ],
+      "suggested_width_px_at_450_viewport": 206,
+      "suggested_godot_scale": 0.3102,
+      "bytes": 394035,
+      "sha256": "643c306ce9af8263e2b2423a8705f849d662c88caac19342d31d3bc46fdb3d18"
+    },
+    {
+      "id": "dairy_building",
+      "file": "dairy_building.png",
+      "description_id": "Rumah Susu / Dairy",
+      "dimensions_px": [
+        708,
+        756
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "antialiased_edge_pixels": 5244,
+      "foot_anchor_px": [
+        348,
+        528
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        192,
+        223,
+        844,
+        923
+      ],
+      "source_crop_px": [
+        164,
+        195,
+        872,
+        951
+      ],
+      "cropped_source_dimensions_px": [
+        708,
+        756
+      ],
+      "nontransparent_bounds_px": [
+        28,
+        28,
+        680,
+        728
+      ],
+      "suggested_width_px_at_450_viewport": 211,
+      "suggested_godot_scale": 0.298,
+      "bytes": 469519,
+      "sha256": "c590fd19386c02b7679d3d7bda289775a934a9c289ffa6d95af6beeb82f7b0d8"
+    },
+    {
+      "id": "feed_mill_building",
+      "file": "feed_mill_building.png",
+      "description_id": "Pabrik Pakan / Feed Mill",
+      "dimensions_px": [
+        708,
+        713
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "antialiased_edge_pixels": 5375,
+      "foot_anchor_px": [
+        330,
+        503
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        210,
+        239,
+        862,
+        896
+      ],
+      "source_crop_px": [
+        182,
+        211,
+        890,
+        924
+      ],
+      "cropped_source_dimensions_px": [
+        708,
+        713
+      ],
+      "nontransparent_bounds_px": [
+        28,
+        28,
+        680,
+        685
+      ],
+      "suggested_width_px_at_450_viewport": 227,
+      "suggested_godot_scale": 0.3206,
+      "bytes": 434746,
+      "sha256": "f0fa6af0519e2eef3cce80edf9c0a35ac33949adc649e9002d2c8a00640f7e97"
+    }
+  ]
+}

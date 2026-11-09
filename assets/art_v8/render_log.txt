@@ -1,0 +1,14 @@
+RENDER_START pig_pen anchor_raw=[512, 642] objects=314
+00:11.062  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v8\_render_source\pig_pen.png'
+00:11.078  reports          | WARNING Path 'C:\Program Files\Blender Foundation\Blender 5.2\5.2\datafiles\assets\brushes\essentials_brushes-gp_draw.blend' cannot be made relative for Material 'Dots Stroke'
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+00:11.078  reports          | WARNING Path 'C:\Program Files\Blender Foundation\Blender 5.2\5.2\datafiles\assets\brushes\essentials_brushes-gp_draw.blend' cannot be made relative for Material 'Material'
+Info: Saved as "pig_pen.blend"
+RENDER_DONE pig_pen anchor_raw=[512, 642]
+RENDER_START goat_pen anchor_raw=[512, 651] objects=348
+00:18.297  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v8\_render_source\goat_pen.png'
+Info: Saved as "goat_pen.blend"
+RENDER_DONE goat_pen anchor_raw=[512, 651]
+BLENDER_COMPLETE {'pig_pen': [512, 642], 'goat_pen': [512, 651]}
+
+Blender quit

@@ -1,0 +1,14 @@
+ASSET_RENDER wooden_crates anchor=[512, 675]
+00:07.000  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v5\_render_source\wooden_crates.png'
+ASSET_RENDER hay_stack anchor=[512, 646]
+00:10.391  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v5\_render_source\hay_stack.png'
+ASSET_RENDER flower_patch anchor=[512, 593]
+00:22.407  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v5\_render_source\flower_patch.png'
+ASSET_RENDER decorative_pond anchor=[512, 573]
+00:24.094  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v5\_render_source\decorative_pond.png'
+ASSET_RENDER rustic_lamp anchor=[512, 751]
+00:24.719  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v5\_render_source\rustic_lamp.png'
+RENDER_COMPLETE art_v5 five decorative props
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit

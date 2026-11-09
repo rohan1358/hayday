@@ -1,0 +1,241 @@
+{
+  "version": "4.0.0",
+  "collection": "Kebun Ceria original isometric farm art",
+  "render": "Blender 5.2 EEVEE orthographic 3/4, transparent RGBA, 1024x1024 source",
+  "crop_padding_px": 28,
+  "max_export_edge_px": 768,
+  "anchor_definition": "pixels from top-left of the trimmed PNG to the ground contact point",
+  "license_note": "Original procedural assets; no Supercell artwork used.",
+  "assets": [
+    {
+      "id": "market_cart",
+      "file": "market_cart.png",
+      "description_id": "Gerobak pasar hasil kebun",
+      "dimensions_px": [
+        720,
+        743
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "antialiased_edge_pixels": 8498,
+      "foot_anchor_px": [
+        326,
+        610
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        214,
+        130,
+        878,
+        817
+      ],
+      "source_crop_px": [
+        186,
+        102,
+        906,
+        845
+      ],
+      "cropped_source_dimensions_px": [
+        720,
+        743
+      ],
+      "nontransparent_bounds_px": [
+        28,
+        28,
+        692,
+        715
+      ],
+      "suggested_width_px_at_450_viewport": 206,
+      "suggested_godot_scale": 0.2861,
+      "bytes": 401227,
+      "sha256": "489d18aa6abbb61a8d1ad5983fae3c35e3bf3eacef120d01e92fc875488db323"
+    },
+    {
+      "id": "fence_straight",
+      "file": "fence_straight.png",
+      "description_id": "Dekorasi pagar kayu lurus",
+      "dimensions_px": [
+        686,
+        598
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "antialiased_edge_pixels": 9301,
+      "foot_anchor_px": [
+        343,
+        425
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        197,
+        227,
+        827,
+        769
+      ],
+      "source_crop_px": [
+        169,
+        199,
+        855,
+        797
+      ],
+      "cropped_source_dimensions_px": [
+        686,
+        598
+      ],
+      "nontransparent_bounds_px": [
+        28,
+        28,
+        658,
+        570
+      ],
+      "suggested_width_px_at_450_viewport": 140,
+      "suggested_godot_scale": 0.2041,
+      "bytes": 211348,
+      "sha256": "333d42d8cb2dbd07680ff1cddecd20fabffcab0db3f9115996f382420c358c03"
+    },
+    {
+      "id": "fence_corner",
+      "file": "fence_corner.png",
+      "description_id": "Dekorasi pagar kayu sudut",
+      "dimensions_px": [
+        423,
+        655
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "antialiased_edge_pixels": 8318,
+      "foot_anchor_px": [
+        69,
+        477
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        471,
+        175,
+        838,
+        774
+      ],
+      "source_crop_px": [
+        443,
+        147,
+        866,
+        802
+      ],
+      "cropped_source_dimensions_px": [
+        423,
+        655
+      ],
+      "nontransparent_bounds_px": [
+        28,
+        28,
+        395,
+        627
+      ],
+      "suggested_width_px_at_450_viewport": 129,
+      "suggested_godot_scale": 0.305,
+      "bytes": 171547,
+      "sha256": "72e9b142d43a2b245b839d506879c0a08dba4575cace6384d28ed23b85d96b0f"
+    },
+    {
+      "id": "flowering_hedge",
+      "file": "flowering_hedge.png",
+      "description_id": "Semak hias berbunga",
+      "dimensions_px": [
+        768,
+        521
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "antialiased_edge_pixels": 8051,
+      "foot_anchor_px": [
+        453,
+        341
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        84,
+        298,
+        801,
+        766
+      ],
+      "source_crop_px": [
+        56,
+        270,
+        829,
+        794
+      ],
+      "cropped_source_dimensions_px": [
+        773,
+        524
+      ],
+      "nontransparent_bounds_px": [
+        28,
+        28,
+        740,
+        493
+      ],
+      "suggested_width_px_at_450_viewport": 131,
+      "suggested_godot_scale": 0.1706,
+      "bytes": 192419,
+      "sha256": "641daee3dbb116d9ad2140f9b4d4de9bca43e1a201255af4e208860240b98ecf"
+    },
+    {
+      "id": "stone_path_tile",
+      "file": "stone_path_tile.png",
+      "description_id": "Jalan setapak batu",
+      "dimensions_px": [
+        768,
+        442
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "antialiased_edge_pixels": 13650,
+      "foot_anchor_px": [
+        368,
+        228
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        94,
+        293,
+        970,
+        773
+      ],
+      "source_crop_px": [
+        66,
+        265,
+        998,
+        801
+      ],
+      "cropped_source_dimensions_px": [
+        932,
+        536
+      ],
+      "nontransparent_bounds_px": [
+        22,
+        21,
+        747,
+        421
+      ],
+      "suggested_width_px_at_450_viewport": 146,
+      "suggested_godot_scale": 0.1901,
+      "bytes": 162761,
+      "sha256": "549a2211d241b75b336f25167addd34a7e688b97faf430018d2db524bcfb2dc6"
+    }
+  ]
+}

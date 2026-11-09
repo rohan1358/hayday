@@ -1,0 +1,14 @@
+ASSET_RENDER market_cart anchor=[512, 712]
+00:30.750  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v4\_render_source\market_cart.png'
+ASSET_RENDER fence_straight anchor=[512, 624]
+00:32.703  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v4\_render_source\fence_straight.png'
+ASSET_RENDER fence_corner anchor=[512, 624]
+00:34.031  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v4\_render_source\fence_corner.png'
+ASSET_RENDER flowering_hedge anchor=[512, 613]
+00:39.516  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v4\_render_source\flowering_hedge.png'
+ASSET_RENDER stone_path_tile anchor=[512, 542]
+00:42.110  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v4\_render_source\stone_path_tile.png'
+RENDER_COMPLETE 5 original art_v4 sprites
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit

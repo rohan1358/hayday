@@ -1,0 +1,26 @@
+{
+  "kitchen_cottage": [
+    512,
+    768
+  ],
+  "village_barn": [
+    512,
+    781
+  ],
+  "apple_tree": [
+    512,
+    816
+  ],
+  "soil_plot_empty": [
+    512,
+    586
+  ],
+  "wheat_plot_ready": [
+    512,
+    663
+  ],
+  "flower_garden": [
+    512,
+    611
+  ]
+}

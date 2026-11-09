@@ -1,0 +1,236 @@
+{
+  "version": "3.0.0",
+  "collection": "Kebun Ceria original isometric farm art",
+  "render": "Blender 5.2 EEVEE orthographic 3/4, transparent RGBA, 1024x1024 source",
+  "crop_padding_px": 28,
+  "max_export_edge_px": 768,
+  "anchor_definition": "pixels from top-left of the trimmed PNG to the ground contact point",
+  "license_note": "Original procedural assets; no Supercell artwork used.",
+  "assets": [
+    {
+      "id": "chicken_coop",
+      "file": "chicken_coop.png",
+      "description_id": "Kandang ayam dan pagar",
+      "dimensions_px": [
+        768,
+        608
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "foot_anchor_px": [
+        384,
+        385
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        89,
+        237,
+        934,
+        894
+      ],
+      "source_crop_px": [
+        61,
+        209,
+        962,
+        922
+      ],
+      "cropped_source_dimensions_px": [
+        901,
+        713
+      ],
+      "nontransparent_bounds_px": [
+        22,
+        22,
+        746,
+        586
+      ],
+      "suggested_width_px_at_450_viewport": 194,
+      "suggested_godot_scale": 0.2526,
+      "bytes": 339632,
+      "sha256": "19df759c50cb9625b278e0a6507298684da398f108e95eaa71e07f882fcbfcdf"
+    },
+    {
+      "id": "cow_pen",
+      "file": "cow_pen.png",
+      "description_id": "Kandang sapi dan pagar",
+      "dimensions_px": [
+        768,
+        621
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "foot_anchor_px": [
+        384,
+        398
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        94,
+        236,
+        929,
+        900
+      ],
+      "source_crop_px": [
+        66,
+        208,
+        957,
+        928
+      ],
+      "cropped_source_dimensions_px": [
+        891,
+        720
+      ],
+      "nontransparent_bounds_px": [
+        23,
+        22,
+        745,
+        598
+      ],
+      "suggested_width_px_at_450_viewport": 208,
+      "suggested_godot_scale": 0.2708,
+      "bytes": 338224,
+      "sha256": "13a29d8ceb702b39e117b13bab15778c19004da78dde63373bba63f5a127446c"
+    },
+    {
+      "id": "corn_plot_ready",
+      "file": "corn_plot_ready.png",
+      "description_id": "Jagung matang siap panen",
+      "dimensions_px": [
+        768,
+        688
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "foot_anchor_px": [
+        384,
+        474
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        69,
+        131,
+        955,
+        919
+      ],
+      "source_crop_px": [
+        41,
+        103,
+        983,
+        947
+      ],
+      "cropped_source_dimensions_px": [
+        942,
+        844
+      ],
+      "nontransparent_bounds_px": [
+        21,
+        21,
+        747,
+        667
+      ],
+      "suggested_width_px_at_450_viewport": 164,
+      "suggested_godot_scale": 0.2135,
+      "bytes": 361827,
+      "sha256": "25f25f8224cfa1d362bb7b034e391a402f69272c22b1b942a10d04ed1936c7c5"
+    },
+    {
+      "id": "carrot_plot_ready",
+      "file": "carrot_plot_ready.png",
+      "description_id": "Wortel matang siap panen",
+      "dimensions_px": [
+        768,
+        535
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "foot_anchor_px": [
+        384,
+        322
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        33,
+        248,
+        991,
+        899
+      ],
+      "source_crop_px": [
+        5,
+        220,
+        1019,
+        927
+      ],
+      "cropped_source_dimensions_px": [
+        1014,
+        707
+      ],
+      "nontransparent_bounds_px": [
+        19,
+        20,
+        749,
+        516
+      ],
+      "suggested_width_px_at_450_viewport": 164,
+      "suggested_godot_scale": 0.2135,
+      "bytes": 289422,
+      "sha256": "7d72f2ccaaf0a3387a7b4249aa18b5870ea4da7bbae4928a2c1802dd5f675c82"
+    },
+    {
+      "id": "young_seedlings",
+      "file": "young_seedlings.png",
+      "description_id": "Petak tanaman baru bertunas",
+      "dimensions_px": [
+        768,
+        492
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "foot_anchor_px": [
+        384,
+        279
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        33,
+        284,
+        991,
+        878
+      ],
+      "source_crop_px": [
+        5,
+        256,
+        1019,
+        906
+      ],
+      "cropped_source_dimensions_px": [
+        1014,
+        650
+      ],
+      "nontransparent_bounds_px": [
+        19,
+        19,
+        749,
+        473
+      ],
+      "suggested_width_px_at_450_viewport": 164,
+      "suggested_godot_scale": 0.2135,
+      "bytes": 243178,
+      "sha256": "01157f68d6f9b38ad53240fd79214d6ebb10b53b0d1113026270841a612fae57"
+    }
+  ]
+}

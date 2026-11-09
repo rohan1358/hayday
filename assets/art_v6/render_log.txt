@@ -1,0 +1,16 @@
+ASSET_RENDER harvest_baskets ground_anchor=[512, 616]
+00:08.734  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v6\_render_source\harvest_baskets.png'
+ASSET_RENDER wooden_signpost ground_anchor=[512, 769]
+00:09.375  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v6\_render_source\wooden_signpost.png'
+ASSET_RENDER wishing_well ground_anchor=[512, 733]
+00:10.828  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v6\_render_source\wishing_well.png'
+ASSET_RENDER flowering_bushes ground_anchor=[512, 611]
+00:20.047  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v6\_render_source\flowering_bushes.png'
+ASSET_RENDER arched_fence ground_anchor=[512, 725]
+00:21.578  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v6\_render_source\arched_fence.png'
+ASSET_RENDER water_tower ground_anchor=[512, 772]
+00:22.453  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v6\_render_source\water_tower.png'
+RENDER_COMPLETE original art_v6 six sprites
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit

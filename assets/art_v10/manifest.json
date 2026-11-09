@@ -1,0 +1,103 @@
+{
+  "version": "10.0.0",
+  "collection": "Kebun Ceria original isometric farm art",
+  "render": "Blender 5.2 EEVEE orthographic 3/4, transparent RGBA, 1024x1024 source",
+  "crop_padding_px": 28,
+  "max_export_edge_px": 768,
+  "anchor_definition": "pixels from top-left of the trimmed PNG to the ground contact point",
+  "license_note": "Original procedural assets; no Supercell artwork used.",
+  "assets": [
+    {
+      "id": "sorting_trolley",
+      "file": "sorting_trolley.png",
+      "description_id": "Troli Sortir / Sorting Trolley",
+      "dimensions_px": [
+        745,
+        688
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "antialiased_edge_pixels": 7260,
+      "foot_anchor_px": [
+        370,
+        476
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        170,
+        267,
+        859,
+        899
+      ],
+      "source_crop_px": [
+        142,
+        239,
+        887,
+        927
+      ],
+      "cropped_source_dimensions_px": [
+        745,
+        688
+      ],
+      "nontransparent_bounds_px": [
+        28,
+        28,
+        717,
+        660
+      ],
+      "suggested_width_px_at_450_viewport": 128,
+      "suggested_godot_scale": 0.1718,
+      "bytes": 341239,
+      "sha256": "d7e273d00722b62f8ebf648b4b749aadf51e52cfcc2ad9cd4d6895a6fe782895"
+    },
+    {
+      "id": "village_waypost",
+      "file": "village_waypost.png",
+      "description_id": "Penunjuk Desa / Village Waypost",
+      "dimensions_px": [
+        494,
+        768
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "antialiased_edge_pixels": 10128,
+      "foot_anchor_px": [
+        257,
+        627
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        268,
+        124,
+        734,
+        879
+      ],
+      "source_crop_px": [
+        240,
+        96,
+        762,
+        907
+      ],
+      "cropped_source_dimensions_px": [
+        522,
+        811
+      ],
+      "nontransparent_bounds_px": [
+        25,
+        25,
+        470,
+        744
+      ],
+      "suggested_width_px_at_450_viewport": 98,
+      "suggested_godot_scale": 0.1984,
+      "bytes": 182684,
+      "sha256": "6f473c2dc5fc2a8fba3b9f1055a2523c62bb5acf46d9c49ce13be00e4a659598"
+    }
+  ]
+}

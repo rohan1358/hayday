@@ -1,0 +1,103 @@
+{
+  "version": "9.0.0",
+  "collection": "Kebun Ceria original isometric farm art",
+  "render": "Blender 5.2 EEVEE orthographic 3/4, transparent RGBA, 1024x1024 source",
+  "crop_padding_px": 28,
+  "max_export_edge_px": 768,
+  "anchor_definition": "pixels from top-left of the trimmed PNG to the ground contact point",
+  "license_note": "Original procedural assets; no Supercell artwork used.",
+  "assets": [
+    {
+      "id": "delivery_depot",
+      "file": "delivery_depot.png",
+      "description_id": "Depot Pesanan / Delivery Depot",
+      "dimensions_px": [
+        768,
+        625
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "antialiased_edge_pixels": 7717,
+      "foot_anchor_px": [
+        384,
+        404
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        115,
+        223,
+        909,
+        859
+      ],
+      "source_crop_px": [
+        87,
+        195,
+        937,
+        887
+      ],
+      "cropped_source_dimensions_px": [
+        850,
+        692
+      ],
+      "nontransparent_bounds_px": [
+        23,
+        24,
+        745,
+        602
+      ],
+      "suggested_width_px_at_450_viewport": 328,
+      "suggested_godot_scale": 0.4271,
+      "bytes": 324291,
+      "sha256": "f6ca8a99ac96646d7d07fbae965cd85c2bdd1e9c4430c1e15efc646ff199b1e7"
+    },
+    {
+      "id": "delivery_truck",
+      "file": "delivery_truck.png",
+      "description_id": "Truk Pengiriman / Delivery Truck",
+      "dimensions_px": [
+        733,
+        627
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "antialiased_edge_pixels": 5134,
+      "foot_anchor_px": [
+        355,
+        457
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        185,
+        226,
+        862,
+        797
+      ],
+      "source_crop_px": [
+        157,
+        198,
+        890,
+        825
+      ],
+      "cropped_source_dimensions_px": [
+        733,
+        627
+      ],
+      "nontransparent_bounds_px": [
+        28,
+        28,
+        705,
+        599
+      ],
+      "suggested_width_px_at_450_viewport": 222,
+      "suggested_godot_scale": 0.3029,
+      "bytes": 324177,
+      "sha256": "8b15dc61464a17aac9eb9641752e99adf8c6ac0e5284d4c3d7a90d1d289b027c"
+    }
+  ]
+}

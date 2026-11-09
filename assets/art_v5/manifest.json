@@ -1,0 +1,241 @@
+{
+  "version": "5.0.0",
+  "collection": "Kebun Ceria original isometric farm art",
+  "render": "Blender 5.2 EEVEE orthographic 3/4, transparent RGBA, 1024x1024 source",
+  "crop_padding_px": 28,
+  "max_export_edge_px": 768,
+  "anchor_definition": "pixels from top-left of the trimmed PNG to the ground contact point",
+  "license_note": "Original procedural assets; no Supercell artwork used.",
+  "assets": [
+    {
+      "id": "wooden_crates",
+      "file": "wooden_crates.png",
+      "description_id": "Peti kayu isi panen",
+      "dimensions_px": [
+        640,
+        641
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "antialiased_edge_pixels": 4819,
+      "foot_anchor_px": [
+        334,
+        447
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        206,
+        256,
+        790,
+        841
+      ],
+      "source_crop_px": [
+        178,
+        228,
+        818,
+        869
+      ],
+      "cropped_source_dimensions_px": [
+        640,
+        641
+      ],
+      "nontransparent_bounds_px": [
+        28,
+        28,
+        612,
+        613
+      ],
+      "suggested_width_px_at_450_viewport": 194,
+      "suggested_godot_scale": 0.3031,
+      "bytes": 333899,
+      "sha256": "518a4a19c526d8124f3fd9ac05b35f5c8682a28b5c05a6f99b87594525d1d9fb"
+    },
+    {
+      "id": "hay_stack",
+      "file": "hay_stack.png",
+      "description_id": "Tumpukan jerami panen",
+      "dimensions_px": [
+        731,
+        629
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "antialiased_edge_pixels": 11055,
+      "foot_anchor_px": [
+        385,
+        394
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        155,
+        280,
+        830,
+        853
+      ],
+      "source_crop_px": [
+        127,
+        252,
+        858,
+        881
+      ],
+      "cropped_source_dimensions_px": [
+        731,
+        629
+      ],
+      "nontransparent_bounds_px": [
+        28,
+        28,
+        703,
+        601
+      ],
+      "suggested_width_px_at_450_viewport": 178,
+      "suggested_godot_scale": 0.2435,
+      "bytes": 333722,
+      "sha256": "ee1cc447ef920317cbfa46df562a2d7c3bde8edb11c9dc2a2fab34ff8d0982e1"
+    },
+    {
+      "id": "flower_patch",
+      "file": "flower_patch.png",
+      "description_id": "Hamparan bunga kebun",
+      "dimensions_px": [
+        748,
+        498
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "antialiased_edge_pixels": 6872,
+      "foot_anchor_px": [
+        373,
+        298
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        167,
+        323,
+        859,
+        765
+      ],
+      "source_crop_px": [
+        139,
+        295,
+        887,
+        793
+      ],
+      "cropped_source_dimensions_px": [
+        748,
+        498
+      ],
+      "nontransparent_bounds_px": [
+        28,
+        28,
+        720,
+        470
+      ],
+      "suggested_width_px_at_450_viewport": 173,
+      "suggested_godot_scale": 0.2313,
+      "bytes": 335903,
+      "sha256": "3d12c8791f094036fd50ec1821722d990760b53cfe81032d3c14c256c3eb5f0e"
+    },
+    {
+      "id": "decorative_pond",
+      "file": "decorative_pond.png",
+      "description_id": "Kolam kecil teratai",
+      "dimensions_px": [
+        768,
+        547
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "antialiased_edge_pixels": 8818,
+      "foot_anchor_px": [
+        383,
+        343
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        142,
+        245,
+        884,
+        757
+      ],
+      "source_crop_px": [
+        114,
+        217,
+        912,
+        785
+      ],
+      "cropped_source_dimensions_px": [
+        798,
+        568
+      ],
+      "nontransparent_bounds_px": [
+        27,
+        27,
+        741,
+        520
+      ],
+      "suggested_width_px_at_450_viewport": 204,
+      "suggested_godot_scale": 0.2656,
+      "bytes": 249807,
+      "sha256": "054345048b4773f13e43d5f9995686820e386ecabc3ba65375e2c748bee12a1b"
+    },
+    {
+      "id": "rustic_lamp",
+      "file": "rustic_lamp.png",
+      "description_id": "Lampu lentera pedesaan",
+      "dimensions_px": [
+        450,
+        639
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "antialiased_edge_pixels": 6118,
+      "foot_anchor_px": [
+        185,
+        554
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        355,
+        225,
+        749,
+        808
+      ],
+      "source_crop_px": [
+        327,
+        197,
+        777,
+        836
+      ],
+      "cropped_source_dimensions_px": [
+        450,
+        639
+      ],
+      "nontransparent_bounds_px": [
+        28,
+        28,
+        422,
+        611
+      ],
+      "suggested_width_px_at_450_viewport": 150,
+      "suggested_godot_scale": 0.3333,
+      "bytes": 159899,
+      "sha256": "5fff83124054a958765be656cd713ad0ebfc8479d5481dc19a28accd69c23ecb"
+    }
+  ]
+}

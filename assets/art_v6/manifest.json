@@ -1,0 +1,287 @@
+{
+  "version": "6.0.0",
+  "collection": "Kebun Ceria original isometric farm art",
+  "render": "Blender 5.2 EEVEE orthographic 3/4, transparent RGBA, 1024x1024 source",
+  "crop_padding_px": 28,
+  "max_export_edge_px": 768,
+  "anchor_definition": "pixels from top-left of the trimmed PNG to the ground contact point",
+  "license_note": "Original procedural assets; no Supercell artwork used.",
+  "assets": [
+    {
+      "id": "harvest_baskets",
+      "file": "harvest_baskets.png",
+      "description_id": "Keranjang hasil panen",
+      "dimensions_px": [
+        702,
+        468
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "antialiased_edge_pixels": 6049,
+      "foot_anchor_px": [
+        382,
+        302
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        158,
+        342,
+        804,
+        754
+      ],
+      "source_crop_px": [
+        130,
+        314,
+        832,
+        782
+      ],
+      "cropped_source_dimensions_px": [
+        702,
+        468
+      ],
+      "nontransparent_bounds_px": [
+        28,
+        28,
+        674,
+        440
+      ],
+      "suggested_width_px_at_450_viewport": 187,
+      "suggested_godot_scale": 0.2664,
+      "bytes": 263420,
+      "sha256": "7a6cb496708e06b69301584f1f54613b93ef316268e7ddb33ba229237db0c998"
+    },
+    {
+      "id": "wooden_signpost",
+      "file": "wooden_signpost.png",
+      "description_id": "Penunjuk arah kebun",
+      "dimensions_px": [
+        533,
+        688
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "antialiased_edge_pixels": 7639,
+      "foot_anchor_px": [
+        293,
+        573
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        247,
+        224,
+        724,
+        856
+      ],
+      "source_crop_px": [
+        219,
+        196,
+        752,
+        884
+      ],
+      "cropped_source_dimensions_px": [
+        533,
+        688
+      ],
+      "nontransparent_bounds_px": [
+        28,
+        28,
+        505,
+        660
+      ],
+      "suggested_width_px_at_450_viewport": 128,
+      "suggested_godot_scale": 0.2402,
+      "bytes": 235831,
+      "sha256": "161355c7d474a3c235b08245e56749851c7dd96679d682858d37b8962c9f1a0b"
+    },
+    {
+      "id": "wishing_well",
+      "file": "wishing_well.png",
+      "description_id": "Sumur taman beratap",
+      "dimensions_px": [
+        626,
+        710
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "antialiased_edge_pixels": 6936,
+      "foot_anchor_px": [
+        313,
+        567
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        227,
+        194,
+        797,
+        848
+      ],
+      "source_crop_px": [
+        199,
+        166,
+        825,
+        876
+      ],
+      "cropped_source_dimensions_px": [
+        626,
+        710
+      ],
+      "nontransparent_bounds_px": [
+        28,
+        28,
+        598,
+        682
+      ],
+      "suggested_width_px_at_450_viewport": 183,
+      "suggested_godot_scale": 0.2923,
+      "bytes": 362709,
+      "sha256": "ef4f943eedfcc0a81d63a595cb1223e40d035da217f5fc0925fc3e5626239947"
+    },
+    {
+      "id": "flowering_bushes",
+      "file": "flowering_bushes.png",
+      "description_id": "Semak bunga warna-warni",
+      "dimensions_px": [
+        764,
+        511
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "antialiased_edge_pixels": 4569,
+      "foot_anchor_px": [
+        363,
+        330
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        177,
+        309,
+        885,
+        764
+      ],
+      "source_crop_px": [
+        149,
+        281,
+        913,
+        792
+      ],
+      "cropped_source_dimensions_px": [
+        764,
+        511
+      ],
+      "nontransparent_bounds_px": [
+        28,
+        28,
+        736,
+        483
+      ],
+      "suggested_width_px_at_450_viewport": 185,
+      "suggested_godot_scale": 0.2421,
+      "bytes": 267944,
+      "sha256": "33fc300cabd2cc673c316ed688ba89fa678e5b5c69e691894fa89631489be3e5"
+    },
+    {
+      "id": "arched_fence",
+      "file": "arched_fence.png",
+      "description_id": "Gapura pagar melengkung",
+      "dimensions_px": [
+        768,
+        692
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "antialiased_edge_pixels": 17451,
+      "foot_anchor_px": [
+        380,
+        514
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        152,
+        229,
+        880,
+        879
+      ],
+      "source_crop_px": [
+        124,
+        201,
+        908,
+        907
+      ],
+      "cropped_source_dimensions_px": [
+        784,
+        706
+      ],
+      "nontransparent_bounds_px": [
+        26,
+        26,
+        743,
+        667
+      ],
+      "suggested_width_px_at_450_viewport": 212,
+      "suggested_godot_scale": 0.276,
+      "bytes": 190255,
+      "sha256": "d55661fbad6c3a32677ce0ca808044f0e57db712efc7291e531ca3cb9aff38c9"
+    },
+    {
+      "id": "water_tower",
+      "file": "water_tower.png",
+      "description_id": "Menara air kayu kecil",
+      "dimensions_px": [
+        444,
+        715
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "antialiased_edge_pixels": 8719,
+      "foot_anchor_px": [
+        223,
+        541
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        317,
+        259,
+        705,
+        918
+      ],
+      "source_crop_px": [
+        289,
+        231,
+        733,
+        946
+      ],
+      "cropped_source_dimensions_px": [
+        444,
+        715
+      ],
+      "nontransparent_bounds_px": [
+        28,
+        28,
+        416,
+        687
+      ],
+      "suggested_width_px_at_450_viewport": 161,
+      "suggested_godot_scale": 0.3626,
+      "bytes": 251035,
+      "sha256": "2b19ba76072ca12ace8f3a9c6ffa06205566ca1b023e3ffbe23ea232054c4cf5"
+    }
+  ]
+}

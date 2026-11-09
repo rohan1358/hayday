@@ -1,0 +1,22 @@
+V11_RENDER_START pollinator_house objects 150 anchor [512, 773]
+00:08.016  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v11\_render_source\pollinator_house.png'
+00:08.016  reports          | WARNING Path 'C:\Program Files\Blender Foundation\Blender 5.2\5.2\datafiles\assets\brushes\essentials_brushes-gp_draw.blend' cannot be made relative for Material 'Dots Stroke'
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+00:08.016  reports          | WARNING Path 'C:\Program Files\Blender Foundation\Blender 5.2\5.2\datafiles\assets\brushes\essentials_brushes-gp_draw.blend' cannot be made relative for Material 'Material'
+Info: Saved as "pollinator_house.blend"
+V11_RENDER_DONE pollinator_house
+V11_RENDER_START herb_drying_rack objects 139 anchor [512, 772]
+00:09.766  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v11\_render_source\herb_drying_rack.png'
+Info: Saved as "herb_drying_rack.blend"
+V11_RENDER_DONE herb_drying_rack
+V11_RENDER_START rainwater_collector objects 79 anchor [512, 779]
+00:10.922  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v11\_render_source\rainwater_collector.png'
+Info: Saved as "rainwater_collector.blend"
+V11_RENDER_DONE rainwater_collector
+V11_RENDER_START wildflower_crescent objects 138 anchor [512, 639]
+00:12.500  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v11\_render_source\wildflower_crescent.png'
+Info: Saved as "wildflower_crescent.blend"
+V11_RENDER_DONE wildflower_crescent
+ART_V11_BLENDER_COMPLETE {'pollinator_house': [512, 773], 'herb_drying_rack': [512, 772], 'rainwater_collector': [512, 779], 'wildflower_crescent': [512, 639]}
+
+Blender quit

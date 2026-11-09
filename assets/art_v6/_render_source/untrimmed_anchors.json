@@ -1,0 +1,26 @@
+{
+  "harvest_baskets": [
+    512,
+    616
+  ],
+  "wooden_signpost": [
+    512,
+    769
+  ],
+  "wishing_well": [
+    512,
+    733
+  ],
+  "flowering_bushes": [
+    512,
+    611
+  ],
+  "arched_fence": [
+    512,
+    725
+  ],
+  "water_tower": [
+    512,
+    772
+  ]
+}

@@ -1,0 +1,14 @@
+RENDER_START sorting_trolley objects=49 anchor=[512, 715]
+00:05.953  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v10\_render_source\sorting_trolley.png'
+00:05.953  reports          | WARNING Path 'C:\Program Files\Blender Foundation\Blender 5.2\5.2\datafiles\assets\brushes\essentials_brushes-gp_draw.blend' cannot be made relative for Material 'Dots Stroke'
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+00:05.953  reports          | WARNING Path 'C:\Program Files\Blender Foundation\Blender 5.2\5.2\datafiles\assets\brushes\essentials_brushes-gp_draw.blend' cannot be made relative for Material 'Material'
+Info: Saved as "sorting_trolley.blend"
+RENDER_DONE sorting_trolley
+RENDER_START village_waypost objects=43 anchor=[512, 758]
+00:06.937  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v10\_render_source\village_waypost.png'
+Info: Saved as "village_waypost.blend"
+RENDER_DONE village_waypost
+RENDER_COMPLETE {'sorting_trolley': [512, 715], 'village_waypost': [512, 758]}
+
+Blender quit

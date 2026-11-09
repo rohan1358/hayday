@@ -1,0 +1,22 @@
+{
+  "market_cart": [
+    512,
+    712
+  ],
+  "fence_straight": [
+    512,
+    624
+  ],
+  "fence_corner": [
+    512,
+    624
+  ],
+  "flowering_hedge": [
+    512,
+    613
+  ],
+  "stone_path_tile": [
+    512,
+    542
+  ]
+}

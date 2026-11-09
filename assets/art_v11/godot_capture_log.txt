@@ -1,0 +1,8 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 617.42 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce RTX 4060 Laptop GPU
+
+ART_V11_GODOT_TEXTURE_OK pollinator_house size=(694.0, 768.0) foot=(348.0, 583.0) scale=0.22478386167147
+ART_V11_GODOT_TEXTURE_OK herb_drying_rack size=(768.0, 759.0) foot=(392.0, 613.0) scale=0.21744791666667
+ART_V11_GODOT_TEXTURE_OK rainwater_collector size=(593.0, 768.0) foot=(309.0, 601.0) scale=0.27318718381113
+ART_V11_GODOT_TEXTURE_OK wildflower_crescent size=(728.0, 491.0) foot=(370.0, 295.0) scale=0.24175824175824
+ART_V11_GODOT_SCREENSHOT D:/portfolio/farmer/game/HayDay/assets/art_v11/godot_sprite_preview.png status=0 size=(450, 800)

@@ -1,0 +1,14 @@
+ASSET_RENDER chicken_coop base_anchor=[512, 661]
+00:07.046  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v3\_render_source\chicken_coop.png'
+ASSET_RENDER cow_pen base_anchor=[512, 669]
+00:08.421  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v3\_render_source\cow_pen.png'
+ASSET_RENDER corn_plot_ready base_anchor=[512, 684]
+00:10.781  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v3\_render_source\corn_plot_ready.png'
+ASSET_RENDER carrot_plot_ready base_anchor=[512, 646]
+00:13.187  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v3\_render_source\carrot_plot_ready.png'
+ASSET_RENDER young_seedlings base_anchor=[512, 624]
+00:14.109  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v3\_render_source\young_seedlings.png'
+RENDER_COMPLETE 5 original sprites
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit

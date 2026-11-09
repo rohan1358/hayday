@@ -1,0 +1,22 @@
+{
+  "chicken_coop": [
+    384,
+    385
+  ],
+  "cow_pen": [
+    384,
+    398
+  ],
+  "corn_plot_ready": [
+    384,
+    474
+  ],
+  "carrot_plot_ready": [
+    384,
+    322
+  ],
+  "young_seedlings": [
+    384,
+    279
+  ]
+}

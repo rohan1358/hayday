@@ -1,0 +1,103 @@
+{
+  "version": "8.0.0",
+  "collection": "Kebun Ceria original isometric farm art",
+  "render": "Blender 5.2 EEVEE orthographic 3/4, transparent RGBA, 1024x1024 source",
+  "crop_padding_px": 28,
+  "max_export_edge_px": 768,
+  "anchor_definition": "pixels from top-left of the trimmed PNG to the ground contact point",
+  "license_note": "Original procedural assets; no Supercell artwork used.",
+  "assets": [
+    {
+      "id": "pig_pen",
+      "file": "pig_pen.png",
+      "description_id": "Kandang Babi / Pig Pen",
+      "dimensions_px": [
+        768,
+        589
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "antialiased_edge_pixels": 12081,
+      "foot_anchor_px": [
+        384,
+        365
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        102,
+        253,
+        922,
+        869
+      ],
+      "source_crop_px": [
+        74,
+        225,
+        950,
+        897
+      ],
+      "cropped_source_dimensions_px": [
+        876,
+        672
+      ],
+      "nontransparent_bounds_px": [
+        23,
+        23,
+        745,
+        567
+      ],
+      "suggested_width_px_at_450_viewport": 260,
+      "suggested_godot_scale": 0.3385,
+      "bytes": 344390,
+      "sha256": "f7ec408fd3b6a9a7c1ffce08e62b83ba85f86b92d4cad3d1682ddd3c756f1bdd"
+    },
+    {
+      "id": "goat_pen",
+      "file": "goat_pen.png",
+      "description_id": "Kandang Kambing / Goat Pen",
+      "dimensions_px": [
+        768,
+        589
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "antialiased_edge_pixels": 11916,
+      "foot_anchor_px": [
+        384,
+        365
+      ],
+      "source_size_px": [
+        1024,
+        1024
+      ],
+      "source_nontransparent_bounds_px": [
+        109,
+        269,
+        915,
+        874
+      ],
+      "source_crop_px": [
+        81,
+        241,
+        943,
+        902
+      ],
+      "cropped_source_dimensions_px": [
+        862,
+        661
+      ],
+      "nontransparent_bounds_px": [
+        24,
+        23,
+        744,
+        566
+      ],
+      "suggested_width_px_at_450_viewport": 270,
+      "suggested_godot_scale": 0.3516,
+      "bytes": 342977,
+      "sha256": "5a6f2985f0176f5dd2b4f1bd0fff9a9f7f204a91d43060ee7851d97b7446576a"
+    }
+  ]
+}

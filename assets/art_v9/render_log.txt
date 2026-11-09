@@ -1,0 +1,14 @@
+RENDER_START delivery_depot objects=218 anchor=[512, 642]
+00:11.625  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v9\_render_source\delivery_depot.png'
+00:11.625  reports          | WARNING Path 'C:\Program Files\Blender Foundation\Blender 5.2\5.2\datafiles\assets\brushes\essentials_brushes-gp_draw.blend' cannot be made relative for Material 'Dots Stroke'
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+00:11.625  reports          | WARNING Path 'C:\Program Files\Blender Foundation\Blender 5.2\5.2\datafiles\assets\brushes\essentials_brushes-gp_draw.blend' cannot be made relative for Material 'Material'
+Info: Saved as "delivery_depot.blend"
+RENDER_DONE delivery_depot
+RENDER_START delivery_truck objects=121 anchor=[512, 655]
+00:13.640  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v9\_render_source\delivery_truck.png'
+Info: Saved as "delivery_truck.blend"
+RENDER_DONE delivery_truck
+RENDER_COMPLETE {'delivery_depot': [512, 642], 'delivery_truck': [512, 655]}
+
+Blender quit

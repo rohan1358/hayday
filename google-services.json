@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "330633860241",
+    "project_id": "cheerful-garden",
+    "storage_bucket": "cheerful-garden.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:330633860241:android:6859b315566dcb7a62db30",
+        "android_client_info": {
+          "package_name": "com.kebunceria.farm"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUBU-epjkfr7ihRJX_ooW7icGogWgP8Ts"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

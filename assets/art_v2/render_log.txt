@@ -1,0 +1,20 @@
+D:\portfolio\farmer\game\HayDay\assets\art_v2\generate_assets.py:29: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  out.use_nodes = True
+D:\portfolio\farmer\game\HayDay\assets\art_v2\generate_assets.py:446: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world.use_nodes = True
+ASSET_RENDER name=kitchen_cottage anchor=[512, 768]
+00:06.453  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v2\kitchen_cottage.png'
+ASSET_RENDER name=village_barn anchor=[512, 781]
+00:07.531  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v2\village_barn.png'
+ASSET_RENDER name=apple_tree anchor=[512, 816]
+00:08.828  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v2\apple_tree.png'
+ASSET_RENDER name=soil_plot_empty anchor=[512, 586]
+00:09.468  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v2\soil_plot_empty.png'
+ASSET_RENDER name=wheat_plot_ready anchor=[512, 663]
+00:14.953  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v2\wheat_plot_ready.png'
+ASSET_RENDER name=flower_garden anchor=[512, 611]
+00:17.250  render           | Saved: 'D:\portfolio\farmer\game\HayDay\assets\art_v2\flower_garden.png'
+RENDER_PASS all 6 assets written
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit

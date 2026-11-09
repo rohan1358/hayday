@@ -1,0 +1,160 @@
+{
+  "version": "2.0.0",
+  "collection": "Kebun Ceria original farm art",
+  "camera": "shared orthographic 3/4 isometric-like view, facing +Y",
+  "source": "generate_assets.py (Blender 5.2) + finalize_assets.py (Pillow)",
+  "projection_anchor": "pixel of world origin projected on each image; used as object ground/pivot",
+  "coordinate_system": "PNG upper-left origin, x positive right, y positive down",
+  "assets": [
+    {
+      "id": "kitchen_cottage",
+      "file": "kitchen_cottage.png",
+      "description_id": "Rumah / dapur",
+      "dimensions_px": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "foot_anchor_px": [
+        512,
+        768
+      ],
+      "nontransparent_bounds_px": [
+        106,
+        79,
+        918,
+        969
+      ],
+      "suggested_width_px_at_450_viewport": 160,
+      "suggested_godot_scale": 0.1562,
+      "bytes": 798679,
+      "sha256": "cb43d4be1bd75ec39ca80af56d69de9f88e9f5f79faac63348f676667214e716"
+    },
+    {
+      "id": "village_barn",
+      "file": "village_barn.png",
+      "description_id": "Gudang hasil panen",
+      "dimensions_px": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "foot_anchor_px": [
+        512,
+        781
+      ],
+      "nontransparent_bounds_px": [
+        86,
+        114,
+        937,
+        985
+      ],
+      "suggested_width_px_at_450_viewport": 165,
+      "suggested_godot_scale": 0.1611,
+      "bytes": 826087,
+      "sha256": "e5726f68ee0d85bedee122aa0d08f7f3ad30bd8785e5916281551f5c3061f5ee"
+    },
+    {
+      "id": "apple_tree",
+      "file": "apple_tree.png",
+      "description_id": "Pohon apel",
+      "dimensions_px": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "foot_anchor_px": [
+        512,
+        816
+      ],
+      "nontransparent_bounds_px": [
+        202,
+        89,
+        816,
+        889
+      ],
+      "suggested_width_px_at_450_viewport": 145,
+      "suggested_godot_scale": 0.1416,
+      "bytes": 616962,
+      "sha256": "a73f4e2c3d1addeea43e286cbc00e2b7e45e607ffdb3c4502b7960e60e349cd2"
+    },
+    {
+      "id": "soil_plot_empty",
+      "file": "soil_plot_empty.png",
+      "description_id": "Petak tanah kosong",
+      "dimensions_px": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "foot_anchor_px": [
+        512,
+        586
+      ],
+      "nontransparent_bounds_px": [
+        27,
+        240,
+        997,
+        841
+      ],
+      "suggested_width_px_at_450_viewport": 158,
+      "suggested_godot_scale": 0.1543,
+      "bytes": 610749,
+      "sha256": "617980fac61722dc3fcaad32e79e0b9b2e05482f505994112f543162daa7a271"
+    },
+    {
+      "id": "wheat_plot_ready",
+      "file": "wheat_plot_ready.png",
+      "description_id": "Petak gandum siap panen",
+      "dimensions_px": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "foot_anchor_px": [
+        512,
+        663
+      ],
+      "nontransparent_bounds_px": [
+        32,
+        105,
+        992,
+        916
+      ],
+      "suggested_width_px_at_450_viewport": 158,
+      "suggested_godot_scale": 0.1543,
+      "bytes": 810749,
+      "sha256": "e56de6cc9ecf9c7d8c7bffbe280fa66166bbb2ff9ac34868e649a609b07c4e38"
+    },
+    {
+      "id": "flower_garden",
+      "file": "flower_garden.png",
+      "description_id": "Taman bunga",
+      "dimensions_px": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "transparent": true,
+      "foot_anchor_px": [
+        512,
+        611
+      ],
+      "nontransparent_bounds_px": [
+        72,
+        179,
+        952,
+        850
+      ],
+      "suggested_width_px_at_450_viewport": 154,
+      "suggested_godot_scale": 0.1504,
+      "bytes": 640891,
+      "sha256": "602d8ca7d7ff2f461d3d5a458b275aae7bdff7a4698183684ab82e49e037873d"
+    }
+  ]
+}

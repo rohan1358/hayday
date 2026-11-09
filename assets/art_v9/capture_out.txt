@@ -1,0 +1,7 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 617.42 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce RTX 4060 Laptop GPU
+
+ART_V9_CAPTURE D:/portfolio/farmer/game/HayDay/assets/art_v9/world_delivery_idle.png result=0 size=(450, 800) position=(1360.0, 1235.0)
+ART_V9_CAPTURE D:/portfolio/farmer/game/HayDay/assets/art_v9/world_delivery_outbound.png result=0 size=(450, 800) position=(1569.081, 1269.476)
+ART_V9_CAPTURE D:/portfolio/farmer/game/HayDay/assets/art_v9/world_delivery_returning.png result=0 size=(450, 800) position=(1553.515, 1266.909)
+ART_V9_CAPTURE D:/portfolio/farmer/game/HayDay/assets/art_v9/world_delivery_showcase.png result=0 size=(450, 800) position=(1360.0, 1235.0)
