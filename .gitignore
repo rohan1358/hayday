@@ -25,3 +25,6 @@ android/build/src/main/java/com/kebunceria/farm/*
 
 # Generated Windows runtime
 /Kebun-Ceria-Windows/KebunCeriaRuntime.exe
+work/
+__pycache__/
+*.pyc
