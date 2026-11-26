@@ -1,0 +1,9 @@
+ASET ELEMEN BACKGROUND
+Dibuat dengan built-in image_gen dari gambar referensi pengguna.
+Enam PNG utama: sungai, gunung, pohon, lahan, jembatan, batu-tebing.
+Folder individual berisi 9 pohon, 4 jembatan, dan 6 batu/tebing; dipotong tanpa resize dari sprite sheet.
+Semua PNG memiliki alpha transparan. Beberapa sprite memiliki pinggiran lembut/semitransparan.
+Ini merupakan rekonstruksi AI, bukan pemisahan layer asli yang identik. Sungai dan lahan perlu penyesuaian posisi/bentuk saat disusun kembali; hasil tidak dijamin menyatu piksel demi piksel.
+Import sebagai sprite 2D, texture compression None/lossless, max size minimal sesuai resolusi file; hindari pembesaran melebihi resolusi aset.
+Urutan yang disarankan: langit buatan sendiri > gunung > sungai > lahan > batu/tebing > jembatan > pohon. Sesuaikan sorting per objek.
+Prompt set: extract/reconstruct river and ponds only; isolate mountain panorama; isolate nine seasonal trees; rebuild terrain base without trees/rocks/bridges and with transparent water channels; isolate four oriented wooden bridges; isolate six rock and seasonal cliff variants. Match original fantasy painted game style, crisp detail and overhead oblique perspective; true alpha, no labels/backdrop.

@@ -14,14 +14,8 @@ static func paint(view: FarmView, game: FarmGameState, index: int, at: Vector2) 
 	else:
 		var info: Dictionary = FarmGameState.FRUITS[fruit_id]
 		var ready := game.tree_ready(index)
-		if view.farm_art.paint(view, "apple_tree", at, 145.0):
-			# Ripe citrus reads as orange while sharing the authored orchard silhouette.
-			if ready and fruit_id == "jeruk":
-				for offset in [Vector2(-34, -80), Vector2(23, -97), Vector2(38, -54)]:
-					view.draw_circle(at + offset, 7, Color("e89931"))
-					view.draw_circle(at + offset + Vector2(-2, -2), 2.8, Color("ffdf83"))
-		else:
-			view.paint_fruit_tree(at, Color(info["color"]), ready)
+		view.farm_art.paint(view, "fruit_tree_" + fruit_id + ("_ripe" if ready else "_bare"), at, 175.0)
+
 		if ready:
 			view.bubble("PANEN!", at + Vector2(0, -159), Color("fff2b6"), Color("8b5624"))
 		else:

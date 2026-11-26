@@ -1,0 +1,9 @@
+[gd_resource type="AtlasTexture" load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/terrain_kit/props/021_rustic_lamp.png" id="1"]
+
+[resource]
+atlas = ExtResource("1")
+region = Rect2(18.0, 18.0, 442.0, 464.0)
+filter_clip = true
+metadata/ground_anchor = Vector2(221.0, 399.040008544922)

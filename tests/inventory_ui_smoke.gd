@@ -30,7 +30,7 @@ func run_tests() -> void:
 	screen.game.backup_path = backup_path
 	root.add_child(screen)
 	await process_frame
-	screen.game.new_game()
+	screen.game.new_game(false)
 	screen.game.inventory["gandum"] = 12
 	screen.game.inventory["jeruk"] = 3
 	screen.game.orders[0]["items"] = {"gandum": 4}

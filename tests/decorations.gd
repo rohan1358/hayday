@@ -44,7 +44,7 @@ func run_test() -> void:
 	var state: FarmGameState = screen.game
 	var farm: FarmView = screen.farm
 
-	check(FarmGameState.DECORATION_ORDER.size() == 16, "Katalog 16 jenis dekorasi tersedia")
+	check(FarmGameState.DECORATION_ORDER.size() == 28, "Katalog 28 dekorasi termasuk Living Garden tersedia")
 	var initial_coins := state.coins
 	check(state.buy_decoration("jenis_tidak_valid") == "" and state.coins == initial_coins,
 		"Jenis tidak dikenal tidak dapat dibeli")

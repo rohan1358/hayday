@@ -1,0 +1,9 @@
+[gd_resource type="AtlasTexture" load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/terrain_kit/props/002_season_scenery.png" id="1"]
+
+[resource]
+atlas = ExtResource("1")
+region = Rect2(2.0, 514.0, 508.0, 508.0)
+filter_clip = true
+metadata/ground_anchor = Vector2(254.0, 447.040008544922)

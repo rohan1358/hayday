@@ -21,7 +21,7 @@ func run_tests() -> void:
 	var game := FarmGameState.new()
 	game.save_path = "user://checkin_" + uid + ".json"
 	game.backup_path = "user://checkin_" + uid + "_backup.json"
-	game.new_game()
+	game.new_game(false) # Legacy ready-to-play fixture; FTUE is covered separately.
 	var initial_coins := game.coins
 	check(game.daily_checkin_preview("2026-11-01")["day"] == 1, "kunjungan pertama menawarkan hari 1")
 	var day_one := game.claim_daily_checkin("2026-11-01")

@@ -19,11 +19,19 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 [application]
 
-config/name="Kebun Ceria"
+config/name="Cheerful Garden"
 config/description="Game pertanian kasual 2D, terinspirasi genre farming seperti Hay Day."
 run/main_scene="res://scenes/Startup.tscn"
+config/use_custom_user_dir=true
+config/custom_user_dir_name="Godot/app_userdata/Kebun Ceria"
+config/quit_on_go_back=false
 config/features=PackedStringArray("4.7", "GL Compatibility")
-config/icon="res://assets/icon.png"
+config/icon="res://assets/cheerful/app_icon.png"
+
+[autoload]
+
+GardenTypography="*res://scripts/typography.gd"
+GardenLanguage="*res://scripts/garden_language.gd"
 
 [display]
 
@@ -39,6 +47,10 @@ window/handheld/immersive_mode=true
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/admob/plugin.cfg")
+
+[gui]
+
+theme/custom="res://assets/fonts/garden_theme.tres"
 
 [rendering]
 

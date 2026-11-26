@@ -6,13 +6,14 @@ const INK := Color("344b39")
 const MUTED := Color("72806d")
 const DISABLED := Color("b9c5b3")
 const BUILDING_PREVIEWS := {
-	"kandang_babi": "res://assets/art_v8/pig_pen.png",
-	"kandang_kambing": "res://assets/art_v8/goat_pen.png",
-	"pabrik_pakan": "res://assets/art_v7/feed_mill_building.png",
-	"toko_roti": "res://assets/art_v7/bakery_building.png",
-	"pabrik_susu": "res://assets/art_v7/dairy_building.png",
-	"petak_bunga": "res://assets/art_v2/flower_garden.png",
-	"kolam": "res://assets/art_v5/decorative_pond.png"
+	"gazebo":"res://assets/colorful_garden/gazebo.png",
+	"kandang_babi": "res://assets/colorful_garden/pig_pen.png",
+	"kandang_kambing": "res://assets/colorful_garden/goat_pen.png",
+	"pabrik_pakan": "res://assets/colorful_garden/feed_mill_building.png",
+	"toko_roti": "res://assets/colorful_garden/bakery_building.png",
+	"pabrik_susu": "res://assets/colorful_garden/dairy_building.png",
+	"petak_bunga": "res://assets/colorful_garden/flower_garden.png",
+	"kolam": "res://assets/colorful_garden/decorative_pond.png"
 }
 
 
@@ -21,7 +22,8 @@ static func populate_animals(
 	parent: VBoxContainer,
 	game: FarmGameState,
 	action: Callable,
-	buildings_action: Callable
+	buildings_action: Callable,
+	selected: String=""
 ) -> Array[Dictionary]:
 	var rows: Array[Dictionary] = []
 	var heading: Panel = ui.call(
@@ -33,7 +35,7 @@ static func populate_animals(
 	)
 	heading.custom_minimum_size.y = 105
 	var chicken_card: Panel = ui.call("row_card", parent, 172, Color("fff3df"))
-	chicken_card.add_child(ui.call("circle", Vector2(46, 49), 23, Color("f7d96e")))
+	animal_picture(ui,chicken_card,"ayam",Vector2(16,20))
 	ui.call("label", chicken_card, "AYAM KAMPUNG", Vector2(88, 20), Vector2(450, 38), 28, INK, true)
 	ui.call(
 		"label",
@@ -54,10 +56,11 @@ static func populate_animals(
 	chicken_button.pressed.connect(func() -> void: action.call("ayam"))
 	rows.append({"id": "ayam", "status": chicken_status, "button": chicken_button})
 	for id in FarmGameState.ANIMAL_ORDER:
+		if selected!="" and id!=selected: continue
 		var info: Dictionary = FarmGameState.ANIMALS[id]
 		var owned: bool = game.has_construction(str(info["building"]))
 		var card: Panel = ui.call("row_card", parent, 240, Color("fff3df"))
-		card.add_child(ui.call("circle", Vector2(47, 55), 26, Color(info["color"])))
+		animal_picture(ui,card,id,Vector2(16,23))
 		ui.call(
 			"label",
 			card,
@@ -110,6 +113,9 @@ static func populate_animals(
 		else:
 			button.pressed.connect(buildings_action)
 		rows.append({"id": id, "status": status, "button": button})
+	if selected!="":
+		chicken_card.queue_free()
+		rows=rows.filter(func(row): return str(row.id)==selected)
 	refresh_animals(game, rows)
 	return rows
 
@@ -123,9 +129,9 @@ static func refresh_animals(game: FarmGameState, rows: Array[Dictionary]) -> voi
 			continue
 		if id == "ayam":
 			var ready := game.ready_eggs()
-			var full := game.storage_used() + 2 > game.storage_capacity
+			var full := game.storage_used() + game.ranch_yield("ayam") > game.storage_capacity
 			status.text = (
-				"2 telur siap diambil!"
+				"%d telur siap diambil!"%game.ranch_yield("ayam")
 				if ready
 				else "Siap %d detik lagi" % maxi(0, game.eggs_ready_at - game.now())
 			)
@@ -154,7 +160,7 @@ static func refresh_animals(game: FarmGameState, rows: Array[Dictionary]) -> voi
 			status.text = "Hasil ternak siap dikumpulkan!"
 			button.text = (
 				"BUKA GUDANG ›"
-				if game.storage_used() + int(info["yield"]) > game.storage_capacity
+				if game.storage_used() + game.ranch_yield(id) > game.storage_capacity
 				else "AMBIL HASIL"
 			)
 			button.disabled = false
@@ -169,6 +175,7 @@ static func refresh_animals(game: FarmGameState, rows: Array[Dictionary]) -> voi
 static func populate_buildings(
 	ui: Control, parent: VBoxContainer, game: FarmGameState, purchase: Callable
 ) -> void:
+	preload("res://scripts/farm_progression.gd").cow_shop(ui,parent,game)
 	ui.call(
 		"callout",
 		parent,
@@ -202,11 +209,13 @@ static func _build_group(
 		var count := game.construction_count(id)
 		var max_count := 3 if id == "petak_bunga" else 1
 		var owned := count >= max_count
-		var unlocked := game.level >= int(info["level"])
+		var required_level: int = 1 if id in ["toko_roti","pabrik_susu"] else (maxi(3 if id.begins_with("kandang_") else 5,int(info["level"])) if not game.ftue.is_empty() else int(info["level"]))
+		var unlocked := game.level >= required_level
 		var can_buy := not owned and unlocked and game.coins >= int(info["cost"])
 		var card: Panel = ui.call("row_card", parent, 157, Color("fff4e2"))
 		if BUILDING_PREVIEWS.has(id) and ResourceLoader.exists(BUILDING_PREVIEWS[id]):
 			var thumbnail := TextureRect.new()
+			thumbnail.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 			thumbnail.position = Vector2(5, 7)
 			thumbnail.size = Vector2(78, 89)
 			thumbnail.texture = load(BUILDING_PREVIEWS[id]) as Texture2D
@@ -215,7 +224,7 @@ static func _build_group(
 			thumbnail.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			card.add_child(thumbnail)
 		else:
-			card.add_child(ui.call("circle", Vector2(43, 53), 27, Color(info["color"])))
+			preload("res://scripts/colorful_icons.gd").add(card,"bangun",Vector2(12,20),Vector2(62,62))
 		ui.call("label", card, str(info["name"]), Vector2(87, 13), Vector2(345, 41), 25, INK, true)
 		ui.call(
 			"label", card, str(info["description"]), Vector2(87, 56), Vector2(477, 38), 17, MUTED
@@ -225,7 +234,7 @@ static func _build_group(
 			card,
 			(
 				"%d koin  •  Level %d  •  Dimiliki %d/%d"
-				% [int(info["cost"]), int(info["level"]), count, max_count]
+				% [int(info["cost"]), required_level, count, max_count]
 			),
 			Vector2(23, 112),
 			Vector2(425, 31),
@@ -234,7 +243,7 @@ static func _build_group(
 			true
 		)
 		var label_text := (
-			"DIMILIKI" if owned else "LV %d" % int(info["level"]) if not unlocked else "BELI"
+			"DIMILIKI" if owned else "LV %d" % required_level if not unlocked else "BELI"
 		)
 		var buy: Button = ui.call(
 			"button",
@@ -249,3 +258,8 @@ static func _build_group(
 		buy.disabled = not can_buy
 		var current_id: String = id
 		buy.pressed.connect(func() -> void: purchase.call(current_id))
+
+
+static func animal_picture(ui,parent: Node,species: String,at: Vector2) -> void:
+	var icon=preload("res://scripts/colorful_icons.gd").add(parent,"hewan",at,Vector2(60,60))
+	if ui.farm.ranch_animator!=null: icon.texture=ui.farm.ranch_animator.frames.get(species+"0",icon.texture)

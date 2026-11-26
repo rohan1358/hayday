@@ -58,23 +58,21 @@ static func populate(
 				18,
 				MUTED
 			)
-			for fruit_index in FarmGameState.FRUITS.size():
-				var id: String = FarmGameState.FRUITS.keys()[fruit_index]
-				var info: Dictionary = FarmGameState.FRUITS[id]
-				var allowed := game.coins >= int(info["cost"]) and game.level >= int(info["level"])
-				var button_x := 21 + fruit_index * 286
-				var buy: Button = ui.call(
-					"button",
-					card,
-					"%s  •  %d KOIN" % [info["name"], info["cost"]],
-					Vector2(button_x, 124),
-					Vector2(272, 69),
-					GREEN if allowed else Color("bac5b7"),
-					Color.WHITE,
-					17
-				)
-				buy.disabled = not allowed
-				buy.pressed.connect(func() -> void: plant_action.call(index, id))
+			var choice := OptionButton.new()
+			choice.position = Vector2(21, 108)
+			choice.size = Vector2(330, 55)
+			choice.add_theme_stylebox_override("normal", ui_style(Color("f5dfb5")))
+			choice.add_theme_stylebox_override("hover", ui_style(Color("ffedc9")))
+			choice.add_theme_color_override("font_color", INK)
+			choice.add_theme_font_override("font", preload("res://assets/fonts/styles/fredoka_semibold.tres"))
+			choice.add_theme_font_size_override("font_size", 16)
+			card.add_child(choice)
+			for id in FarmGameState.FRUITS:
+				var entry: Dictionary = FarmGameState.FRUITS[id]
+				choice.add_item("%s · Lv %d · %d koin" % [entry.name, entry.level, entry.cost])
+			var buy: Button = ui.call("button", card, "TANAM POHON", Vector2(365,108), Vector2(215,55), GREEN, Color.WHITE, 18)
+			buy.pressed.connect(func() -> void: plant_action.call(index, FarmGameState.FRUITS.keys()[choice.selected]))
+
 			continue
 		var info: Dictionary = FarmGameState.FRUITS[fruit_id]
 		ui.call(
@@ -118,7 +116,9 @@ static func populate(
 			Color.WHITE,
 			19
 		)
-		collect.pressed.connect(func() -> void: harvest_action.call(index))
+		collect.pressed.connect(func() -> void:
+			if game.tree_ready(index): harvest_action.call(index)
+			else: ui.call("on_orchard_speedup", index))
 		status_rows.append({"index": index, "label": status, "button": collect})
 	ui.call(
 		"callout",
@@ -149,7 +149,8 @@ static func refresh_status(game: FarmGameState, rows: Array[Dictionary]) -> void
 			if ready and full
 			else "Siap dipanen!" if ready else "Tumbuh %d detik" % remaining
 		)
-		collect.disabled = not ready or full
+		collect.text = "PETIK BUAH" if ready else "IKLAN · PERCEPAT"
+		collect.disabled = ready and full
 		collect.add_theme_stylebox_override("disabled", ui_style(Color("b6c6b0")))
 
 

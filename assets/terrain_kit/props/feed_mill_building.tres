@@ -1,0 +1,9 @@
+[gd_resource type="AtlasTexture" load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/terrain_kit/props/018_feed_mill_building.png" id="1"]
+
+[resource]
+atlas = ExtResource("1")
+region = Rect2(0.0, 14.0, 751.0, 754.0)
+filter_clip = true
+metadata/ground_anchor = Vector2(375.5, 648.440002441406)

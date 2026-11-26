@@ -35,6 +35,8 @@ func run_tests() -> void:
 		quit(1)
 		return
 
+	preload("res://tests/admob_mock_cleanup.gd").release()
+	await process_frame
 	print("AdMob Remote Config and free rewards: PASS")
 	ads.free()
 	quit(0)

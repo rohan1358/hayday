@@ -1,0 +1,1395 @@
+{
+  "backdrops": [
+    {
+      "file": "backdrops/distant_mountains.png",
+      "height": 887,
+      "id": "distant_mountains",
+      "usage": "Distant scenery only; never place playable objects on this image.",
+      "width": 1774
+    }
+  ],
+  "materials": [
+    {
+      "file": "materials/spring_grass.png",
+      "height": 1254,
+      "id": "spring_grass",
+      "minimum_texels_per_world_unit": 4.8984375,
+      "width": 1254,
+      "world_tile": 256
+    },
+    {
+      "file": "materials/summer_grass.png",
+      "height": 1254,
+      "id": "summer_grass",
+      "minimum_texels_per_world_unit": 4.8984375,
+      "width": 1254,
+      "world_tile": 256
+    },
+    {
+      "file": "materials/autumn_ground.png",
+      "height": 1254,
+      "id": "autumn_ground",
+      "minimum_texels_per_world_unit": 4.8984375,
+      "width": 1254,
+      "world_tile": 256
+    },
+    {
+      "file": "materials/winter_snow.png",
+      "height": 1254,
+      "id": "winter_snow",
+      "minimum_texels_per_world_unit": 4.8984375,
+      "width": 1254,
+      "world_tile": 256
+    },
+    {
+      "file": "materials/garden_soil.png",
+      "height": 1254,
+      "id": "garden_soil",
+      "minimum_texels_per_world_unit": 4.8984375,
+      "width": 1254,
+      "world_tile": 256
+    },
+    {
+      "file": "materials/river_water.png",
+      "height": 1254,
+      "id": "river_water",
+      "minimum_texels_per_world_unit": 4.8984375,
+      "width": 1254,
+      "world_tile": 256
+    },
+    {
+      "file": "materials/cliff_rock.png",
+      "height": 1254,
+      "id": "cliff_rock",
+      "minimum_texels_per_world_unit": 4.8984375,
+      "width": 1254,
+      "world_tile": 256
+    },
+    {
+      "file": "materials/stone_path.png",
+      "height": 1254,
+      "id": "stone_path",
+      "minimum_texels_per_world_unit": 4.8984375,
+      "width": 1254,
+      "world_tile": 256
+    },
+    {
+      "file": "materials/bridge_wood.png",
+      "height": 1254,
+      "id": "bridge_wood",
+      "minimum_texels_per_world_unit": 4.8984375,
+      "width": 1254,
+      "world_tile": 256
+    }
+  ],
+  "sources": [
+    "res://assets/colorful_garden/colorful_oak.png",
+    "res://assets/living_garden/environment.png",
+    "res://assets/reference_atlases/season_scenery.png",
+    "res://assets/colorful_garden/flower_patch.png",
+    "res://assets/colorful_garden/flowering_bushes.png",
+    "res://assets/colorful_garden/flower_garden.png",
+    "res://assets/art_v11/resource_boulder_clean.png",
+    "res://assets/colorful_garden/soil_plot_empty.png",
+    "res://assets/reference_atlases/crops.png",
+    "res://assets/colorful_garden/decorative_pond.png",
+    "res://assets/colorful_garden/kitchen_cottage.png",
+    "res://assets/colorful_garden/village_barn.png",
+    "res://assets/colorful_garden/market_cart.png",
+    "res://assets/colorful_garden/fence_straight.png",
+    "res://assets/colorful_garden/fence_corner.png",
+    "res://assets/colorful_garden/arched_fence.png",
+    "res://assets/colorful_garden/bakery_building.png",
+    "res://assets/colorful_garden/dairy_building.png",
+    "res://assets/colorful_garden/feed_mill_building.png",
+    "res://assets/colorful_garden/delivery_truck.png",
+    "res://assets/colorful_garden/delivery_depot.png",
+    "res://assets/colorful_garden/rustic_lamp.png",
+    "res://assets/colorful_garden/wooden_crates.png",
+    "res://assets/reference_atlases/orchard.png",
+    "res://assets/reference_atlases/orchard_harvested.png",
+    "res://assets/crop_illustrations/plants.png"
+  ],
+  "sprites": [
+    {
+      "anchor": [
+        338.0,
+        699.359985351563
+      ],
+      "id": "colorful_oak",
+      "max_zoom_at_native_resolution": 3.07272727272727,
+      "recommended_width": 220.0,
+      "region": [
+        10.0,
+        24.0,
+        676.0,
+        744.0
+      ],
+      "source": "res://assets/colorful_garden/colorful_oak.png",
+      "file": "props/000_colorful_oak.png",
+      "resource": "props/colorful_oak.tres"
+    },
+    {
+      "anchor": [
+        197.5,
+        382.579986572266
+      ],
+      "id": "lg_blossom_tree",
+      "max_zoom_at_native_resolution": 2.63333333333333,
+      "recommended_width": 150.0,
+      "region": [
+        465.0,
+        459.0,
+        395.0,
+        407.0
+      ],
+      "source": "res://assets/living_garden/environment.png",
+      "file": "props/001_environment.png",
+      "resource": "props/lg_blossom_tree.tres"
+    },
+    {
+      "anchor": [
+        254.0,
+        447.040008544922
+      ],
+      "id": "autumn_maple",
+      "max_zoom_at_native_resolution": 3.38666666666667,
+      "recommended_width": 150.0,
+      "region": [
+        2.0,
+        2.0,
+        508.0,
+        508.0
+      ],
+      "source": "res://assets/reference_atlases/season_scenery.png",
+      "file": "props/002_season_scenery.png",
+      "resource": "props/autumn_maple.tres"
+    },
+    {
+      "anchor": [
+        254.0,
+        447.040008544922
+      ],
+      "id": "snow_pine",
+      "max_zoom_at_native_resolution": 3.38666666666667,
+      "recommended_width": 150.0,
+      "region": [
+        514.0,
+        2.0,
+        508.0,
+        508.0
+      ],
+      "source": "res://assets/reference_atlases/season_scenery.png",
+      "file": "props/002_season_scenery.png",
+      "resource": "props/snow_pine.tres"
+    },
+    {
+      "anchor": [
+        254.0,
+        447.040008544922
+      ],
+      "id": "sunflower_patch",
+      "max_zoom_at_native_resolution": 2.30909090909091,
+      "recommended_width": 220.0,
+      "region": [
+        1026.0,
+        2.0,
+        508.0,
+        508.0
+      ],
+      "source": "res://assets/reference_atlases/season_scenery.png",
+      "file": "props/002_season_scenery.png",
+      "resource": "props/sunflower_patch.tres"
+    },
+    {
+      "anchor": [
+        245.0,
+        318.959991455078
+      ],
+      "id": "flower_patch",
+      "max_zoom_at_native_resolution": 2.22727272727273,
+      "recommended_width": 220.0,
+      "region": [
+        10.0,
+        5.0,
+        490.0,
+        443.0
+      ],
+      "source": "res://assets/colorful_garden/flower_patch.png",
+      "file": "props/003_flower_patch.png",
+      "resource": "props/flower_patch.tres"
+    },
+    {
+      "anchor": [
+        236.5,
+        261.600006103516
+      ],
+      "id": "flowering_bushes",
+      "max_zoom_at_native_resolution": 2.15,
+      "recommended_width": 220.0,
+      "region": [
+        34.0,
+        6.0,
+        473.0,
+        327.0
+      ],
+      "source": "res://assets/colorful_garden/flowering_bushes.png",
+      "file": "props/004_flowering_bushes.png",
+      "resource": "props/flowering_bushes.tres"
+    },
+    {
+      "anchor": [
+        239.0,
+        277.119995117188
+      ],
+      "id": "flower_garden",
+      "max_zoom_at_native_resolution": 2.17272727272727,
+      "recommended_width": 220.0,
+      "region": [
+        10.0,
+        7.0,
+        478.0,
+        433.0
+      ],
+      "source": "res://assets/colorful_garden/flower_garden.png",
+      "file": "props/005_flower_garden.png",
+      "resource": "props/flower_garden.tres"
+    },
+    {
+      "anchor": [
+        685.0,
+        1102.07995605469
+      ],
+      "id": "resource_boulder",
+      "max_zoom_at_native_resolution": 6.22727272727273,
+      "recommended_width": 220.0,
+      "region": [
+        0.0,
+        0.0,
+        1370.0,
+        1148.0
+      ],
+      "source": "res://assets/art_v11/resource_boulder_clean.png",
+      "file": "props/006_resource_boulder_clean.png",
+      "resource": "props/resource_boulder.tres"
+    },
+    {
+      "anchor": [
+        252.0,
+        218.0
+      ],
+      "id": "soil_plot_empty",
+      "max_zoom_at_native_resolution": 2.29090909090909,
+      "recommended_width": 220.0,
+      "region": [
+        0.0,
+        7.0,
+        504.0,
+        436.0
+      ],
+      "source": "res://assets/colorful_garden/soil_plot_empty.png",
+      "file": "props/007_soil_plot_empty.png",
+      "resource": "props/soil_plot_empty.tres"
+    },
+    {
+      "anchor": [
+        138.199996948242,
+        243.320007324219
+      ],
+      "id": "wheat_plot_ready",
+      "max_zoom_at_native_resolution": 2.0,
+      "recommended_width": 138.199996948242,
+      "region": [
+        2.0,
+        2.0,
+        276.399993896484,
+        276.5
+      ],
+      "source": "res://assets/reference_atlases/crops.png",
+      "file": "props/008_crops.png",
+      "resource": "props/wheat_plot_ready.tres"
+    },
+    {
+      "anchor": [
+        138.199996948242,
+        243.320007324219
+      ],
+      "id": "corn_plot_ready",
+      "max_zoom_at_native_resolution": 2.0,
+      "recommended_width": 138.199996948242,
+      "region": [
+        282.399993896484,
+        2.0,
+        276.399993896484,
+        276.5
+      ],
+      "source": "res://assets/reference_atlases/crops.png",
+      "file": "props/008_crops.png",
+      "resource": "props/corn_plot_ready.tres"
+    },
+    {
+      "anchor": [
+        138.199996948242,
+        243.320007324219
+      ],
+      "id": "carrot_plot_ready",
+      "max_zoom_at_native_resolution": 2.0,
+      "recommended_width": 138.199996948242,
+      "region": [
+        562.799987792969,
+        2.0,
+        276.399993896484,
+        276.5
+      ],
+      "source": "res://assets/reference_atlases/crops.png",
+      "file": "props/008_crops.png",
+      "resource": "props/carrot_plot_ready.tres"
+    },
+    {
+      "anchor": [
+        202.5,
+        356.399993896484
+      ],
+      "id": "lg_greenhouse",
+      "max_zoom_at_native_resolution": 2.0,
+      "recommended_width": 202.5,
+      "region": [
+        23.0,
+        27.0,
+        405.0,
+        405.0
+      ],
+      "source": "res://assets/living_garden/environment.png",
+      "file": "props/001_environment.png",
+      "resource": "props/lg_greenhouse.tres"
+    },
+    {
+      "anchor": [
+        254.0,
+        447.040008544922
+      ],
+      "id": "snow_greenhouse",
+      "max_zoom_at_native_resolution": 2.30909090909091,
+      "recommended_width": 220.0,
+      "region": [
+        514.0,
+        514.0,
+        508.0,
+        508.0
+      ],
+      "source": "res://assets/reference_atlases/season_scenery.png",
+      "file": "props/002_season_scenery.png",
+      "resource": "props/snow_greenhouse.tres"
+    },
+    {
+      "anchor": [
+        254.0,
+        447.040008544922
+      ],
+      "id": "snow_cabin",
+      "max_zoom_at_native_resolution": 2.30909090909091,
+      "recommended_width": 220.0,
+      "region": [
+        2.0,
+        514.0,
+        508.0,
+        508.0
+      ],
+      "source": "res://assets/reference_atlases/season_scenery.png",
+      "file": "props/002_season_scenery.png",
+      "resource": "props/snow_cabin.tres"
+    },
+    {
+      "anchor": [
+        254.0,
+        447.040008544922
+      ],
+      "id": "frozen_lake",
+      "max_zoom_at_native_resolution": 2.30909090909091,
+      "recommended_width": 220.0,
+      "region": [
+        1026.0,
+        514.0,
+        508.0,
+        508.0
+      ],
+      "source": "res://assets/reference_atlases/season_scenery.png",
+      "file": "props/002_season_scenery.png",
+      "resource": "props/frozen_lake.tres"
+    },
+    {
+      "anchor": [
+        256.0,
+        202.520004272461
+      ],
+      "id": "decorative_pond",
+      "max_zoom_at_native_resolution": 2.32727272727273,
+      "recommended_width": 220.0,
+      "region": [
+        0.0,
+        6.0,
+        512.0,
+        332.0
+      ],
+      "source": "res://assets/colorful_garden/decorative_pond.png",
+      "file": "props/009_decorative_pond.png",
+      "resource": "props/decorative_pond.tres"
+    },
+    {
+      "anchor": [
+        378.5,
+        644.140014648438
+      ],
+      "id": "kitchen_cottage",
+      "max_zoom_at_native_resolution": 3.44090909090909,
+      "recommended_width": 220.0,
+      "region": [
+        0.0,
+        19.0,
+        757.0,
+        749.0
+      ],
+      "source": "res://assets/colorful_garden/kitchen_cottage.png",
+      "file": "props/010_kitchen_cottage.png",
+      "resource": "props/kitchen_cottage.tres"
+    },
+    {
+      "anchor": [
+        372.5,
+        602.859985351563
+      ],
+      "id": "village_barn",
+      "max_zoom_at_native_resolution": 3.38636363636364,
+      "recommended_width": 220.0,
+      "region": [
+        0.0,
+        0.0,
+        745.0,
+        701.0
+      ],
+      "source": "res://assets/colorful_garden/village_barn.png",
+      "file": "props/011_village_barn.png",
+      "resource": "props/village_barn.tres"
+    },
+    {
+      "anchor": [
+        380.5,
+        602.859985351563
+      ],
+      "id": "market_cart",
+      "max_zoom_at_native_resolution": 3.45909090909091,
+      "recommended_width": 220.0,
+      "region": [
+        0.0,
+        0.0,
+        761.0,
+        701.0
+      ],
+      "source": "res://assets/colorful_garden/market_cart.png",
+      "file": "props/012_market_cart.png",
+      "resource": "props/market_cart.tres"
+    },
+    {
+      "anchor": [
+        256.0,
+        325.940002441406
+      ],
+      "id": "fence_straight",
+      "max_zoom_at_native_resolution": 2.32727272727273,
+      "recommended_width": 220.0,
+      "region": [
+        0.0,
+        1.0,
+        512.0,
+        379.0
+      ],
+      "source": "res://assets/colorful_garden/fence_straight.png",
+      "file": "props/013_fence_straight.png",
+      "resource": "props/fence_straight.tres"
+    },
+    {
+      "anchor": [
+        244.5,
+        374.100006103516
+      ],
+      "id": "fence_corner",
+      "max_zoom_at_native_resolution": 2.22272727272727,
+      "recommended_width": 220.0,
+      "region": [
+        14.0,
+        10.0,
+        489.0,
+        435.0
+      ],
+      "source": "res://assets/colorful_garden/fence_corner.png",
+      "file": "props/014_fence_corner.png",
+      "resource": "props/fence_corner.tres"
+    },
+    {
+      "anchor": [
+        246.5,
+        393.880004882813
+      ],
+      "id": "arched_fence",
+      "max_zoom_at_native_resolution": 2.24090909090909,
+      "recommended_width": 220.0,
+      "region": [
+        19.0,
+        5.0,
+        493.0,
+        458.0
+      ],
+      "source": "res://assets/colorful_garden/arched_fence.png",
+      "file": "props/015_arched_fence.png",
+      "resource": "props/arched_fence.tres"
+    },
+    {
+      "anchor": [
+        373.5,
+        563.299987792969
+      ],
+      "id": "bakery_building",
+      "max_zoom_at_native_resolution": 3.39545454545455,
+      "recommended_width": 220.0,
+      "region": [
+        0.0,
+        23.0,
+        747.0,
+        655.0
+      ],
+      "source": "res://assets/colorful_garden/bakery_building.png",
+      "file": "props/016_bakery_building.png",
+      "resource": "props/bakery_building.tres"
+    },
+    {
+      "anchor": [
+        373.5,
+        593.400024414063
+      ],
+      "id": "dairy_building",
+      "max_zoom_at_native_resolution": 3.39545454545455,
+      "recommended_width": 220.0,
+      "region": [
+        0.0,
+        0.0,
+        747.0,
+        690.0
+      ],
+      "source": "res://assets/colorful_garden/dairy_building.png",
+      "file": "props/017_dairy_building.png",
+      "resource": "props/dairy_building.tres"
+    },
+    {
+      "anchor": [
+        375.5,
+        648.440002441406
+      ],
+      "id": "feed_mill_building",
+      "max_zoom_at_native_resolution": 3.41363636363636,
+      "recommended_width": 220.0,
+      "region": [
+        0.0,
+        14.0,
+        751.0,
+        754.0
+      ],
+      "source": "res://assets/colorful_garden/feed_mill_building.png",
+      "file": "props/018_feed_mill_building.png",
+      "resource": "props/feed_mill_building.tres"
+    },
+    {
+      "anchor": [
+        237.5,
+        431.299987792969
+      ],
+      "id": "delivery_truck",
+      "max_zoom_at_native_resolution": 2.15909090909091,
+      "recommended_width": 220.0,
+      "region": [
+        18.0,
+        7.0,
+        475.0,
+        454.0
+      ],
+      "source": "res://assets/colorful_garden/delivery_truck.png",
+      "file": "props/019_delivery_truck.png",
+      "resource": "props/delivery_truck.tres"
+    },
+    {
+      "anchor": [
+        235.0,
+        320.399993896484
+      ],
+      "id": "delivery_depot",
+      "max_zoom_at_native_resolution": 2.13636363636364,
+      "recommended_width": 220.0,
+      "region": [
+        19.0,
+        10.0,
+        470.0,
+        445.0
+      ],
+      "source": "res://assets/colorful_garden/delivery_depot.png",
+      "file": "props/020_delivery_depot.png",
+      "resource": "props/delivery_depot.tres"
+    },
+    {
+      "anchor": [
+        221.0,
+        399.040008544922
+      ],
+      "id": "rustic_lamp",
+      "max_zoom_at_native_resolution": 2.00909090909091,
+      "recommended_width": 220.0,
+      "region": [
+        18.0,
+        18.0,
+        442.0,
+        464.0
+      ],
+      "source": "res://assets/colorful_garden/rustic_lamp.png",
+      "file": "props/021_rustic_lamp.png",
+      "resource": "props/rustic_lamp.tres"
+    },
+    {
+      "anchor": [
+        230.5,
+        391.299987792969
+      ],
+      "id": "wooden_crates",
+      "max_zoom_at_native_resolution": 2.09545454545455,
+      "recommended_width": 220.0,
+      "region": [
+        19.0,
+        7.0,
+        461.0,
+        455.0
+      ],
+      "source": "res://assets/colorful_garden/wooden_crates.png",
+      "file": "props/022_wooden_crates.png",
+      "resource": "props/wooden_crates.tres"
+    },
+    {
+      "anchor": [
+        151.75,
+        264.0
+      ],
+      "id": "fruit_tree_apel_ripe",
+      "max_zoom_at_native_resolution": 2.02333333333333,
+      "recommended_width": 150.0,
+      "region": [
+        2.0,
+        0.0,
+        303.5,
+        300.0
+      ],
+      "source": "res://assets/reference_atlases/orchard.png",
+      "file": "props/023_orchard.png",
+      "resource": "props/fruit_tree_apel_ripe.tres"
+    },
+    {
+      "anchor": [
+        151.75,
+        264.0
+      ],
+      "id": "fruit_tree_apel_bare",
+      "max_zoom_at_native_resolution": 2.02333333333333,
+      "recommended_width": 150.0,
+      "region": [
+        2.0,
+        0.0,
+        303.5,
+        300.0
+      ],
+      "source": "res://assets/reference_atlases/orchard_harvested.png",
+      "file": "props/024_orchard_harvested.png",
+      "resource": "props/fruit_tree_apel_bare.tres"
+    },
+    {
+      "anchor": [
+        151.75,
+        264.0
+      ],
+      "id": "fruit_tree_jeruk_ripe",
+      "max_zoom_at_native_resolution": 2.02333333333333,
+      "recommended_width": 150.0,
+      "region": [
+        309.5,
+        0.0,
+        303.5,
+        300.0
+      ],
+      "source": "res://assets/reference_atlases/orchard.png",
+      "file": "props/023_orchard.png",
+      "resource": "props/fruit_tree_jeruk_ripe.tres"
+    },
+    {
+      "anchor": [
+        151.75,
+        264.0
+      ],
+      "id": "fruit_tree_jeruk_bare",
+      "max_zoom_at_native_resolution": 2.02333333333333,
+      "recommended_width": 150.0,
+      "region": [
+        309.5,
+        0.0,
+        303.5,
+        300.0
+      ],
+      "source": "res://assets/reference_atlases/orchard_harvested.png",
+      "file": "props/024_orchard_harvested.png",
+      "resource": "props/fruit_tree_jeruk_bare.tres"
+    },
+    {
+      "anchor": [
+        151.75,
+        264.0
+      ],
+      "id": "fruit_tree_mangga_ripe",
+      "max_zoom_at_native_resolution": 2.02333333333333,
+      "recommended_width": 150.0,
+      "region": [
+        617.0,
+        0.0,
+        303.5,
+        300.0
+      ],
+      "source": "res://assets/reference_atlases/orchard.png",
+      "file": "props/023_orchard.png",
+      "resource": "props/fruit_tree_mangga_ripe.tres"
+    },
+    {
+      "anchor": [
+        151.75,
+        264.0
+      ],
+      "id": "fruit_tree_mangga_bare",
+      "max_zoom_at_native_resolution": 2.02333333333333,
+      "recommended_width": 150.0,
+      "region": [
+        617.0,
+        0.0,
+        303.5,
+        300.0
+      ],
+      "source": "res://assets/reference_atlases/orchard_harvested.png",
+      "file": "props/024_orchard_harvested.png",
+      "resource": "props/fruit_tree_mangga_bare.tres"
+    },
+    {
+      "anchor": [
+        151.75,
+        264.0
+      ],
+      "id": "fruit_tree_pisang_ripe",
+      "max_zoom_at_native_resolution": 2.02333333333333,
+      "recommended_width": 150.0,
+      "region": [
+        924.5,
+        0.0,
+        303.5,
+        300.0
+      ],
+      "source": "res://assets/reference_atlases/orchard.png",
+      "file": "props/023_orchard.png",
+      "resource": "props/fruit_tree_pisang_ripe.tres"
+    },
+    {
+      "anchor": [
+        151.75,
+        264.0
+      ],
+      "id": "fruit_tree_pisang_bare",
+      "max_zoom_at_native_resolution": 2.02333333333333,
+      "recommended_width": 150.0,
+      "region": [
+        924.5,
+        0.0,
+        303.5,
+        300.0
+      ],
+      "source": "res://assets/reference_atlases/orchard_harvested.png",
+      "file": "props/024_orchard_harvested.png",
+      "resource": "props/fruit_tree_pisang_bare.tres"
+    },
+    {
+      "anchor": [
+        151.75,
+        264.0
+      ],
+      "id": "fruit_tree_ceri_ripe",
+      "max_zoom_at_native_resolution": 2.02333333333333,
+      "recommended_width": 150.0,
+      "region": [
+        2.0,
+        310.0,
+        303.5,
+        300.0
+      ],
+      "source": "res://assets/reference_atlases/orchard.png",
+      "file": "props/023_orchard.png",
+      "resource": "props/fruit_tree_ceri_ripe.tres"
+    },
+    {
+      "anchor": [
+        151.75,
+        264.0
+      ],
+      "id": "fruit_tree_ceri_bare",
+      "max_zoom_at_native_resolution": 2.02333333333333,
+      "recommended_width": 150.0,
+      "region": [
+        2.0,
+        310.0,
+        303.5,
+        300.0
+      ],
+      "source": "res://assets/reference_atlases/orchard_harvested.png",
+      "file": "props/024_orchard_harvested.png",
+      "resource": "props/fruit_tree_ceri_bare.tres"
+    },
+    {
+      "anchor": [
+        151.75,
+        264.0
+      ],
+      "id": "fruit_tree_lemon_ripe",
+      "max_zoom_at_native_resolution": 2.02333333333333,
+      "recommended_width": 150.0,
+      "region": [
+        309.5,
+        310.0,
+        303.5,
+        300.0
+      ],
+      "source": "res://assets/reference_atlases/orchard.png",
+      "file": "props/023_orchard.png",
+      "resource": "props/fruit_tree_lemon_ripe.tres"
+    },
+    {
+      "anchor": [
+        151.75,
+        264.0
+      ],
+      "id": "fruit_tree_lemon_bare",
+      "max_zoom_at_native_resolution": 2.02333333333333,
+      "recommended_width": 150.0,
+      "region": [
+        309.5,
+        310.0,
+        303.5,
+        300.0
+      ],
+      "source": "res://assets/reference_atlases/orchard_harvested.png",
+      "file": "props/024_orchard_harvested.png",
+      "resource": "props/fruit_tree_lemon_bare.tres"
+    },
+    {
+      "anchor": [
+        151.75,
+        264.0
+      ],
+      "id": "fruit_tree_alpukat_ripe",
+      "max_zoom_at_native_resolution": 2.02333333333333,
+      "recommended_width": 150.0,
+      "region": [
+        617.0,
+        310.0,
+        303.5,
+        300.0
+      ],
+      "source": "res://assets/reference_atlases/orchard.png",
+      "file": "props/023_orchard.png",
+      "resource": "props/fruit_tree_alpukat_ripe.tres"
+    },
+    {
+      "anchor": [
+        151.75,
+        264.0
+      ],
+      "id": "fruit_tree_alpukat_bare",
+      "max_zoom_at_native_resolution": 2.02333333333333,
+      "recommended_width": 150.0,
+      "region": [
+        617.0,
+        310.0,
+        303.5,
+        300.0
+      ],
+      "source": "res://assets/reference_atlases/orchard_harvested.png",
+      "file": "props/024_orchard_harvested.png",
+      "resource": "props/fruit_tree_alpukat_bare.tres"
+    },
+    {
+      "anchor": [
+        151.75,
+        264.0
+      ],
+      "id": "fruit_tree_kelapa_ripe",
+      "max_zoom_at_native_resolution": 2.02333333333333,
+      "recommended_width": 150.0,
+      "region": [
+        924.5,
+        310.0,
+        303.5,
+        300.0
+      ],
+      "source": "res://assets/reference_atlases/orchard.png",
+      "file": "props/023_orchard.png",
+      "resource": "props/fruit_tree_kelapa_ripe.tres"
+    },
+    {
+      "anchor": [
+        151.75,
+        264.0
+      ],
+      "id": "fruit_tree_kelapa_bare",
+      "max_zoom_at_native_resolution": 2.02333333333333,
+      "recommended_width": 150.0,
+      "region": [
+        924.5,
+        310.0,
+        303.5,
+        300.0
+      ],
+      "source": "res://assets/reference_atlases/orchard_harvested.png",
+      "file": "props/024_orchard_harvested.png",
+      "resource": "props/fruit_tree_kelapa_bare.tres"
+    },
+    {
+      "anchor": [
+        151.75,
+        255.199996948242
+      ],
+      "id": "fruit_tree_persik_ripe",
+      "max_zoom_at_native_resolution": 2.02333333333333,
+      "recommended_width": 150.0,
+      "region": [
+        2.0,
+        610.0,
+        303.5,
+        290.0
+      ],
+      "source": "res://assets/reference_atlases/orchard.png",
+      "file": "props/023_orchard.png",
+      "resource": "props/fruit_tree_persik_ripe.tres"
+    },
+    {
+      "anchor": [
+        151.75,
+        255.199996948242
+      ],
+      "id": "fruit_tree_persik_bare",
+      "max_zoom_at_native_resolution": 2.02333333333333,
+      "recommended_width": 150.0,
+      "region": [
+        2.0,
+        610.0,
+        303.5,
+        290.0
+      ],
+      "source": "res://assets/reference_atlases/orchard_harvested.png",
+      "file": "props/024_orchard_harvested.png",
+      "resource": "props/fruit_tree_persik_bare.tres"
+    },
+    {
+      "anchor": [
+        151.75,
+        255.199996948242
+      ],
+      "id": "fruit_tree_pir_ripe",
+      "max_zoom_at_native_resolution": 2.02333333333333,
+      "recommended_width": 150.0,
+      "region": [
+        309.5,
+        610.0,
+        303.5,
+        290.0
+      ],
+      "source": "res://assets/reference_atlases/orchard.png",
+      "file": "props/023_orchard.png",
+      "resource": "props/fruit_tree_pir_ripe.tres"
+    },
+    {
+      "anchor": [
+        151.75,
+        255.199996948242
+      ],
+      "id": "fruit_tree_pir_bare",
+      "max_zoom_at_native_resolution": 2.02333333333333,
+      "recommended_width": 150.0,
+      "region": [
+        309.5,
+        610.0,
+        303.5,
+        290.0
+      ],
+      "source": "res://assets/reference_atlases/orchard_harvested.png",
+      "file": "props/024_orchard_harvested.png",
+      "resource": "props/fruit_tree_pir_bare.tres"
+    },
+    {
+      "anchor": [
+        151.75,
+        255.199996948242
+      ],
+      "id": "fruit_tree_kakao_ripe",
+      "max_zoom_at_native_resolution": 2.02333333333333,
+      "recommended_width": 150.0,
+      "region": [
+        617.0,
+        610.0,
+        303.5,
+        290.0
+      ],
+      "source": "res://assets/reference_atlases/orchard.png",
+      "file": "props/023_orchard.png",
+      "resource": "props/fruit_tree_kakao_ripe.tres"
+    },
+    {
+      "anchor": [
+        151.75,
+        255.199996948242
+      ],
+      "id": "fruit_tree_kakao_bare",
+      "max_zoom_at_native_resolution": 2.02333333333333,
+      "recommended_width": 150.0,
+      "region": [
+        617.0,
+        610.0,
+        303.5,
+        290.0
+      ],
+      "source": "res://assets/reference_atlases/orchard_harvested.png",
+      "file": "props/024_orchard_harvested.png",
+      "resource": "props/fruit_tree_kakao_bare.tres"
+    },
+    {
+      "anchor": [
+        151.75,
+        255.199996948242
+      ],
+      "id": "fruit_tree_biji_kopi_ripe",
+      "max_zoom_at_native_resolution": 2.02333333333333,
+      "recommended_width": 150.0,
+      "region": [
+        924.5,
+        610.0,
+        303.5,
+        290.0
+      ],
+      "source": "res://assets/reference_atlases/orchard.png",
+      "file": "props/023_orchard.png",
+      "resource": "props/fruit_tree_biji_kopi_ripe.tres"
+    },
+    {
+      "anchor": [
+        151.75,
+        255.199996948242
+      ],
+      "id": "fruit_tree_biji_kopi_bare",
+      "max_zoom_at_native_resolution": 2.02333333333333,
+      "recommended_width": 150.0,
+      "region": [
+        924.5,
+        610.0,
+        303.5,
+        290.0
+      ],
+      "source": "res://assets/reference_atlases/orchard_harvested.png",
+      "file": "props/024_orchard_harvested.png",
+      "resource": "props/fruit_tree_biji_kopi_bare.tres"
+    },
+    {
+      "anchor": [
+        157.875,
+        299.040008544922
+      ],
+      "id": "plant_gandum",
+      "max_zoom_at_native_resolution": 2.0,
+      "recommended_width": 157.875,
+      "region": [
+        0.0,
+        0.0,
+        315.75,
+        311.5
+      ],
+      "source": "res://assets/crop_illustrations/plants.png",
+      "file": "props/025_plants.png",
+      "resource": "props/plant_gandum.tres"
+    },
+    {
+      "anchor": [
+        157.875,
+        299.040008544922
+      ],
+      "id": "plant_jagung",
+      "max_zoom_at_native_resolution": 2.0,
+      "recommended_width": 157.875,
+      "region": [
+        315.75,
+        0.0,
+        315.75,
+        311.5
+      ],
+      "source": "res://assets/crop_illustrations/plants.png",
+      "file": "props/025_plants.png",
+      "resource": "props/plant_jagung.tres"
+    },
+    {
+      "anchor": [
+        157.875,
+        299.040008544922
+      ],
+      "id": "plant_wortel",
+      "max_zoom_at_native_resolution": 2.0,
+      "recommended_width": 157.875,
+      "region": [
+        631.5,
+        0.0,
+        315.75,
+        311.5
+      ],
+      "source": "res://assets/crop_illustrations/plants.png",
+      "file": "props/025_plants.png",
+      "resource": "props/plant_wortel.tres"
+    },
+    {
+      "anchor": [
+        157.875,
+        299.040008544922
+      ],
+      "id": "plant_tebu",
+      "max_zoom_at_native_resolution": 2.0,
+      "recommended_width": 157.875,
+      "region": [
+        947.25,
+        0.0,
+        315.75,
+        311.5
+      ],
+      "source": "res://assets/crop_illustrations/plants.png",
+      "file": "props/025_plants.png",
+      "resource": "props/plant_tebu.tres"
+    },
+    {
+      "anchor": [
+        157.875,
+        299.040008544922
+      ],
+      "id": "plant_stroberi",
+      "max_zoom_at_native_resolution": 2.0,
+      "recommended_width": 157.875,
+      "region": [
+        0.0,
+        311.5,
+        315.75,
+        311.5
+      ],
+      "source": "res://assets/crop_illustrations/plants.png",
+      "file": "props/025_plants.png",
+      "resource": "props/plant_stroberi.tres"
+    },
+    {
+      "anchor": [
+        157.875,
+        299.040008544922
+      ],
+      "id": "plant_kedelai",
+      "max_zoom_at_native_resolution": 2.0,
+      "recommended_width": 157.875,
+      "region": [
+        315.75,
+        311.5,
+        315.75,
+        311.5
+      ],
+      "source": "res://assets/crop_illustrations/plants.png",
+      "file": "props/025_plants.png",
+      "resource": "props/plant_kedelai.tres"
+    },
+    {
+      "anchor": [
+        157.875,
+        299.040008544922
+      ],
+      "id": "plant_kentang",
+      "max_zoom_at_native_resolution": 2.0,
+      "recommended_width": 157.875,
+      "region": [
+        631.5,
+        311.5,
+        315.75,
+        311.5
+      ],
+      "source": "res://assets/crop_illustrations/plants.png",
+      "file": "props/025_plants.png",
+      "resource": "props/plant_kentang.tres"
+    },
+    {
+      "anchor": [
+        157.875,
+        299.040008544922
+      ],
+      "id": "plant_labu",
+      "max_zoom_at_native_resolution": 2.0,
+      "recommended_width": 157.875,
+      "region": [
+        947.25,
+        311.5,
+        315.75,
+        311.5
+      ],
+      "source": "res://assets/crop_illustrations/plants.png",
+      "file": "props/025_plants.png",
+      "resource": "props/plant_labu.tres"
+    },
+    {
+      "anchor": [
+        157.875,
+        299.040008544922
+      ],
+      "id": "plant_padi",
+      "max_zoom_at_native_resolution": 2.0,
+      "recommended_width": 157.875,
+      "region": [
+        0.0,
+        623.0,
+        315.75,
+        311.5
+      ],
+      "source": "res://assets/crop_illustrations/plants.png",
+      "file": "props/025_plants.png",
+      "resource": "props/plant_padi.tres"
+    },
+    {
+      "anchor": [
+        157.875,
+        299.040008544922
+      ],
+      "id": "plant_tomat",
+      "max_zoom_at_native_resolution": 2.0,
+      "recommended_width": 157.875,
+      "region": [
+        315.75,
+        623.0,
+        315.75,
+        311.5
+      ],
+      "source": "res://assets/crop_illustrations/plants.png",
+      "file": "props/025_plants.png",
+      "resource": "props/plant_tomat.tres"
+    },
+    {
+      "anchor": [
+        157.875,
+        299.040008544922
+      ],
+      "id": "plant_cabai",
+      "max_zoom_at_native_resolution": 2.0,
+      "recommended_width": 157.875,
+      "region": [
+        631.5,
+        623.0,
+        315.75,
+        311.5
+      ],
+      "source": "res://assets/crop_illustrations/plants.png",
+      "file": "props/025_plants.png",
+      "resource": "props/plant_cabai.tres"
+    },
+    {
+      "anchor": [
+        157.875,
+        299.040008544922
+      ],
+      "id": "plant_kopi",
+      "max_zoom_at_native_resolution": 2.0,
+      "recommended_width": 157.875,
+      "region": [
+        947.25,
+        623.0,
+        315.75,
+        311.5
+      ],
+      "source": "res://assets/crop_illustrations/plants.png",
+      "file": "props/025_plants.png",
+      "resource": "props/plant_kopi.tres"
+    },
+    {
+      "anchor": [
+        157.875,
+        299.040008544922
+      ],
+      "id": "plant_nanas",
+      "max_zoom_at_native_resolution": 2.0,
+      "recommended_width": 157.875,
+      "region": [
+        0.0,
+        934.5,
+        315.75,
+        311.5
+      ],
+      "source": "res://assets/crop_illustrations/plants.png",
+      "file": "props/025_plants.png",
+      "resource": "props/plant_nanas.tres"
+    },
+    {
+      "anchor": [
+        157.875,
+        299.040008544922
+      ],
+      "id": "plant_stroberi_kristal",
+      "max_zoom_at_native_resolution": 2.0,
+      "recommended_width": 157.875,
+      "region": [
+        315.75,
+        934.5,
+        315.75,
+        311.5
+      ],
+      "source": "res://assets/crop_illustrations/plants.png",
+      "file": "props/025_plants.png",
+      "resource": "props/plant_stroberi_kristal.tres"
+    },
+    {
+      "anchor": [
+        157.875,
+        299.040008544922
+      ],
+      "id": "plant_young_leaves",
+      "max_zoom_at_native_resolution": 2.0,
+      "recommended_width": 157.875,
+      "region": [
+        631.5,
+        934.5,
+        315.75,
+        311.5
+      ],
+      "source": "res://assets/crop_illustrations/plants.png",
+      "file": "props/025_plants.png",
+      "resource": "props/plant_young_leaves.tres"
+    },
+    {
+      "anchor": [
+        157.875,
+        299.040008544922
+      ],
+      "id": "plant_tiny_sprouts",
+      "max_zoom_at_native_resolution": 2.0,
+      "recommended_width": 157.875,
+      "region": [
+        947.25,
+        934.5,
+        315.75,
+        311.5
+      ],
+      "source": "res://assets/crop_illustrations/plants.png",
+      "file": "props/025_plants.png",
+      "resource": "props/plant_tiny_sprouts.tres"
+    }
+  ],
+  "tile_world_size": 256,
+  "version": 1
+}

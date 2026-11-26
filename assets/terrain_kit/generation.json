@@ -1,0 +1,76 @@
+{
+  "materials": [
+    {
+      "id": "spring_grass",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1dfa7-852c-7d53-b12f-7fc6d9ab5aa0\\exec-6d56d939-991b-4e09-a40d-a820ae549e7c.png",
+      "prompt": "Production-ready seamless square terrain material texture for Cheerful Garden 3D isometric farming game. Material: fresh spring meadow turf, varied small green grass blades and clover, sparse tiny white/pink flower petals, green ground visible between tufts. Orthographic straight overhead texture scan, fills entire square edge-to-edge. Fine sharp tactile stylized realistic detail, charming colorful farming illustration, physically plausible small-scale ambient occlusion. Uniform soft diffuse daylight, consistent material scale. Seamlessly tileable all four edges, evenly distributed details, no large focal object, no directional cast shadow, no perspective, no horizon, no landscape scene, NO text UI borders frames grid or checkerboard. Opaque texture, highest native resolution. This ONE material tile covers 256x256 world units; show many fine grass/soil details, not a whole map.",
+      "tool": "built-in imagegen",
+      "path": "materials/spring_grass.png",
+      "tile_world_units": 256
+    },
+    {
+      "id": "summer_grass",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1dfa7-852c-7d53-b12f-7fc6d9ab5aa0\\exec-6cda3444-0f09-490d-af97-3fa83691624b.png",
+      "prompt": "Production-ready seamless square terrain material texture for Cheerful Garden 3D isometric farming game. Material: lush summer meadow turf, warm yellow-green grass blades and clover, subtle dried grass tufts, sparse tiny yellow wildflowers. Orthographic straight overhead texture scan, fills entire square edge-to-edge. Fine sharp tactile stylized realistic detail, charming colorful farming illustration, physically plausible small-scale ambient occlusion. Uniform soft diffuse daylight, consistent material scale. Seamlessly tileable all four edges, evenly distributed details, no large focal object, no directional cast shadow, no perspective, no horizon, no landscape scene, NO text UI borders frames grid or checkerboard. Opaque texture, highest native resolution. This ONE material tile covers 256x256 world units; show many fine grass/soil details, not a whole map.",
+      "tool": "built-in imagegen",
+      "path": "materials/summer_grass.png",
+      "tile_world_units": 256
+    },
+    {
+      "id": "autumn_ground",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1dfa7-852c-7d53-b12f-7fc6d9ab5aa0\\exec-8237dcb3-8dde-471e-80be-e80363a3f16a.png",
+      "prompt": "Production-ready seamless square terrain material texture for Cheerful Garden 3D isometric farming game. Material: natural autumn meadow soil, ochre short grass and individual russet maple leaves, varied warm brown earth, tiny pebbles, scattered gold foliage. Orthographic straight overhead texture scan, fills entire square edge-to-edge. Fine sharp tactile stylized realistic detail, charming colorful farming illustration, physically plausible small-scale ambient occlusion. Uniform soft diffuse daylight, consistent material scale. Seamlessly tileable all four edges, evenly distributed details, no large focal object, no directional cast shadow, no perspective, no horizon, no landscape scene, NO text UI borders frames grid or checkerboard. Opaque texture, highest native resolution. This ONE material tile covers 256x256 world units; show many fine grass/soil details, not a whole map.",
+      "tool": "built-in imagegen",
+      "path": "materials/autumn_ground.png",
+      "tile_world_units": 256
+    },
+    {
+      "id": "winter_snow",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1dfa7-852c-7d53-b12f-7fc6d9ab5aa0\\exec-933af051-9cc3-44b5-a34e-458d0d094368.png",
+      "prompt": "ONE seamless square high-resolution material tile for a colorful tactile 3D isometric farming game, Cheerful Garden. natural fine crystalline winter snow surface, shallow soft wind-shaped ridges, tiny sparkling ice crystals, slight pale-blue creases, no footprints or trees or big rocks. Orthographic straight overhead texture, fills entire square edge-to-edge. Sharp fine real material detail, stylized realism, natural small-scale ambient occlusion, uniform soft diffuse daylight. Tileable on all four edges, no large focal object, no directional cast shadows, no perspective, horizon, landscape, text, UI, borders or grid. Highest native resolution. Small texture sample covering 256x256 game world units; fine microdetails, not a landscape scene. Opaque background.",
+      "tool": "built-in imagegen",
+      "path": "materials/winter_snow.png",
+      "tile_world_units": 256
+    },
+    {
+      "id": "garden_soil",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1dfa7-852c-7d53-b12f-7fc6d9ab5aa0\\exec-7dfb71fd-5832-4aac-8a8b-233a15873872.png",
+      "prompt": "ONE seamless square high-resolution material tile for a colorful tactile 3D isometric farming game, Cheerful Garden. natural rich brown gardening soil, small crumbled earth clods, tiny stones, uneven fine granular fertile earth, occasional tiny root fibres, no plants. Orthographic straight overhead texture, fills entire square edge-to-edge. Sharp fine real material detail, stylized realism, natural small-scale ambient occlusion, uniform soft diffuse daylight. Tileable on all four edges, no large focal object, no directional cast shadows, no perspective, horizon, landscape, text, UI, borders or grid. Highest native resolution. Small texture sample covering 256x256 game world units; fine microdetails, not a landscape scene. Opaque background.",
+      "tool": "built-in imagegen",
+      "path": "materials/garden_soil.png",
+      "tile_world_units": 256
+    },
+    {
+      "id": "river_water",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1dfa7-852c-7d53-b12f-7fc6d9ab5aa0\\exec-0d02c1a1-a8cf-4cd9-b010-fb49be08a576.png",
+      "prompt": "ONE seamless square high-resolution material tile for a colorful tactile 3D isometric farming game, Cheerful Garden. clear turquoise flowing shallow river water seen directly overhead, small flowing ripples, delicate pale caustics, subtle visible pebbles far beneath transparent water, no shoreline or land. Orthographic straight overhead texture, fills entire square edge-to-edge. Sharp fine real material detail, stylized realism, natural small-scale ambient occlusion, uniform soft diffuse daylight. Tileable on all four edges, no large focal object, no directional cast shadows, no perspective, horizon, landscape, text, UI, borders or grid. Highest native resolution. Small texture sample covering 256x256 game world units; fine microdetails, not a landscape scene. Opaque background.",
+      "tool": "built-in imagegen",
+      "path": "materials/river_water.png",
+      "tile_world_units": 256
+    },
+    {
+      "id": "cliff_rock",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1dfa7-852c-7d53-b12f-7fc6d9ab5aa0\\exec-6232e977-b8b1-4efa-a245-f769310559af.png",
+      "prompt": "ONE square production material texture for Cheerful Garden farming game. natural stratified warm-gray geological cliff rock surface, interlocking irregular stone layers, vertical cracks and subtle moss in crevices, fine rough stone grain, no grass top, no rock silhouette, no background. Flat orthographic material sample filling the entire square edge-to-edge. Highest native resolution, fine sharp detail, charming colorful stylized 3D realistic material, consistent soft diffuse lighting and micro ambient occlusion. Seamless tileable all four edges. No perspective, no horizon, no large cast shadows, no entire scene, no labels or UI or border or checkerboard. The tile will be sampled repeatedly on native Godot terrain polygons for sharp zoom, so show numerous small material features evenly throughout. Opaque.",
+      "tool": "built-in imagegen",
+      "path": "materials/cliff_rock.png",
+      "tile_world_units": 256
+    },
+    {
+      "id": "stone_path",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1dfa7-852c-7d53-b12f-7fc6d9ab5aa0\\exec-3a6a98a8-23d1-4bfe-9eda-a823a27d4c63.png",
+      "prompt": "ONE square production material texture for Cheerful Garden farming game. natural path made of many irregular small cream sandstone paving stones fitted with thin brown earth joints and sparse moss, varied warm beige stone colors, individually visible stones, subtle small-scale bevels. Flat orthographic material sample filling the entire square edge-to-edge. Highest native resolution, fine sharp detail, charming colorful stylized 3D realistic material, consistent soft diffuse lighting and micro ambient occlusion. Seamless tileable all four edges. No perspective, no horizon, no large cast shadows, no entire scene, no labels or UI or border or checkerboard. The tile will be sampled repeatedly on native Godot terrain polygons for sharp zoom, so show numerous small material features evenly throughout. Opaque.",
+      "tool": "built-in imagegen",
+      "path": "materials/stone_path.png",
+      "tile_world_units": 256
+    },
+    {
+      "id": "bridge_wood",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1dfa7-852c-7d53-b12f-7fc6d9ab5aa0\\exec-c27743a2-9cfc-4bf6-83d5-08977675b7ca.png",
+      "prompt": "ONE square production material texture for Cheerful Garden farming game. weathered golden-brown wooden bridge deck planks running horizontally across the square, varied timber grain and fine cracks, tight dark joins, occasional small iron nail heads, no bridge silhouette, no rails or background. Flat orthographic material sample filling the entire square edge-to-edge. Highest native resolution, fine sharp detail, charming colorful stylized 3D realistic material, consistent soft diffuse lighting and micro ambient occlusion. Seamless tileable all four edges. No perspective, no horizon, no large cast shadows, no entire scene, no labels or UI or border or checkerboard. The tile will be sampled repeatedly on native Godot terrain polygons for sharp zoom, so show numerous small material features evenly throughout. Opaque.",
+      "tool": "built-in imagegen",
+      "path": "materials/bridge_wood.png",
+      "tile_world_units": 256
+    }
+  ]
+}
