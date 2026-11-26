@@ -1,0 +1,29 @@
+{
+  "change": "Existing crop acceleration button now requests rewarded AdMob video instead of charging one gem.",
+  "existing_acceleration_buttons_found": [
+    "Percepat Panen"
+  ],
+  "reward_rule": "Only the SDK earned-reward event can finish the captured crop. No instant/free fallback when unsupported, offline or disabled.",
+  "guards": [
+    "single active ticket",
+    "exact plot identity, crop, planting time and generation",
+    "duplicate callback protection",
+    "no gem bonus attached to speedup",
+    "dismissed/failed ads cannot complete crop",
+    "save persists reward",
+    "controls do not overlap action panel"
+  ],
+  "android_configuration": {
+    "EnableAdmob": true,
+    "EnableAdmobReward": true,
+    "note": "Uses existing Firebase Remote Config and AdMob consent/init flow; flags remain remotely controlled."
+  },
+  "tests": {
+    "rewarded_speedup_test.gd": "19 checks passed, zero failures",
+    "ads_config.gd": "passed (existing gem bonus/config behavior preserved)",
+    "smoke.gd": "zero failures",
+    "rewarded_speedup_visual.gd": "rendered and visually inspected"
+  },
+  "device_limitation": "Real ad delivery has not been tested on an Android device. PC requests report that rewarded ads are Android-only and never simulate a reward.",
+  "documentation": "https://developers.google.com/admob/android/rewarded"
+}

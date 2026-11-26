@@ -1,0 +1,10 @@
+{
+  "tests": [
+    "Road drag 12 checks",
+    "Road purchase 24 checks",
+    "Isometric roads 11 checks",
+    "Neighbor visual pass"
+  ],
+  "roads": "Beli jalan baru dengan koin; geser jalan milik pemain melalui Atur > Objek tanpa biaya ulang",
+  "neighbor": "Karakter ibu berbaju merah muda dengan keranjang, transparan"
+}

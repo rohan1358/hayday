@@ -2,3 +2,26 @@
 *.tmp
 *.log
 build/
+
+# Keep custom Firebase Android plugin sources and their Gradle wiring in Git.
+!android/build/
+android/build/*
+!android/build/build.gradle
+!android/build/src/
+android/build/src/*
+!android/build/src/main/
+android/build/src/main/*
+!android/build/src/main/AndroidManifest.xml
+!android/build/src/main/java/
+android/build/src/main/java/*
+!android/build/src/main/java/com/
+android/build/src/main/java/com/*
+!android/build/src/main/java/com/kebunceria/
+android/build/src/main/java/com/kebunceria/*
+!android/build/src/main/java/com/kebunceria/farm/
+android/build/src/main/java/com/kebunceria/farm/*
+!android/build/src/main/java/com/kebunceria/farm/FarmRemoteConfigPlugin.kt
+!android/build/src/main/java/com/kebunceria/farm/FarmUserFirestorePlugin.kt
+
+# Generated Windows runtime
+/Kebun-Ceria-Windows/KebunCeriaRuntime.exe

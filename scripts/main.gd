@@ -1,14 +1,14 @@
 extends Control
 
-const INK := Color("344b39")
-const SOFT_INK := Color("72806d")
+const INK := Color("62442f")
+const SOFT_INK := Color("8e765a")
 const CREAM := Color("fff9e8")
-const PAPER := Color("fffcf3")
-const GREEN := Color("368d5b")
+const PAPER := Color("fff8e8")
+const GREEN := Color("239b61")
 const MINT := Color("dbefce")
-const GOLD := Color("e9b84b")
+const GOLD := Color("ffc44e")
 const PINK := Color("ef837b")
-const HUD_GREEN := Color("26774e")
+const HUD_GREEN := Color("208650")
 const HUD_TAB_IDLE := Color("f4f0dd")
 const HUD_TAB_TEXT := Color("3f6547")
 const TEXT_FORMAT := preload("res://scripts/game_text.gd")
@@ -22,7 +22,14 @@ var animal_sound_generation := 0
 var animal_sound_deadline_ms := 0
 var current_animal_sound_kind := ""
 var axe_audio: AudioStreamPlayer
+var orchard_speedup: Dictionary = {}
+var orchard_speedup_serial := 0
+var speedups=preload("res://scripts/rewarded_speedups.gd").new()
 var ads: FarmAds
+var tree_chop_ad_dialog
+var pending_tree_chop_index := -1
+var pending_tree_chop_hybrid := false
+var pending_tree_chop_replace := false
 var ad_footer_reserved := 0.0
 var ad_space: Panel
 var selected_plot := 0
@@ -67,12 +74,29 @@ var tutorial_hint: Label
 
 
 func _ready() -> void:
+	var loading_started=Time.get_ticks_msec()
+	DisplayServer.window_set_title("Cheerful Garden")
+	get_node("/root/GardenLanguage").language_changed.connect(func(_code): call_deferred("refresh_all"))
 	game.load_game()
+	preload("res://scripts/home_services.gd").prepare(game)
+	if preload("res://scripts/mailbox.gd").ensure(game): game.save_game()
+	preload("res://scripts/cheerful_layout.gd").ensure(game)
+	preload("res://scripts/four_seasons.gd").migrate(game)
 	game.refresh_visitor()
+	print("GARDEN LOAD state ms=",Time.get_ticks_msec()-loading_started)
 	build_screen()
+	print("GARDEN LOAD screen ms=",Time.get_ticks_msec()-loading_started)
+	add_child(preload("res://scripts/colorful_theme.gd").new())
+	add_child(preload("res://scripts/seasonal_ui.gd").new())
+	add_child(preload("res://scripts/hybrid/controller.gd").new())
+	print("GARDEN LOAD controls ms=",Time.get_ticks_msec()-loading_started)
 	ads = FarmAds.new()
 	add_child(ads)
 	ads.reward_granted.connect(_on_ad_reward_granted)
+	ads.speedup_rewarded.connect(_on_speedup_rewarded)
+	ads.speedup_finished.connect(_on_speedup_finished)
+	ads.tree_chop_rewarded.connect(_on_tree_chop_rewarded)
+	ads.tree_chop_finished.connect(_on_tree_chop_finished)
 	ads.message_requested.connect(show_toast)
 	ads.config_changed.connect(_sync_ad_footer)
 	ads.visible_ad_changed.connect(_sync_ad_footer)
@@ -80,13 +104,25 @@ func _ready() -> void:
 	ads.set_game_tab(active_tab)
 	var offline_coins := game.settle_market_sales()
 	refresh_all()
+	add_child(preload("res://scripts/first_farm_ui.gd").new())
+	add_child(preload("res://scripts/cheerful_hud.gd").new())
+	add_child(preload("res://scripts/firestore_user.gd").new())
+	add_child(preload("res://scripts/tree_count_config.gd").new())
+	add_child(preload("res://scripts/four_seasons_ui.gd").new())
+	add_child(preload("res://scripts/garden_audio.gd").new())
+	add_child(preload("res://scripts/farm_progression.gd").new())
+	preload("res://scripts/safe_asset_placement.gd").repair_owned_pens(self)
+	print("GARDEN LOAD buildings ms=",Time.get_ticks_msec()-loading_started)
+	preload("res://scripts/reference_terrain.gd").repair_playfield(self)
+	add_child(preload("res://scripts/asset_edit_ui.gd").new())
+	print("GARDEN LOAD terrain ms=",Time.get_ticks_msec()-loading_started)
 	# Optional diagnostic, enabled only on a debug Android install with an
 	# explicit local flag. Normal gameplay never loads the layer profiler.
 	if OS.get_name() == "Android" and OS.has_feature("debug") and FileAccess.file_exists("user://pm_render_probe.flag"):
 		add_child(load("res://scripts/android_render_probe.gd").new())
 	if offline_coins > 0:
 		show_toast("Pembeli pasar membayar %d koin saat kamu pergi!" % offline_coins)
-	elif game.first_visit:
+	elif game.first_visit and game.ftue.is_empty():
 		show_toast("Selamat datang! Panen tanaman siap, lalu mulai menanam!")
 
 
@@ -110,6 +146,7 @@ func _process(delta: float) -> void:
 	timer_accum += delta
 	if timer_accum > 0.9:
 		timer_accum = 0.0
+		preload("res://scripts/wild_tree_regrowth.gd").tick(self)
 		if game.refresh_visitor():
 			if active_tab == "kebun":
 				farm.queue_redraw()
@@ -133,11 +170,21 @@ func _process(delta: float) -> void:
 			and game.plots[selected_plot]["crop"] != ""
 		):
 			refresh_action()
-		elif active_tab == "produksi":
+		elif active_tab == "pesan":
+			preload("res://scripts/mailbox_ui.gd").refresh(self)
+		elif active_tab == "misi":
+			preload("res://scripts/missions_menu.gd").refresh(self)
+		elif active_tab == "hadiah_pemula":
+			preload("res://scripts/reward_menu.gd").refresh(self)
+		elif active_tab == "ayam":
+			preload("res://scripts/ranch_presentation.gd").refresh(self)
+			preload("res://scripts/first_coop.gd").refresh(self)
+		elif active_tab in ["produksi","roti","susu"]:
 			refresh_production_status()
 		elif active_tab == "pakan":
 			refresh_feed_status()
 		elif active_tab == "sapi":
+			preload("res://scripts/ranch_presentation.gd").refresh(self)
 			refresh_cow_status()
 		elif active_tab == "pasar":
 			MarketUI.refresh_timers(game, market_time_labels)
@@ -156,6 +203,7 @@ func _process(delta: float) -> void:
 			OrchardUI.refresh_status(game, orchard_status_rows)
 		elif active_tab == "ternak":
 			FarmExpansionUI.refresh_animals(game, animal_status_rows)
+			preload("res://scripts/ranch_presentation.gd").refresh(self)
 		elif active_tab == "pengunjung" and is_instance_valid(visitor_status_text):
 			visitor_status_text.text = "Tamu berikutnya tiba dalam %d detik." % maxi(0, game.visitor_next_at - game.now())
 
@@ -167,14 +215,15 @@ func build_screen() -> void:
 	backdrop.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(backdrop)
 
-	farm = FarmView.new()
+	farm = preload("res://scripts/hybrid/hybrid_farm_view.gd").new()
 	farm.game = game
+	farm.restore_wild_tree_slots()
 	farm.selected_plot = selected_plot
 	farm.anchor_left = 0.0
 	farm.anchor_right = 1.0
 	farm.anchor_top = 0.0
 	farm.anchor_bottom = 1.0
-	farm.offset_top = 146.0
+	farm.offset_top = 0.0
 	farm.offset_bottom = -125.0 - ad_footer_reserved
 	add_child(farm)
 	animal_audio = AudioStreamPlayer.new()
@@ -191,6 +240,8 @@ func build_screen() -> void:
 	farm.cow_pressed.connect(func() -> void: switch_tab("sapi"))
 	farm.barn_pressed.connect(func() -> void: switch_tab("gudang"))
 	farm.factory_pressed.connect(func() -> void: switch_tab("produksi"))
+	farm.bakery_pressed.connect(func() -> void: switch_tab("roti"))
+	farm.dairy_pressed.connect(func() -> void: switch_tab("susu"))
 	farm.feed_mill_pressed.connect(func() -> void: switch_tab("pakan"))
 	farm.missions_pressed.connect(func() -> void: switch_tab("misi"))
 	farm.orders_pressed.connect(func() -> void: switch_tab("pesanan"))
@@ -199,6 +250,7 @@ func build_screen() -> void:
 	farm.orchard_pressed.connect(func(_index: int) -> void: switch_tab("kebun_buah"))
 	farm.livestock_pressed.connect(func() -> void: switch_tab("ternak"))
 	farm.constructions_pressed.connect(func() -> void: switch_tab("bangun"))
+	farm.region_pressed.connect(on_world_region_pressed)
 	farm.layout_changed.connect(on_object_moved)
 	farm.decoration_placed.connect(on_decoration_placed)
 	farm.roads_changed.connect(on_roads_changed)
@@ -207,9 +259,10 @@ func build_screen() -> void:
 	farm.wild_tree_started.connect(func() -> void: show_toast("Ujang sedang menuju pohon untuk menebangnya!"))
 	farm.wild_tree_struck.connect(play_axe_chop_sound)
 	farm.wild_tree_chopped.connect(on_wild_tree_chopped)
+	farm.wild_tree_quota_reached.connect(prompt_tree_chop_ad)
 
 	build_header()
-	arrange_button = button(self, "✥ ATUR", Vector2(532, 158), Vector2(171, 52), GREEN, Color.WHITE, 19)
+	arrange_button = button(self, "PINDAH ASET", Vector2(532, 158), Vector2(171, 52), GREEN, Color.WHITE, 19)
 	arrange_button.pressed.connect(toggle_arrange_mode)
 	visitor_shortcut = button(
 		self, "TAMU KEBUN", Vector2(352, 158), Vector2(170, 52),
@@ -223,13 +276,14 @@ func build_screen() -> void:
 	activity_shortcut.name = "ActivityShortcut"
 	activity_shortcut.pressed.connect(func() -> void: switch_tab("aktivitas"))
 	for spec in [
-		["object", "OBJEK"], ["draw", "+ JALAN"],
+		["object", "PINDAH"], ["draw", "+ JALAN"],
 		["erase", "- HAPUS"], ["pan", "GESER"]
 	]:
 		var tool_id: String = spec[0]
 		var index := road_tool_buttons.size()
 		var tool_button := button(self, spec[1], Vector2(14 + index * 128, 158), Vector2(120, 52), MINT, GREEN, 16)
-		tool_button.pressed.connect(select_road_tool.bind(tool_id))
+		if tool_id=="draw": tool_button.pressed.connect(func(): switch_tab("jalan"))
+		else: tool_button.pressed.connect(select_road_tool.bind(tool_id))
 		road_tool_buttons[tool_id] = tool_button
 	refresh_road_toolbar()
 	action_panel = panel(
@@ -267,20 +321,20 @@ func resize_screen_layout() -> void:
 		card.size.y = area_height - 42.0
 		var scroll := card.get_node_or_null("ContentScroll") as ScrollContainer
 		if scroll:
-			scroll.size.y = card.size.y - 158.0
+			scroll.size.y = card.size.y - 171.0
 
 
 func toggle_arrange_mode() -> void:
 	if farm.placement_decoration_key != "":
 		farm.cancel_decoration_placement()
 		farm.set_edit_mode(false)
-		arrange_button.text = "✥ ATUR"
+		arrange_button.text = "PINDAH ASET"
 		refresh_road_toolbar()
 		update_visitor_shortcut()
 		show_toast("Pemasangan dibatalkan. Dekorasi tetap tersimpan di koleksi.")
 		return
 	farm.set_edit_mode(not farm.edit_mode)
-	arrange_button.text = "✓ SELESAI" if farm.edit_mode else "✥ ATUR"
+	arrange_button.text = "✓ SELESAI" if farm.edit_mode else "PINDAH ASET"
 	refresh_road_toolbar()
 	update_visitor_shortcut()
 	update_activity_shortcut()
@@ -293,9 +347,10 @@ func select_road_tool(tool_id: String) -> void:
 	farm.set_road_tool(tool_id)
 	refresh_road_toolbar()
 	if tool_id == "draw":
-		show_toast("Seret jari di lahan kosong untuk membuat jalan.")
+		var roads=preload("res://scripts/road_catalog.gd").prepare(game)
+		show_toast("%s · stok %d. Seret di lahan kosong untuk memasang." % [preload("res://scripts/road_catalog.gd").ITEMS[roads.selected].name,int(roads.stock[roads.selected])])
 	elif tool_id == "erase":
-		show_toast("Seret jari di atas jalan untuk menghapusnya.")
+		show_toast("Seret untuk menghapus jalan. Ruas dikembalikan ke stok.")
 
 
 func refresh_road_toolbar() -> void:
@@ -319,6 +374,9 @@ func on_roads_changed() -> void:
 
 
 func on_object_moved(key: String, at: Vector2) -> void:
+	if preload("res://scripts/asset_edit.gd").special(key):
+		preload("res://scripts/asset_edit.gd").commit(self,key,at)
+		return
 	if key.begins_with("dekor_"):
 		if not game.set_decoration_position(key, at):
 			show_toast("Posisi dekorasi tidak berhasil disimpan.")
@@ -328,6 +386,75 @@ func on_object_moved(key: String, at: Vector2) -> void:
 		game.save_game()
 	farm.invalidate_scenery()
 	show_toast("Posisi berhasil disimpan!")
+
+
+func on_world_region_pressed(id: String) -> void:
+	if preload("res://scripts/world_regions.gd").purchased(game,id) and farm.hybrid_controller != null and not farm.edit_mode:
+		queue_region_action(id)
+		return
+	set_meta("selected_region", id)
+	switch_tab("kawasan")
+
+
+func queue_region_action(id: String) -> void:
+	if id in ["penggilingan","tambang"]:open_industry(id);return
+	if id=="taman_bermain":open_playground();return
+	if farm.hybrid_controller == null:
+		show_toast(preload("res://scripts/world_regions.gd").action(game,id))
+		refresh_all()
+		return
+	if farm.hybrid_controller.enqueue({"action":"region", "target":"region", "region":id}, true):
+		show_toast("Menuju %s." % str(preload("res://scripts/world_regions.gd").DATA[id].name))
+		switch_tab("kebun")
+
+
+func on_world_region_action(id: String) -> void:
+	const REGIONS = preload("res://scripts/world_regions.gd")
+	if not REGIONS.DATA.has(id):
+		return
+	var info: Dictionary = REGIONS.DATA[id]
+	if preload("res://scripts/island_journey.gd").city_level(game) < int(info.level):
+		show_toast("Kawasan ini terbuka pada Level %d." % int(info.level))
+		return
+	if info.has("cost") and not REGIONS.purchased(game,id):
+		var spot: Vector2=load("res://scripts/island_layout.gd").purchase_spot(self,"region_"+id)
+		if spot==Vector2.INF:
+			show_toast("Area bangunan terhalang. Pindahkan benda dari lahan yang disediakan; koin tidak dipotong.")
+			return
+		if not REGIONS.buy(game,id,spot):
+			show_toast("Butuh %d koin untuk membangun %s." % [int(info.cost), str(info.name)])
+			return
+		farm.invalidate_scenery()
+		switch_tab("kebun")
+		farm.frame_asset("region_"+id)
+		show_toast("%s sudah tersusun di areanya." % str(info.name))
+		refresh_all()
+		return
+	if id in ["penggilingan","tambang"]:open_industry(id);return
+	if id=="taman_bermain":open_playground();return
+	var tabs := {"desa":"pengunjung", "ladang":"kebun", "hutan":"kebun", "peternakan":"ternak", "produksi":"produksi", "logistik":"gudang", "kebun_buah":"kebun_buah", "pasar_desa":"pasar"}
+	if tabs.has(id):
+		switch_tab(str(tabs[id]))
+		if id == "hutan":
+			farm.camera_target = farm.clamp_camera_center(farm.object_position("region_hutan"), farm.zoom_target)
+		return
+	queue_region_action(id)
+
+
+func on_world_region_upgrade(id: String) -> void:
+	const REGIONS = preload("res://scripts/world_regions.gd")
+	if not REGIONS.purchased(game,id):
+		show_toast("Bangun kawasan ini terlebih dahulu.")
+		return
+	var cost: Dictionary = REGIONS.upgrade_cost(game,id)
+	if cost.is_empty():
+		show_toast("Kawasan sudah mencapai tingkat 5.")
+		return
+	if not REGIONS.upgrade(game,id):
+		show_toast("Perlu %d koin, %d kayu, dan %d batu." % [int(cost.coins),int(cost.kayu),int(cost.batu)])
+		return
+	show_toast("%s meningkat ke tingkat %d!" % [str(REGIONS.DATA[id].name),REGIONS.tier(game,id)])
+	refresh_all()
 
 
 func on_decoration_placed(key: String, at: Vector2) -> void:
@@ -346,7 +473,76 @@ func on_wild_tree_chopped(tree_id: int) -> void:
 		farm.invalidate_scenery()
 		game.save_game()
 		refresh_all()
-		show_toast("Ujang menebang pohon liar! +6 koin dan +3 XP")
+		show_toast("Pohon ditebang! +3 kayu, +6 koin, +3 XP. Sisa gratis: %d/%d." % [maxi(0, game.max_daily_free_tree_cuts - game.wild_tree_chops_today), game.max_daily_free_tree_cuts])
+
+
+func prompt_tree_chop_ad(tree_id: int = -1, from_hybrid: bool = false, replace: bool = false) -> void:
+	if game.wild_tree_chop_cooling_down():
+		show_toast(FarmGameState.WILD_TREE_COOLDOWN_NOTICE)
+		return
+	if game.can_chop_wild_tree():
+		return
+	if tree_chop_ad_dialog == null:
+		var dialog_layer := CanvasLayer.new()
+		dialog_layer.name = "TreeChopAdLayer"
+		dialog_layer.layer = 200
+		add_child(dialog_layer)
+		tree_chop_ad_dialog = preload("res://scripts/tree_chop_ad_popup.gd").new()
+		tree_chop_ad_dialog.host = self
+		tree_chop_ad_dialog.hide()
+		tree_chop_ad_dialog.confirmed.connect(_on_tree_chop_ad_confirmed)
+		tree_chop_ad_dialog.canceled.connect(_clear_pending_tree_chop)
+		dialog_layer.add_child(tree_chop_ad_dialog)
+	if tree_chop_ad_dialog.visible:
+		return
+	pending_tree_chop_index = tree_id
+	pending_tree_chop_hybrid = from_hybrid
+	pending_tree_chop_replace = replace
+	tree_chop_ad_dialog.show_offer()
+
+
+func _on_tree_chop_ad_confirmed() -> void:
+	if game.wild_tree_chop_cooling_down():
+		_clear_pending_tree_chop()
+		show_toast(FarmGameState.WILD_TREE_COOLDOWN_NOTICE)
+		return
+	if game.can_chop_wild_tree():
+		_resume_pending_tree_chop()
+	elif ads == null or not ads.request_tree_chop():
+		_clear_pending_tree_chop()
+
+
+func _clear_pending_tree_chop() -> void:
+	pending_tree_chop_index = -1
+	pending_tree_chop_hybrid = false
+	pending_tree_chop_replace = false
+
+
+func _resume_pending_tree_chop() -> bool:
+	var tree_id := pending_tree_chop_index
+	var from_hybrid := pending_tree_chop_hybrid
+	var replace := pending_tree_chop_replace
+	_clear_pending_tree_chop()
+	if tree_id < 0 or not farm.wild_tree_active(tree_id) or game.wild_tree_chop_cooling_down() or not game.can_chop_wild_tree():
+		return false
+	if from_hybrid and farm.hybrid_controller != null:
+		return farm.hybrid_controller.enqueue({"action": "chop", "target": "tree", "index": tree_id}, replace)
+	return farm.start_chopping(tree_id)
+
+
+func _on_tree_chop_rewarded() -> void:
+	game.grant_wild_tree_bonus_chop()
+
+
+func _on_tree_chop_finished(earned: bool) -> void:
+	if earned:
+		if _resume_pending_tree_chop():
+			show_toast("Iklan selesai! Ujang akan menebang pohon yang dipilih.")
+		else:
+			show_toast("Iklan selesai! Kamu mendapat 1 kesempatan tebang tambahan.")
+	else:
+		_clear_pending_tree_chop()
+		show_toast("Iklan belum selesai. Kesempatan tebang tambahan belum diberikan.")
 
 
 func play_axe_chop_sound() -> void:
@@ -412,51 +608,7 @@ func _sync_ad_footer() -> void:
 
 
 func build_header() -> void:
-	var header := panel(self, Vector2(0, 0), Vector2(720, 146), Color("fff9ea"), 0, 2)
-	var stripe := ColorRect.new()
-	stripe.color = Color("d1e5b5")
-	stripe.position = Vector2(0, 141)
-	stripe.size = Vector2(720, 5)
-	stripe.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	header.add_child(stripe)
-	label(header, "KEBUN CERIA", Vector2(24, 12), Vector2(324, 47), 34, HUD_GREEN, true)
-	label(header, "Panen hari ini, ceria setiap hari", Vector2(26, 58), Vector2(320, 28), 17, HUD_TAB_TEXT)
-
-	var lvl := panel(header, Vector2(24, 92), Vector2(80, 40), HUD_GREEN, 15, 2)
-	top_level_text = label(lvl, "LV 1", Vector2(0, 7), Vector2(80, 27), 20, Color.WHITE, true)
-	top_level_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	xp_track = ProgressBar.new()
-	xp_track.show_percentage = false
-	xp_track.position = Vector2(116, 116)
-	xp_track.size = Vector2(202, 12)
-	xp_track.max_value = 30
-	xp_track.value = 0
-	xp_track.add_theme_stylebox_override("background", style(Color("dae5ca"), 10))
-	xp_track.add_theme_stylebox_override("fill", style(Color("efbe53"), 10))
-	header.add_child(xp_track)
-	top_xp_text = label(header, "0 / 30 XP", Vector2(116, 90), Vector2(202, 26), 17, HUD_TAB_TEXT, true)
-
-	var coin_chip := panel(header, Vector2(350, 15), Vector2(180, 65), Color("fff0c5"), 20, 2)
-	coin_chip.add_child(circle(Vector2(29, 33), 19, GOLD))
-	label(coin_chip, "✦", Vector2(16, 17), Vector2(32, 34), 24, Color("85591c"), true)
-	label(coin_chip, "KOIN", Vector2(57, 6), Vector2(116, 21), 15, Color("85591c"), true)
-	top_coins_text = label(coin_chip, "400", Vector2(56, 25), Vector2(118, 36), 25, INK, true)
-
-	var gem_chip := panel(header, Vector2(541, 15), Vector2(155, 65), Color("e6f0fa"), 20, 2)
-	label(gem_chip, "◆", Vector2(13, 13), Vector2(43, 43), 32, Color("4a9ac0"), true)
-	label(gem_chip, "PERMATA", Vector2(54, 6), Vector2(94, 21), 14, Color("4c7792"), true)
-	top_gems_text = label(gem_chip, "12", Vector2(54, 25), Vector2(94, 36), 25, INK, true)
-
-	mission_header_button = button(
-		header,
-		"★ MISI 0/3  ·  1 KLAIM  ›",
-		Vector2(350, 91),
-		Vector2(346, 41),
-		Color("e3f0d5"),
-		HUD_GREEN,
-		18
-	)
-	mission_header_button.pressed.connect(func() -> void: switch_tab("misi"))
+	preload("res://scripts/cheerful_hud.gd").header(self)
 
 
 func build_navbar() -> void:
@@ -470,25 +622,27 @@ func build_navbar() -> void:
 	navbar_rule.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	navbar.add_child(navbar_rule)
 	var entries := [
-		["kebun", "KEBUN", "⌂"],
-		["pesanan", "PESANAN", "≡"],
-		["toko", "TOKO", "+"],
-		["produksi", "PRODUKSI", "⚙"],
-		["gudang", "GUDANG", "▣"],
+		["kebun", "Kebun", "⌂"],
+		["pesanan", "Pesanan", "≡"],
+		["toko", "Toko", "+"],
+		["gudang", "Gudang", "▣"],
+		["koleksi", "Koleksi", "▧"],
 	]
 	for i in entries.size():
 		var entry: Array = entries[i]
 		var tab_id: String = entry[0]
-		var tab := panel(navbar, Vector2(14 + 140 * i, 14), Vector2(132, 91), HUD_TAB_IDLE, 22)
+		var tab := panel(navbar, Vector2(12 + 105 * i, 9), Vector2(100, 105), HUD_TAB_IDLE, 22)
 		tab.set_meta("tab_id", tab_id)
-		var icon_bg := panel(tab, Vector2(42, 8), Vector2(48, 47), Color("e0ecd5"), 23)
+		var icon_bg := panel(tab, Vector2(26, 10), Vector2(48, 47), Color("e0ecd5"), 23)
 		icon_bg.name = "IconBg"
 		icon_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		var icon := label(icon_bg, entry[2], Vector2(0, 1), Vector2(48, 44), 30, HUD_GREEN, true)
 		icon.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		icon.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		icon.name = "Symbol"
-		var text_label := label(tab, entry[1], Vector2(2, 61), Vector2(128, 25), 17, HUD_TAB_TEXT, true)
+		icon.hide()
+		preload("res://scripts/colorful_icons.gd").add(icon_bg,tab_id,Vector2(-3,-4),Vector2(54,54))
+		var text_label := label(tab, entry[1], Vector2(2, 72), Vector2(96, 25), 16, HUD_TAB_TEXT, true)
 		text_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		text_label.name = "Caption"
 		var click := Button.new()
@@ -533,8 +687,9 @@ func update_navbar() -> void:
 		if not node.has_meta("tab_id"):
 			continue
 		var chosen: bool = node.get_meta("tab_id") == active_tab
-		var tile_style := style(HUD_GREEN if chosen else HUD_TAB_IDLE, 22, 3 if chosen else 0)
-		tile_style.border_color = Color("1e6543") if chosen else Color("e1dfc9")
+		var accent: Color = preload("res://scripts/colorful_theme.gd").COLORS.get(str(node.get_meta("tab_id")),HUD_GREEN)
+		var tile_style := style(accent if chosen else accent.lightened(0.84), 22, 3 if chosen else 0)
+		tile_style.border_color = accent.darkened(0.18) if chosen else accent.lightened(0.62)
 		tile_style.set_border_width_all(2 if chosen else 1)
 		node.add_theme_stylebox_override("panel", tile_style)
 		var icon_bg := node.get_node("IconBg") as Panel
@@ -542,9 +697,9 @@ func update_navbar() -> void:
 			"panel", style(Color("f3f7dc") if chosen else Color("e0ecd5"), 23)
 		)
 		var symbol := icon_bg.get_node("Symbol") as Label
-		symbol.add_theme_color_override("font_color", HUD_GREEN)
+		symbol.add_theme_color_override("font_color", accent)
 		var caption := node.get_node("Caption") as Label
-		caption.add_theme_color_override("font_color", Color.WHITE if chosen else HUD_TAB_TEXT)
+		caption.add_theme_color_override("font_color", Color.WHITE if chosen else accent.darkened(0.28))
 		if node.has_node("GuideBadge"):
 			node.get_node("GuideBadge").visible = (
 				game.onboarding_step == 2 and active_tab == "kebun"
@@ -576,6 +731,9 @@ func build_tutorial() -> void:
 
 
 func refresh_tutorial() -> void:
+	if not game.ftue.is_empty():
+		if is_instance_valid(tutorial_panel): tutorial_panel.hide()
+		return
 	if is_instance_valid(farm):
 		farm.guide_plot_index = -1
 		farm.guide_plot_action = ""
@@ -612,9 +770,18 @@ func on_skip_tutorial() -> void:
 
 
 func switch_tab(tab_id: String) -> void:
+	if tab_id=="pasar" and preload("res://scripts/first_farm.gd").active(game) and str(game.ftue.get("step",""))=="sale":tab_id="pengunjung"
+	if not preload("res://scripts/first_farm.gd").tab(game,tab_id):
+		show_toast("Fitur ini terbuka setelah misi awal atau level berikutnya.")
+		return
+	if farm.hybrid_controller!=null and farm.hybrid_controller.ui!=null:
+		farm.hybrid_controller.ui.menu.hide()
+		farm.hybrid_controller.ui.joystick.release()
+	var previous_focus=get_viewport().gui_get_focus_owner()
+	if previous_focus!=null: previous_focus.release_focus()
 	if farm.edit_mode:
 		farm.set_edit_mode(false)
-		arrange_button.text = "✥ ATUR"
+		arrange_button.text = "PINDAH ASET"
 	refresh_road_toolbar()
 	arrange_button.visible = tab_id == "kebun"
 	save_sheet_scroll_position()
@@ -647,6 +814,7 @@ func switch_tab(tab_id: String) -> void:
 
 
 func show_sheet() -> void:
+	set_meta("ranch_heroes",[])
 	save_sheet_scroll_position()
 	if sheet != null:
 		sheet.queue_free()
@@ -675,13 +843,33 @@ func show_sheet() -> void:
 	layer.add_child(dim)
 	var card := panel(layer, Vector2(20, 16), Vector2(680, layer.size.y - 42.0), PAPER, 29, 8)
 	var titles := {
+		"kawasan": ["KAWASAN DESA", "Jelajahi, bangun, dan kelola area baru."],
+		"koleksi":["KOLEKSI","Kostum, dekorasi, dan kegiatan kebun."],
+		"aset":["DEKORASI KEBUN","Kelola dekorasi dan benda yang kamu miliki."],
+		"prestasi":["PRESTASI","Pencapaian dan hadiah yang sudah kamu raih."],
+		"pesan":["PESAN","Surat sistem, lampiran hadiah, dan pengumuman."],
+		"pengaturan":["PENGATURAN","Kontrol, kamera, dan tata kebun."],
+		"hadiah_pemula":["HADIAH","Selesaikan tugas berikut untuk mendapatkan hadiah."],
+		"rumput":["TOKO RUMPUT","Beli rumput dan atur petak tamanmu."],
+		"bunga":["TOKO BUNGA","Bunga colorful untuk mempercantik kebun."],
+		"pohon":["TOKO POHON","Pohon hias bisa dibeli, dipasang, dan dipindahkan."],
+		"dekorasi":["TOKO DEKORASI","Koleksi seluruh dekorasi kebun."],
+		"gedung":["GEDUNG & TOKO","Bangunan produksi dan kios hias untuk kebun."],
+		"ayam": ["PETERNAKAN PERTAMA", "Bangun kandang, racik pakan, dan kumpulkan telur."],
 		"aktivitas": ["AKTIVITAS KEBUN", "Semua hasil siap dan pekerjaan yang menunggu."],
+		"jalan": ["TOKO JALAN", "Tiga varian jalan colorful untuk kebunmu."],
+		"upgrade": ["MISI UPGRADE BANGUNAN", "Kumpulkan bahan dan selesaikan tugas pembangunan."],
 		"misi": ["MISI & PRESTASI", "Tantangan harian dan pencapaian kebun."],
 		"pesanan": ["PAPAN PESANAN", "Antar hasil panen, dapatkan hadiah!"],
 		"toko": ["TOKO BENIH", "Pilih bibit untuk kebunmu."],
 		"produksi": ["DAPUR PRODUKSI", "Olah hasil kebun menjadi makanan."],
+		"roti": ["TOKO ROTI", "Panggang roti dan kue dari hasil kebun."],
+		"susu": ["PABRIK SUSU", "Olah susu menjadi keju, mentega, dan yogurt."],
 		"pakan": ["PABRIK PAKAN", "Racik pakan siap pakai untuk ternak."],
 		"gudang": ["GUDANG PANEN", "Jual hasil atau simpan untuk pesanan."],
+		"rumah": ["RUMAH", "Tempat tinggal petani dan dapur rumah."],
+		"babi": ["KANDANG BABI", "Rawat babi dan kumpulkan hasilnya."],
+		"kambing": ["KANDANG KAMBING", "Rawat kambing dan kumpulkan susu."],
 		"sapi": ["KANDANG SAPI", "Rawat sapi dan hasilkan susu segar."],
 		"pasar": ["PASAR PINGGIR JALAN", "Jual barang ke tetangga desa."],
 		"pengunjung": ["TAMU KEBUN", "Tetangga datang mencari hasil kebun segar!"],
@@ -690,25 +878,17 @@ func show_sheet() -> void:
 		"bangun": ["BANGUN & DEKORASI", "Kembangkan peternakan dan percantik kebun."],
 	}
 	var title_data: Array = titles[active_tab]
-	label(card, title_data[0], Vector2(31, 25), Vector2(540, 44), 31, HUD_GREEN, true)
-	label(card, title_data[1], Vector2(33, 69), Vector2(545, 33), 19, HUD_TAB_TEXT)
-	var close := button(card, "×", Vector2(595, 28), Vector2(53, 53), Color("e9f0df"), GREEN, 25)
+	preload("res://scripts/menu_frame.gd").install(self,card,active_tab,str(title_data[1]))
+	var close := button(card, "×", Vector2(613, -4), Vector2(58, 58), Color("dc4932"), Color.WHITE, 34)
+	close.name="MenuClose"
+	for state in ["normal","hover","pressed"]:
+		var close_style=preload("res://scripts/ranch_presentation.gd").style(Color("dc4932").lightened(0.08) if state=="hover" else Color("dc4932"),Color("ffdda2"),30)
+		close.add_theme_stylebox_override(state,close_style)
 	close.pressed.connect(func() -> void: switch_tab("kebun"))
-	var rule := ColorRect.new()
-	rule.color = Color("d9e5cb")
-	rule.position = Vector2(30, 117)
-	rule.size = Vector2(618, 3)
-	card.add_child(rule)
-	var rule_accent := ColorRect.new()
-	rule_accent.color = HUD_GREEN
-	rule_accent.position = Vector2(30, 117)
-	rule_accent.size = Vector2(94, 3)
-	rule_accent.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	card.add_child(rule_accent)
 	var scroll := ScrollContainer.new()
 	scroll.name = "ContentScroll"
-	scroll.position = Vector2(26, 133)
-	scroll.size = Vector2(627, card.size.y - 158.0)
+	scroll.position = Vector2(26, 146)
+	scroll.size = Vector2(627, card.size.y - 171.0)
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
 	scroll.scroll_deadzone = 12
@@ -719,6 +899,31 @@ func show_sheet() -> void:
 	list.add_theme_constant_override("separation", 17)
 	scroll.add_child(list)
 	match active_tab:
+		"kawasan":
+			preload("res://scripts/world_regions_ui.gd").populate(self,list)
+		"pesan":
+			preload("res://scripts/mailbox_ui.gd").populate(self,list)
+		"aset":
+			preload("res://scripts/collection_hub.gd").assets(self,list)
+		"prestasi":
+			DailyMissionsUI.populate_achievements(self,list,game,Callable(self,"claim_achievement"))
+		"koleksi":
+			preload("res://scripts/cheerful_menus.gd").collection(self,list)
+		"pengaturan":
+			preload("res://scripts/cheerful_menus.gd").settings(self,list)
+		"hadiah_pemula":
+			preload("res://scripts/cheerful_menus.gd").beginner(self,list)
+		"rumput", "bunga", "pohon", "dekorasi":
+			populate_decorations(list,active_tab)
+		"gedung":
+			FarmExpansionUI.populate_buildings(self,list,game,Callable(self,"on_buy_construction"))
+			populate_decorations(list,"gedung")
+		"ayam":
+			preload("res://scripts/first_coop.gd").populate(self,list)
+		"jalan":
+			preload("res://scripts/road_shop_ui.gd").populate(self,list)
+		"upgrade":
+			preload("res://scripts/building_upgrade_ui.gd").populate(self,list)
 		"aktivitas":
 			populate_activities(list)
 		"misi":
@@ -727,14 +932,20 @@ func show_sheet() -> void:
 			populate_orders(list)
 		"toko":
 			populate_shop(list)
-		"produksi":
-			populate_production(list)
+		"produksi", "roti", "susu":
+			populate_production(list,active_tab)
 		"pakan":
 			populate_feed_mill(list)
 		"gudang":
 			populate_inventory(list)
+		"rumah":
+			preload("res://scripts/home_services.gd").populate(self,list)
+		"babi", "kambing":
+			preload("res://scripts/ranch_ui.gd").populate(self,list,active_tab)
+			animal_status_rows=FarmExpansionUI.populate_animals(self,list,game,Callable(self,"on_animal_action"),Callable(self,"on_open_buildings"),active_tab)
 		"sapi":
 			populate_cow(list)
+			preload("res://scripts/ranch_ui.gd").populate(self,list,"sapi")
 		"pasar":
 			market_time_labels = MarketUI.populate(
 				self,
@@ -754,6 +965,7 @@ func show_sheet() -> void:
 				Callable(self, "on_orchard_harvest")
 			)
 		"ternak":
+			preload("res://scripts/ranch_ui.gd").populate(self,list)
 			var feed_link := row_card(list, 91, Color("f4e7cc"))
 			var feed_button := button(feed_link, "PABRIK PAKAN  ›", Vector2(20, 13), Vector2(560, 65), GREEN, Color.WHITE, 22)
 			feed_button.pressed.connect(func() -> void: switch_tab("pakan"))
@@ -770,10 +982,10 @@ func show_sheet() -> void:
 				Callable(self, "on_open_buildings")
 			)
 		"bangun":
-			populate_decorations(list)
 			FarmExpansionUI.populate_buildings(
 				self, list, game, Callable(self, "on_buy_construction")
 			)
+			populate_decorations(list)
 	scroll.set_deferred("scroll_vertical", int(sheet_scroll_positions.get(active_tab, 0)))
 
 
@@ -783,36 +995,7 @@ func save_sheet_scroll_position() -> void:
 
 
 func populate_activities(list: VBoxContainer) -> void:
-	var activities := game.ready_activities()
-	activity_signature = JSON.stringify(activities)
-	var total := 0
-	for activity in activities:
-		total += int(activity["count"])
-	callout(
-		list, "SELESAIKAN PEKERJAAN KEBUN",
-		"%d tugas siap. Ketuk LIHAT untuk menuju lokasi." % total,
-		Color("e4f1d9")
-	)
-	if game.storage_used() >= game.storage_capacity:
-		var warning := row_card(list, 105, Color("fff0d8"))
-		label(warning, "GUDANG PENUH", Vector2(20, 12), Vector2(420, 35), 21, Color("98652f"), true)
-		var storage_link := button(warning, "BUKA GUDANG  ›", Vector2(20, 51), Vector2(559, 45), GREEN, Color.WHITE, 20)
-		storage_link.pressed.connect(func() -> void: switch_tab("gudang"))
-	if activities.is_empty():
-		callout(
-			list, "SEMUA PEKERJAAN SELESAI!",
-			"Tanaman dan hasil produksi sedang tumbuh. Kembali lagi nanti.",
-			Color("fff1d5")
-		)
-		return
-	for activity in activities:
-		var card := row_card(list, 151, Color("fff5e1"))
-		label(card, str(activity["title"]), Vector2(21, 15), Vector2(465, 31), 22, GREEN, true)
-		label(card, "×%d" % int(activity["count"]), Vector2(492, 15), Vector2(82, 30), 20, HUD_GREEN, true)
-		label(card, str(activity["detail"]), Vector2(21, 53), Vector2(550, 29), 18, INK)
-		var link := button(card, "LIHAT  ›", Vector2(20, 94), Vector2(561, 47), GREEN, Color.WHITE, 20)
-		link.name = "ActivityRow_" + str(activity["id"])
-		link.pressed.connect(open_activity.bind(activity))
+	preload("res://scripts/activities_ui.gd").populate(self,list)
 
 
 func open_activity(activity: Dictionary) -> void:
@@ -838,7 +1021,7 @@ func populate_visitors(list: VBoxContainer) -> void:
 	var in_storage := int(game.inventory.get(item_id, 0))
 	var guest := row_card(list, 318, Color("fff4d9"))
 	label(guest, str(request["name"]).to_upper(), Vector2(22, 19), Vector2(530, 37), 27, INK, true)
-	label(guest, "\"Halo! Boleh saya beli hasil kebunmu?\"", Vector2(22, 65), Vector2(556, 29), 18, SOFT_INK)
+	label(guest, "Wah, gandummu sudah siap dipanen! Bisa kamu jual 3 gandum kepadaku?" if request.get("first_farm",false) else "\"Halo! Boleh saya beli hasil kebunmu?\"", Vector2(22, 65), Vector2(556, 29), 18, SOFT_INK)
 	label(guest, "%s  •  %d/%d tersedia" % [str(game.item_info(item_id)["name"]), in_storage, quantity], Vector2(22, 109), Vector2(554, 36), 22, GREEN if in_storage >= quantity else INK, true)
 	var track := panel(guest, Vector2(22, 158), Vector2(556, 12), Color("d9d6b1"), 6)
 	track.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -848,9 +1031,11 @@ func populate_visitors(list: VBoxContainer) -> void:
 		fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	label(guest, "+%d koin     +%d XP" % [int(request["coins"]), int(request["xp"])], Vector2(22, 187), Vector2(550, 35), 22, GREEN, true)
 	var sell := button(guest, "JUAL BARANG", Vector2(22, 245), Vector2(330, 56), GREEN if game.visitor_can_sell() else Color("b8c7b2"), Color.WHITE, 20)
+	sell.name="SellVisitorGoods"
 	sell.disabled = not game.visitor_can_sell()
 	sell.pressed.connect(on_visitor_sell)
 	var decline := button(guest, "TOLAK", Vector2(371, 245), Vector2(209, 56), Color("cf9271"), Color.WHITE, 19)
+	decline.disabled=preload("res://scripts/first_farm.gd").active(game)
 	decline.pressed.connect(on_visitor_decline)
 	if not game.visitor_can_sell():
 		callout(list, "STOK BELUM CUKUP", "Panen atau produksi %s untuk memenuhi permintaan." % str(game.item_info(item_id)["name"]), Color("fbe7df"))
@@ -861,6 +1046,7 @@ func on_visitor_sell() -> void:
 	if game.fulfill_visitor():
 		farm.show_world_feedback("harvest", farm.visitor_world_position(), "+%d" % reward)
 		show_toast("Terima kasih! Pengunjung membayar %d koin." % reward)
+		if not game.ftue.is_empty() and game.ftue.step=="reward": switch_tab("kebun")
 	else:
 		show_toast("Barang belum cukup untuk permintaan pengunjung.")
 	refresh_all()
@@ -877,12 +1063,12 @@ func on_open_buildings() -> void:
 
 
 func on_animal_action(id: String) -> void:
-	if id == "ayam" and game.ready_eggs() and game.storage_used() + 2 > game.storage_capacity:
-		show_toast("Gudang kurang %d slot untuk telur. Jual stok dulu." % (game.storage_used() + 2 - game.storage_capacity))
+	if id == "ayam" and game.ready_eggs() and game.storage_used() + game.ranch_yield("ayam") > game.storage_capacity:
+		show_toast("Gudang kurang %d slot untuk telur. Jual stok dulu." % (game.storage_used() + game.ranch_yield("ayam") - game.storage_capacity))
 		switch_tab("gudang")
 		return
 	if id != "ayam" and game.animal_ready(id):
-		var amount := int(FarmGameState.ANIMALS[id]["yield"])
+		var amount := game.ranch_yield(id)
 		if game.storage_used() + amount > game.storage_capacity:
 			show_toast("Gudang kurang %d slot untuk hasil ternak." % (game.storage_used() + amount - game.storage_capacity))
 			switch_tab("gudang")
@@ -903,7 +1089,7 @@ func on_animal_action(id: String) -> void:
 			shortages.append("%s +%d" % [game.item_info(ingredient)["name"], missing[ingredient]])
 		show_toast("Pakan kurang: %s." % ", ".join(shortages))
 	elif game.animal_ready(id):
-		var required := int(FarmGameState.ANIMALS[id]["yield"])
+		var required := game.ranch_yield(id)
 		var shortage := maxi(0, game.storage_used() + required - game.storage_capacity)
 		show_toast("Ruang gudang kurang. Kosongkan %d slot." % shortage)
 	else:
@@ -912,16 +1098,28 @@ func on_animal_action(id: String) -> void:
 
 
 func on_buy_construction(id: String) -> void:
+	var placement=preload("res://scripts/safe_asset_placement.gd")
+	var asset_key=str(placement.KEYS.get(id,""))
+	var at=Vector2.INF
+	if asset_key!="":
+		at=load("res://scripts/island_layout.gd").purchase_spot(self,asset_key)
+		if at==Vector2.INF: show_toast("Tidak ada ruang kosong. Rapikan lahan dahulu; koin tidak dipotong.");return
 	if game.buy_construction(id):
+		if asset_key!="": placement.commit(self,asset_key,at)
 		show_toast("%s telah dibangun!" % FarmGameState.CONSTRUCTIONS[id]["name"])
 	else:
 		show_toast("Belum bisa dibeli. Cek level, koin, dan jumlah bangunan.")
 	refresh_all()
 
 
-func populate_decorations(list: VBoxContainer) -> void:
+func populate_decorations(list: VBoxContainer,category: String="") -> void:
 	callout(list, "TOKO DEKORASI", "Beli, pasang, pindahkan lewat ATUR, atau simpan kembali.", Color("dcefd3"))
 	for kind in FarmGameState.DECORATION_ORDER:
+		if kind=="grass_patch": continue
+		if not preload("res://scripts/garden_catalog.gd").matches(kind,category): continue
+		farm.farm_art.ensure_reference(kind)
+		if kind=="lg_greenhouse":
+			callout(list,"LIVING GARDEN / 12 ASET BARU","Dekorasi terbuka sesuai level. Stroberi kristal tersedia di toko bibit pada Lv20.",Color("e0f0ed"))
 		var info: Dictionary = FarmGameState.DECORATIONS[kind]
 		var stored := game.stored_decoration_count(kind)
 		var placed := 0
@@ -935,6 +1133,7 @@ func populate_decorations(list: VBoxContainer) -> void:
 			atlas.atlas = sprite["texture"]
 			atlas.region = sprite["region"]
 			var thumbnail := TextureRect.new()
+			thumbnail.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 			thumbnail.position = Vector2(11, 9)
 			thumbnail.size = Vector2(101, 88)
 			thumbnail.texture = atlas
@@ -947,10 +1146,12 @@ func populate_decorations(list: VBoxContainer) -> void:
 			Vector2(115, 52), Vector2(466, 31), 17, SOFT_INK)
 		var buy := button(card, "BELI & PASANG", Vector2(410, 88), Vector2(175, 42),
 			GREEN if game.coins >= int(info["cost"]) else Color("b4baad"), Color.WHITE, 16)
-		buy.disabled = game.coins < int(info["cost"])
+		buy.disabled = game.coins < int(info["cost"]) or game.level<int(info.get("level",1))
+		if game.level<int(info.get("level",1)): buy.text="TERKUNCI LV"+str(info["level"])
 		buy.pressed.connect(on_buy_decoration.bind(kind))
 		if stored > 0:
 			var place := button(card, "PASANG", Vector2(115, 88), Vector2(152, 42), MINT, GREEN, 18)
+			place.disabled=game.level<int(info.get("level",1))
 			place.pressed.connect(on_place_stored_decoration.bind(kind))
 	if game.decorations.is_empty():
 		return
@@ -974,6 +1175,10 @@ func populate_decorations(list: VBoxContainer) -> void:
 func begin_decoration_from_inventory(key: String) -> void:
 	switch_tab("kebun")
 	farm.begin_decoration_placement(key)
+	var free_at=preload("res://scripts/safe_asset_placement.gd").find(farm,key,farm.camera_center)
+	if free_at!=Vector2.INF:
+		farm.placement_preview=free_at
+		farm.camera_target=free_at;farm.clamp_camera_target()
 	arrange_button.text = "✕ BATAL"
 	refresh_road_toolbar()
 	update_visitor_shortcut()
@@ -983,7 +1188,7 @@ func begin_decoration_from_inventory(key: String) -> void:
 func on_buy_decoration(kind: String) -> void:
 	var key := game.buy_decoration(kind)
 	if key == "":
-		show_toast("Koin tidak cukup untuk membeli dekorasi ini.")
+		show_toast("Koin belum cukup atau level dekorasi belum terbuka.")
 		refresh_all()
 		return
 	begin_decoration_from_inventory(key)
@@ -1008,7 +1213,13 @@ func on_store_decoration(key: String) -> void:
 
 
 func on_orchard_plant(index: int, fruit_id: String) -> void:
+	var placement = preload("res://scripts/safe_asset_placement.gd")
+	var site: Vector2 = placement.find(farm, "buah_%d" % index, farm.orchard_center(index))
+	if site == Vector2.INF:
+		show_toast("Rapikan lahan untuk pohon dahulu.")
+		return
 	if game.plant_tree(index, fruit_id):
+		placement.commit(self, "buah_%d" % index, site)
 		farm.show_orchard_feedback(index, "plant")
 		show_toast("Pohon berhasil ditanam! Buah tumbuh otomatis.")
 	else:
@@ -1043,10 +1254,7 @@ func on_market_cancel(index: int) -> void:
 
 
 func populate_missions(list: VBoxContainer) -> void:
-	DailyMissionsUI.populate(
-		self, list, game, Callable(self, "claim_mission"), Callable(self, "claim_checkin"),
-		Callable(self, "claim_achievement")
-	)
+	preload("res://scripts/missions_menu.gd").populate(self,list)
 
 
 func claim_achievement(id: String) -> void:
@@ -1079,6 +1287,7 @@ func claim_mission(id: String) -> void:
 
 
 func populate_cow(list: VBoxContainer) -> void:
+	preload("res://scripts/ranch_presentation.gd").hero(self,list,"sapi")
 	var feed_link := row_card(list, 86, Color("f4e7cc"))
 	var feed_button := button(feed_link, "BUAT PAKAN SAPI  ›", Vector2(20, 12), Vector2(560, 60), GREEN, Color.WHITE, 20)
 	feed_button.pressed.connect(func() -> void: switch_tab("pakan"))
@@ -1102,7 +1311,7 @@ func populate_cow(list: VBoxContainer) -> void:
 	label(feed_card, "PAKAN SAPI", Vector2(21, 19), Vector2(420, 40), 24, INK, true)
 	label(
 		feed_card,
-		"1 paket pakan, atau 2 Gandum + 1 Jagung per siklus.",
+		"%d paket pakan, atau %d Gandum + %d Jagung per siklus."%[preload("res://scripts/ranch_state.gd").feed_multiplier(game,"sapi"),2*preload("res://scripts/ranch_state.gd").feed_multiplier(game,"sapi"),preload("res://scripts/ranch_state.gd").feed_multiplier(game,"sapi")],
 		Vector2(22, 68),
 		Vector2(550, 43),
 		20,
@@ -1128,6 +1337,12 @@ func populate_cow(list: VBoxContainer) -> void:
 func refresh_cow_status() -> void:
 	if cow_status_text == null or not is_instance_valid(cow_status_text):
 		return
+	if not preload("res://scripts/ranch_state.gd").available(game,"sapi"):
+		cow_status_text.text="Bangun kandang sapi melalui menu Toko untuk mulai beternak."
+		if is_instance_valid(cow_action_button):
+			cow_action_button.text="KANDANG BELUM DIBANGUN"
+			cow_action_button.disabled=true
+		return
 	if game.cow_is_hungry():
 		cow_status_text.text = "Sapi lapar! Pakai paket pakan atau hasil panen."
 	elif game.cow_milk_ready():
@@ -1151,15 +1366,15 @@ func refresh_cow_status() -> void:
 
 
 func on_cow_action() -> void:
-	if game.cow_milk_ready() and game.storage_used() + 2 > game.storage_capacity:
-		show_toast("Gudang kurang %d slot untuk susu. Jual stok dulu." % (game.storage_used() + 2 - game.storage_capacity))
+	if game.cow_milk_ready() and game.storage_used() + game.ranch_yield("sapi") > game.storage_capacity:
+		show_toast("Gudang kurang %d slot untuk susu. Jual stok dulu." % (game.storage_used() + game.ranch_yield("sapi") - game.storage_capacity))
 		switch_tab("gudang")
 		return
 	if game.cow_is_hungry():
 		if game.feed_cow():
 			show_toast("Sapi sudah diberi makan! Susu segera siap.")
 		else:
-			show_toast("Pakan kurang. Panen 2 gandum dan 1 jagung dulu.")
+			show_toast("Pakan kurang. Cek jumlah pakan untuk seluruh sapi di kandang.")
 	elif game.collect_milk():
 		show_toast("Berhasil memerah! +2 susu dan +10 XP.")
 	else:
@@ -1194,6 +1409,8 @@ func populate_orders(list: VBoxContainer) -> void:
 		label(card, order["title"], Vector2(20, 40), Vector2(450, 39), 27, INK, true)
 		var item_row := 0
 		for id in order["items"]:
+			var item_icon=preload("res://scripts/colorful_icons.gd").add(card,"bibit",Vector2(20,84+item_row*35),Vector2(31,31))
+			item_icon.texture=inventory_icon_texture(str(id))
 			var target: int = order["items"][id]
 			var current := int(game.inventory.get(id, 0))
 			label(
@@ -1207,8 +1424,8 @@ func populate_orders(list: VBoxContainer) -> void:
 						"✓" if current >= target else "•"
 					]
 				),
-				Vector2(21, 86 + item_row * 35),
-				Vector2(560, 32),
+				Vector2(59, 86 + item_row * 35),
+				Vector2(522, 32),
 				19,
 				GREEN if current >= target else SOFT_INK,
 				true
@@ -1276,6 +1493,8 @@ func populate_orders(list: VBoxContainer) -> void:
 
 
 func order_supply_tab(id: String) -> String:
+	if FarmGameState.REGION_ITEMS.has(id):
+		return "kawasan"
 	if FarmGameState.CROPS.has(id) or id == "telur":
 		return "kebun"
 	if FarmGameState.PRODUCTS.has(id):
@@ -1318,175 +1537,63 @@ func on_refresh_order(index: int) -> void:
 
 
 func populate_shop(list: VBoxContainer) -> void:
-	if ads:
-		var bonus := row_card(list, 236, Color("e3eff7"))
-		label(bonus, "BONUS PERMATA", Vector2(20, 14), Vector2(555, 34), 24, GREEN, true)
-		label(
-			bonus,
-			"Tonton iklan jika aktif, atau klaim saat nonaktif.",
-			Vector2(20, 51),
-			Vector2(570, 30),
-			16,
-			INK
-		)
-		var watch := button(
-			bonus,
-			"▶ IKLAN REWARD: +2 ◆" if ads.can_show_kind("rewarded") else "KLAIM GRATIS: +2 ◆",
-			Vector2(18, 91),
-			Vector2(570, 51),
-			GREEN,
-			Color.WHITE,
-			19
-		)
-		watch.pressed.connect(func() -> void: ads.show_rewarded("rewarded"))
-		var watch_more := button(
-			bonus,
-			(
-				"▶ IKLAN BONUS: +3 ◆"
-				if ads.can_show_kind("rewarded_interstitial")
-				else "KLAIM GRATIS: +3 ◆"
-			),
-			Vector2(18, 150),
-			Vector2(570, 51),
-			Color("6196b5"),
-			Color.WHITE,
-			19
-		)
-		watch_more.pressed.connect(func() -> void: ads.show_rewarded("rewarded_interstitial"))
-		if ads.has_enabled_ads():
-			var privacy := button(
-				bonus,
-				"PRIVASI IKLAN",
-				Vector2(376, 207),
-				Vector2(205, 26),
-				Color("deebd9"),
-				INK,
-				13
-			)
-			privacy.pressed.connect(ads.show_privacy_options)
-	var menu := row_card(list, 202, Color("e4f0d8"))
-	label(menu, "JELAJAHI PERTANIAN", Vector2(20, 15), Vector2(565, 36), 23, GREEN, true)
-	var go_animals := button(
-		menu, "TERNAK", Vector2(19, 69), Vector2(268, 58), GREEN, Color.WHITE, 21
-	)
-	go_animals.pressed.connect(func() -> void: switch_tab("ternak"))
-	var go_build := button(
-		menu, "BANGUN & DEKOR", Vector2(302, 69), Vector2(279, 58), GREEN, Color.WHITE, 19
-	)
-	go_build.pressed.connect(func() -> void: switch_tab("bangun"))
-	var go_market := button(
-		menu, "PASAR TETANGGA  ›", Vector2(19, 137), Vector2(562, 52), Color("f8d58e"), INK, 19
-	)
-	go_market.pressed.connect(func() -> void: switch_tab("pasar"))
-	if game.needs_seed_recovery():
-		var recovery := row_card(list, 180, Color("fff0d8"))
-		label(recovery, "BANTUAN BIBIT DARURAT", Vector2(20, 14), Vector2(559, 34), 23, GREEN, true)
-		var recovery_wait := game.seed_recovery_seconds_left()
-		var recovery_hint := (
-			"Stok habis? Ambil 3 bibit gandum gratis untuk mulai bertani lagi."
-			if recovery_wait == 0
-			else "Bantuan tersedia kembali setelah jeda. Kamu juga bisa jual telur di gudang."
-		)
-		label(recovery, recovery_hint, Vector2(20, 50), Vector2(561, 54), 16, INK)
-		seed_recovery_button = button(
-			recovery,
-			"AMBIL 3 BIBIT GRATIS" if recovery_wait == 0 else "TUNGGU %d:%02d" % [int(recovery_wait / 60), recovery_wait % 60],
-			Vector2(19, 113), Vector2(561, 50),
-			GREEN if recovery_wait == 0 else Color("b9c5b3"), Color.WHITE, 18
-		)
-		seed_recovery_button.disabled = recovery_wait > 0
-		seed_recovery_button.pressed.connect(on_claim_seed_recovery)
-	callout(
-		list, "PILIH BIBIT FAVORIT", "Beli bibit lalu ketuk petak untuk menanam.", Color("e3f0db")
-	)
-	for id in FarmGameState.CROP_ORDER:
-		var info: Dictionary = FarmGameState.CROPS[id]
-		var unlocked: bool = game.level >= int(info["level"])
-		var seed_price: int = int(info["seed_cost"])
-		var card := row_card(list, 149, Color("fff3e1"))
-		var icon := TextureRect.new()
-		icon.name = "SeedIcon_" + id
-		icon.texture = seed_icon_texture(id)
-		icon.position = Vector2(12, 28)
-		icon.size = Vector2(88, 88)
-		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		if not unlocked:
-			icon.modulate = Color(0.76, 0.76, 0.76, 0.65)
-		card.add_child(icon)
-		var seed_name := label(card, str(info["name"]), Vector2(172, 15), Vector2(265, 38), 27, INK, true)
-		seed_name.clip_text = true
-		var seed_stock := label(
-			card,
-			"Stok: " + str(game.seeds.get(id, 0)) + "    •    " + str(info["grow"]) + " dtk",
-			Vector2(172, 55),
-			Vector2(176, 31),
-			17,
-			SOFT_INK
-		)
-		seed_stock.clip_text = true
-		label(
-			card,
-			"1 bibit: %d  ·  5 bibit: %d koin" % [seed_price, seed_price * 5],
-			Vector2(172, 102),
-			Vector2(402, 30),
-			16,
-			Color("a4783e"),
-			true
-		)
-		if unlocked:
-			var buy_one := button(
-				card, "BELI 1", Vector2(447, 46), Vector2(65, 54),
-				GREEN if game.coins >= seed_price else Color("b9c5b3"), Color.WHITE, 13
-			)
-			buy_one.disabled = game.coins < seed_price
-			buy_one.pressed.connect(func() -> void: buy_crop(id, 1))
-			var buy_five := button(
-				card, "BELI 5", Vector2(516, 46), Vector2(66, 54),
-				GREEN if game.coins >= seed_price * 5 else Color("b9c5b3"), Color.WHITE, 13
-			)
-			buy_five.disabled = game.coins < seed_price * 5
-			buy_five.pressed.connect(func() -> void: buy_crop(id, 5))
-			var choose := button(
-				card,
-				"DIPILIH" if game.selected_crop == id else "PILIH",
-				Vector2(354, 46),
-				Vector2(90, 54),
-				Color("f8d58e") if game.selected_crop == id else Color("e6ead6"),
-				INK,
-				15
-			)
-			choose.pressed.connect(func() -> void: choose_crop(id))
-		else:
-			var locked := button(
-				card, "LV " + str(info["level"]), Vector2(447, 46),
-				Vector2(135, 54), Color("b9c5b3"), Color.WHITE, 18
-			)
-			locked.disabled = true
+	preload("res://scripts/garden_shop_ui.gd").populate(self,list)
 
 
 func seed_icon_texture(id: String) -> Texture2D:
+	if ReferenceAssets.CROPS.has(id):
+		return ReferenceAssets.icon("ref_crop_" + id)
+	if id=="stroberi_kristal" and farm.farm_art.sprites.has("lg_crystal_stage_3"):
+		var sprite: Dictionary=farm.farm_art.sprites["lg_crystal_stage_3"]
+		var atlas:=AtlasTexture.new()
+		atlas.atlas=sprite.texture
+		atlas.region=sprite.region
+		return atlas
 	if not seed_icon_textures.has(id):
 		var path := "res://assets/seed_icons/%s.svg" % id
 		seed_icon_textures[id] = load(path) as Texture2D
 	return seed_icon_textures[id]
 
 
+func inventory_icon_texture(id: String) -> Texture2D:
+	if FarmGameState.FRUITS.has(id): return ReferenceAssets.icon("fruit_tree_"+id+"_ripe")
+	if FarmGameState.CROPS.has(id): return seed_icon_texture(id)
+	if FarmGameState.PRODUCTS.has(id): return production_icon_texture(id)
+	if FarmGameState.REGION_ITEMS.has(id):
+		var path := "res://assets/production_icons/%s.svg" % id
+		return load(path) as Texture2D if ResourceLoader.exists(path) else preload("res://scripts/colorful_icons.gd").texture("pakan")
+	var keys={"susu":"susu","susu_kambing":"susu","telur":"telur","wol":"wol","daging_babi":"daging","jeruk":"jeruk","apel":"apel"}
+	return preload("res://scripts/colorful_icons.gd").texture(str(keys.get(id,"pakan")))
+
+
 func production_icon_texture(id: String) -> Texture2D:
 	if not production_icon_textures.has(id):
 		var path := "res://assets/production_icons/%s.svg" % id
-		production_icon_textures[id] = load(path) as Texture2D
+		if ResourceLoader.exists(path): production_icon_textures[id] = load(path) as Texture2D
+		else:
+			for ingredient in FarmGameState.PRODUCTS.get(id, {}).get("ingredients", {}):
+				if FarmGameState.FRUITS.has(ingredient):
+					production_icon_textures[id] = ReferenceAssets.icon("fruit_tree_"+ingredient+"_ripe")
+					break
+			if not production_icon_textures.has(id): production_icon_textures[id] = preload("res://scripts/colorful_icons.gd").texture("pakan")
 	return production_icon_textures[id]
 
 
-func populate_production(list: VBoxContainer) -> void:
-	var feed_link := row_card(list, 82, Color("f3e9d6"))
-	var feed_button := button(feed_link, "BUKA PABRIK PAKAN  ›", Vector2(20, 12), Vector2(560, 56), GREEN, Color.WHITE, 19)
-	feed_button.pressed.connect(func() -> void: switch_tab("pakan"))
+func populate_production(list: VBoxContainer,building: String="produksi") -> void:
+	preload("res://scripts/building_upgrade_ui.gd").link(self,list)
+	if building=="produksi": pass
+	else:
+		var built_id="toko_roti" if building=="roti" else "pabrik_susu"
+		if not game.has_construction(built_id):
+			callout(list,"BELUM DIBANGUN","Beli bangunan ini di Toko sebelum mulai produksi.",Color("fff0d3"))
+			return
+	if building=="produksi":
+		var feed_link := row_card(list, 82, Color("f3e9d6"))
+		var feed_button := button(feed_link, "BUKA PABRIK PAKAN  ›", Vector2(20, 12), Vector2(560, 56), GREEN, Color.WHITE, 19)
+		feed_button.pressed.connect(func() -> void: switch_tab("pakan"))
 	var queue_card := row_card(list, 237, Color("e1f0d5"))
 	label(
-		queue_card, "ANTRIAN DAPUR  ·  MAKS. 3", Vector2(22, 13), Vector2(552, 35), 21, GREEN, true
+		queue_card, "ANTRIAN PRODUKSI  ·  MAKS. %d" % game.production_capacity(), Vector2(22, 13), Vector2(552, 35), 21, GREEN, true
 	)
 	production_status_text = label(
 		queue_card, "", Vector2(22, 56), Vector2(565, 102), 19, INK, true
@@ -1500,10 +1607,25 @@ func populate_production(list: VBoxContainer) -> void:
 		list, "RESEP PILIHAN", "Panen bahan, lalu masukkan makanan ke antrian.", Color("fff0d3")
 	)
 	for id in FarmGameState.PRODUCT_ORDER:
+		if building=="roti" and id not in ["roti","roti_manis","kue","roti_pisang","pai_pir"]: continue
+		if building=="susu" and id not in ["keju","mentega","yogurt_kambing"]: continue
 		var info: Dictionary = FarmGameState.PRODUCTS[id]
-		var unlocked := game.level >= int(info["level"])
-		var card := row_card(list, 163, Color("fff4df"))
+		var unlocked: bool = game.level >= int(info["level"]) or id in ["roti","keju","mentega"]
+		var ingredients := ""
+		for ingredient in info["ingredients"]:
+			ingredients += (
+				str(game.item_info(ingredient)["name"])
+				+ " "
+				+ str(game.inventory.get(ingredient, 0))
+				+ "/"
+				+ str(info["ingredients"][ingredient])
+				+ "  "
+			)
+		var body_font=preload("res://assets/fonts/styles/nunito_semibold.tres")
+		var ingredient_height=maxf(76,ceilf(body_font.get_multiline_string_size(ingredients.strip_edges(),HORIZONTAL_ALIGNMENT_LEFT,277,17).y*1.5)+8)
+		var card := row_card(list, maxi(163,int(ingredient_height)+118), Color("fff4df"))
 		var icon := TextureRect.new()
+		icon.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 		icon.name = "ProductionIcon_" + id
 		icon.texture = production_icon_texture(id)
 		icon.position = Vector2(14, 36)
@@ -1516,17 +1638,7 @@ func populate_production(list: VBoxContainer) -> void:
 		card.add_child(icon)
 		var recipe_name := label(card, str(info["name"]), Vector2(172, 15), Vector2(277, 37), 26, INK, true)
 		recipe_name.clip_text = true
-		var ingredients := ""
-		for ingredient in info["ingredients"]:
-			ingredients += (
-				str(game.item_info(ingredient)["name"])
-				+ " "
-				+ str(game.inventory.get(ingredient, 0))
-				+ "/"
-				+ str(info["ingredients"][ingredient])
-				+ "  "
-			)
-		var ingredient_label := label(card, ingredients.strip_edges(), Vector2(172, 55), Vector2(277, 42), 17, SOFT_INK)
+		var ingredient_label := label(card, ingredients.strip_edges(), Vector2(172, 55), Vector2(277, ingredient_height), 17, SOFT_INK)
 		ingredient_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		ingredient_label.clip_text = true
 		label(
@@ -1539,7 +1651,7 @@ func populate_production(list: VBoxContainer) -> void:
 				+ str(info["sell"])
 				+ " koin"
 			),
-			Vector2(172, 110),
+			Vector2(172, 67+ingredient_height),
 			Vector2(402, 30),
 			17,
 			Color("a4783e"),
@@ -1575,9 +1687,9 @@ func populate_feed_mill(list: VBoxContainer) -> void:
 	callout(list, "RACIK PAKAN", "1 racikan = 2 paket. Hewan memakai pakan lebih dulu.", Color("fff0d3"))
 	for id in FarmGameState.FEED_ORDER:
 		var info: Dictionary = FarmGameState.FEED_RECIPES[id]
-		var unlocked := game.level >= int(info["level"])
+		var unlocked: bool = game.level >= int(info["level"]) or id in ["roti","keju","mentega"]
 		var card := row_card(list, 167, Color("fff4df"))
-		card.add_child(circle(Vector2(44, 67), 27, Color(info["color"])))
+		preload("res://scripts/colorful_icons.gd").add(card,"pakan",Vector2(10,34),Vector2(66,66))
 		label(card, str(info["name"]), Vector2(87, 15), Vector2(355, 35), 25, INK, true)
 		var ingredients := ""
 		for ingredient in info["ingredients"]:
@@ -1716,8 +1828,10 @@ func refresh_all() -> void:
 		"normal", style(Color("f7e3a0") if ready_rewards > 0 else Color("e3f0d5"), 17, 2)
 	)
 	top_level_text.text = "LV " + str(game.level)
-	top_coins_text.text = TEXT_FORMAT.format_number(game.coins)
-	top_gems_text.text = str(game.diamonds)
+	top_coins_text.text = TEXT_FORMAT.format_hud_currency(game.coins)
+	top_coins_text.tooltip_text=TEXT_FORMAT.format_number(game.coins)+" koin"
+	top_gems_text.text = TEXT_FORMAT.format_hud_currency(game.diamonds)
+	top_gems_text.tooltip_text=TEXT_FORMAT.format_number(game.diamonds)+" permata"
 	top_xp_text.text = str(game.xp) + " / " + str(game.xp_target()) + " XP"
 	refresh_tutorial()
 	xp_track.max_value = game.xp_target()
@@ -1866,7 +1980,7 @@ func refresh_action() -> void:
 			GREEN if ready else SOFT_INK,
 			true
 		)
-		var harvest_text := "PERCEPAT PANEN  •  1 PERMATA"
+		var harvest_text := "PERCEPAT PANEN  •  TONTON IKLAN"
 		if ready:
 			harvest_text = "KOSONGKAN GUDANG  •  %d SLOT" % shortage if shortage > 0 else "PANEN SEKARANG  +%d" % int(info["yield"])
 		var harvest := button(
@@ -1878,11 +1992,13 @@ func refresh_action() -> void:
 			Color.WHITE,
 			22
 		)
-		harvest.disabled = not ready and game.diamonds < 1
+		harvest.disabled = not ready and not speedups.pending.is_empty()
+		if not ready: harvest.tooltip_text="Tonton iklan berhadiah sampai selesai agar tanaman langsung siap panen."
 		harvest.pressed.connect(on_harvest_or_speed)
 
 
 func on_plot_pressed(index: int) -> void:
+	preload("res://scripts/first_farm.gd").selected(game,index)
 	selected_plot = index
 	action_panel.show()
 	refresh_action()
@@ -1925,6 +2041,9 @@ func hide_action_panel() -> void:
 
 
 func on_coop_pressed() -> void:
+	if not game.ftue.is_empty():
+		switch_tab("ayam")
+		return
 	if game.collect_eggs():
 		show_toast("Ayam menghasilkan 2 telur! +8 XP")
 	else:
@@ -1956,14 +2075,56 @@ func on_harvest_or_speed() -> void:
 			show_toast("Panen berhasil! +" + str(quantity) + " hasil masuk gudang.")
 		else:
 			show_toast("Ruang gudang kurang. Jual hasil di GUDANG.")
-	elif game.accelerate(selected_plot):
-		farm.show_plot_feedback(selected_plot, "plant")
-		show_toast("Panen dipercepat dengan 1 permata!")
+	else:
+		if not orchard_speedup.is_empty(): return
+		var request_id=speedups.start(game,selected_plot)
+		if request_id.is_empty(): return
+		if ads==null or not ads.request_speedup(request_id): speedups.cancel(request_id)
+	refresh_all()
+
+
+func on_orchard_speedup(index: int) -> void:
+	if not orchard_speedup.is_empty() or not speedups.pending.is_empty() or game.tree_ready(index): return
+	if index < 0 or index >= game.orchard.size() or str(game.orchard[index].fruit).is_empty(): return
+	orchard_speedup_serial += 1
+	var token := "orchard_%d" % orchard_speedup_serial
+	orchard_speedup = {"id":token, "index":index, "fruit":game.orchard[index].fruit, "ready_at":game.orchard[index].ready_at}
+	if ads == null or not ads.request_speedup(token): orchard_speedup.clear()
+
+
+func _on_speedup_rewarded(request_id: String) -> void:
+	if orchard_speedup.get("id", "") == request_id:
+		var ticket := orchard_speedup.duplicate()
+		orchard_speedup.clear()
+		var slot: Dictionary = game.orchard[int(ticket.index)]
+		if slot.fruit == ticket.fruit and int(slot.ready_at) == int(ticket.ready_at):
+			slot.ready_at = game.now()
+			game.save_game()
+			show_toast("Iklan selesai! Buah sudah siap dipetik.")
+		refresh_all()
+		return
+	var index=int(speedups.pending.get("index",-1))
+	if speedups.complete(game,request_id):
+		farm.show_plot_feedback(index,"plant")
+		show_toast("Iklan selesai! Tanaman sudah siap dipanen.")
+	else:
+		show_toast("Target tanaman sudah berubah. Percepatan tidak diterapkan ke tanaman lain.")
+	refresh_all()
+
+
+func _on_speedup_finished(request_id: String,earned: bool) -> void:
+	if orchard_speedup.get("id", "") == request_id: orchard_speedup.clear()
+	speedups.cancel(request_id)
+	if not earned: show_toast("Iklan belum selesai. Tanaman belum dipercepat.")
 	refresh_all()
 
 
 func on_unlock_plot() -> void:
 	if game.unlock_plot(selected_plot):
+		farm.invalidate_scenery()
+		if farm.hybrid_controller != null:
+			farm.hybrid_controller.data.follow = false
+		farm.frame_world_bounds(Rect2(farm.plot_center(selected_plot) - Vector2(115, 95), Vector2(230, 185)))
 		show_toast("Lahan baru terbuka! +10 XP")
 	else:
 		show_toast("Koin belum cukup untuk membuka lahan.")
@@ -1993,7 +2154,15 @@ func on_claim_seed_recovery() -> void:
 
 
 func send_delivery(index: int) -> void:
+	if farm.delivery_elapsed >= 0.0:
+		show_toast("Truk sedang mengirim pesanan. Tunggu sampai kembali.")
+		return
 	if game.deliver_order(index):
+		switch_tab("kebun")
+		if farm.hybrid_controller != null: farm.hybrid_controller.data.follow = true
+		farm.camera_target = farm.ujang_position
+		farm.camera_center = farm.camera_target
+		farm.clamp_camera_target()
 		farm.start_delivery_animation()
 		show_toast("Pesanan terkirim! Koin dan XP bertambah.")
 		if ads:
@@ -2018,9 +2187,7 @@ func sell_crop(id: String, quantity: int) -> void:
 
 
 func upgrade_barn() -> void:
-	if game.upgrade_storage():
-		show_toast("Gudang diperbesar! +30 kapasitas.")
-	refresh_all()
+	switch_tab("upgrade")
 
 
 func confirm_new_game() -> void:
@@ -2034,11 +2201,8 @@ func confirm_new_game() -> void:
 		func() -> void:
 			game.new_game()
 			game.save_game()
-			selected_plot = 0
-			farm.selected_plot = 0
-			switch_tab("kebun")
-			refresh_all()
-			show_toast("Kebun baru siap! Selamat bertani.")
+			get_tree().call_deferred("reload_current_scene")
+			return
 	)
 	confirmation.canceled.connect(confirmation.queue_free)
 	confirmation.confirmed.connect(confirmation.queue_free)
@@ -2046,12 +2210,15 @@ func confirm_new_game() -> void:
 
 
 func show_toast(message: String) -> void:
+	get_tree().call_group("garden_audio","notify",message)
 	for node in toast_layer.get_children():
 		node.queue_free()
-	var toast := panel(toast_layer, Vector2(69, 849), Vector2(582, 67), Color("3d7653"), 24, 4)
+	var toast_font=preload("res://assets/fonts/styles/nunito_semibold.tres")
+	var text_height=maxf(45,ceilf(toast_font.get_multiline_string_size(message,HORIZONTAL_ALIGNMENT_CENTER,548,19).y)+4)
+	var toast := panel(toast_layer, Vector2(69, 849), Vector2(582, text_height+22), Color("3d7653"), 24, 4)
 	# Notifications must never block the next farm touch or drag.
 	toast.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var caption := label(toast, message, Vector2(17, 11), Vector2(548, 45), 19, Color.WHITE, true)
+	var caption := label(toast, message, Vector2(17, 11), Vector2(548, text_height), 19, Color.WHITE, false)
 	caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	caption.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	caption.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -2078,7 +2245,7 @@ func panel(
 
 func style(color: Color, radius: int = 14, shadow: int = 0) -> StyleBoxFlat:
 	var s := StyleBoxFlat.new()
-	s.bg_color = color
+	s.bg_color = preload("res://scripts/colorful_theme.gd").paper_color(color)
 	s.set_corner_radius_all(radius)
 	s.set_border_width_all(1)
 	s.border_color = color.darkened(0.11)
@@ -2100,6 +2267,8 @@ func label(
 	bold: bool = false
 ) -> Label:
 	var l := Label.new()
+	l.set_meta("typography_role", "title" if bold and font_size>=30 else ("heading" if bold else "body"))
+	l.set_meta("typography_extent", dimensions)
 	l.text = content
 	l.position = pos
 	l.size = dimensions
@@ -2124,7 +2293,9 @@ func button(
 	color: Color,
 	font_size: int = 20
 ) -> Button:
+	bg = preload("res://scripts/colorful_theme.gd").accent(caption,bg)
 	var b := Button.new()
+	b.set_meta("typography_role", "button")
 	b.text = caption
 	b.position = pos
 	b.size = dimensions
@@ -2172,9 +2343,12 @@ func row_card(parent: Node, height: int, bg: Color) -> Panel:
 
 
 func callout(parent: Node, title: String, caption: String, bg: Color) -> Panel:
-	var card := row_card(parent, 106, bg)
+	var body_font=preload("res://assets/fonts/styles/nunito_semibold.tres")
+	var text_height=maxf(32,ceilf(body_font.get_multiline_string_size(caption,HORIZONTAL_ALIGNMENT_LEFT,555,18).y)+4)
+	var card := row_card(parent, maxi(106,int(text_height)+76), bg)
 	label(card, title, Vector2(20, 17), Vector2(555, 34), 21, GREEN, true)
-	label(card, caption, Vector2(20, 55), Vector2(555, 35), 17, SOFT_INK)
+	var description=label(card, caption, Vector2(20, 55), Vector2(555, text_height), 18, SOFT_INK)
+	description.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
 	return card
 
 
@@ -2187,3 +2361,19 @@ class CircleIcon:
 
 	func _draw() -> void:
 		draw_circle(size * 0.5, minf(size.x, size.y) * 0.5, color)
+
+
+func open_playground() -> void:
+	if get_node_or_null("Playground")!=null:return
+	var regions=preload("res://scripts/world_regions.gd")
+	if preload("res://scripts/island_journey.gd").city_level(game)<int(regions.DATA.taman_bermain.level) or not regions.purchased(game,"taman_bermain"):
+		show_toast("Taman Bermain terbuka pada Level 5. Beli kawasannya dahulu.")
+		return
+	switch_tab("kebun")
+	var playground=preload("res://scenes/Playground.tscn").instantiate();playground.host=self;add_child(playground)
+
+func open_industry(kind: String) -> void:
+	if get_node_or_null("IndustryPanel")!=null:return
+	if not preload("res://scripts/world_regions.gd").purchased(game,kind):return
+	switch_tab("kebun")
+	var window=load("res://scripts/industry_panel.gd").new();window.name="IndustryPanel";window.host=self;window.kind=kind;add_child(window)

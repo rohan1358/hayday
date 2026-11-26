@@ -21,7 +21,7 @@ func run_tests() -> void:
 	var game := FarmGameState.new()
 	game.save_path = "user://achievements_" + uid + ".json"
 	game.backup_path = "user://achievements_" + uid + "_backup.json"
-	game.new_game()
+	game.new_game(false) # Legacy ready-to-play fixture; FTUE is covered separately.
 	check(game.achievement_status("missing").is_empty(), "unknown achievement rejected")
 	check(game.claim_achievement("panen").is_empty(), "claim before milestone rejected")
 	check(game.achievement_progress["panen"] == 0, "new game starts with zero harvested goods")
@@ -94,7 +94,7 @@ func run_tests() -> void:
 	var badge := FarmGameState.new()
 	badge.save_path = "user://achievement_badge_" + uid + ".json"
 	badge.backup_path = "user://achievement_badge_" + uid + "_backup.json"
-	badge.new_game()
+	badge.new_game(false)
 	check(badge.claimable_rewards_count() == 1, "fresh farm highlights available daily check-in")
 	check(not badge.claim_daily_checkin().is_empty() and badge.claimable_rewards_count() == 0, "claimed check-in clears header badge")
 	badge.add_daily_progress("panen", 6)

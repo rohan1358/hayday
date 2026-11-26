@@ -1,0 +1,31 @@
+{
+  "variants": [
+    {
+      "id": "stone",
+      "name": "Batu Pastel",
+      "coins_per_unit": 3
+    },
+    {
+      "id": "brick",
+      "name": "Bata Merah",
+      "coins_per_unit": 5
+    },
+    {
+      "id": "moss",
+      "name": "Batu Alam Berlumut",
+      "coins_per_unit": 8
+    }
+  ],
+  "purchase": "Buy one or five units with coins in Toko Jalan, then choose Pasang and drag over clear land.",
+  "ownership": "One placed cell consumes one unit. Erasing returns its style to stock, not coins. Replacing a style returns the old unit and consumes one new unit.",
+  "storage": "Road inventory is separate from harvest storage.",
+  "migration": "Existing road arrays remain valid; old roads become Batu Pastel. The legacy key array remains in saves alongside style and stock metadata.",
+  "validation": {
+    "roads_purchase_test": "24 checks passed, zero failures",
+    "isometric_roads_test": "11 checks passed, zero failures",
+    "roads_visual": "rendered and visually inspected"
+  },
+  "appearance": "Individual illustrated isometric stone, brick and mossy stone pavers, tessellated over the original purchased road footprint. No wooden plank variant.",
+  "wood_migration": "Old wood stock and selected type convert once to moss stone. Placed wood roads also load as moss stone.",
+  "art_prompts": "outputs/isometric-road-prompts.json"
+}

@@ -1,0 +1,278 @@
+{
+	"assets": [
+		{
+			"anchor": [
+				202.5,
+				356.4
+			],
+			"atlas": "res://assets/living_garden/environment.png",
+			"id": "lg_greenhouse",
+			"level": 8,
+			"name": "Rumah Kaca Hias",
+			"region": [
+				23,
+				27,
+				405,
+				405
+			],
+			"usage": "decoration"
+		},
+		{
+			"anchor": [
+				198.0,
+				324.72
+			],
+			"atlas": "res://assets/living_garden/environment.png",
+			"id": "lg_composter",
+			"level": 5,
+			"name": "Sudut Komposter",
+			"region": [
+				468,
+				55,
+				396,
+				369
+			],
+			"usage": "decoration"
+		},
+		{
+			"anchor": [
+				197.0,
+				329.73
+			],
+			"atlas": "res://assets/living_garden/environment.png",
+			"id": "lg_stream",
+			"level": 6,
+			"name": "Aliran Air Mini",
+			"region": [
+				909,
+				44,
+				394,
+				379
+			],
+			"usage": "decoration"
+		},
+		{
+			"anchor": [
+				205.0,
+				363.12
+			],
+			"atlas": "res://assets/living_garden/environment.png",
+			"id": "lg_research_desk",
+			"level": 7,
+			"name": "Meja Riset Kebun",
+			"region": [
+				1342,
+				21,
+				410,
+				408
+			],
+			"usage": "decoration"
+		},
+		{
+			"anchor": [
+				199.5,
+				328.52
+			],
+			"atlas": "res://assets/living_garden/environment.png",
+			"id": "lg_seed_chest",
+			"level": 2,
+			"name": "Peti Benih Warna",
+			"region": [
+				23,
+				479,
+				399,
+				382
+			],
+			"usage": "decoration"
+		},
+		{
+			"anchor": [
+				197.5,
+				382.58
+			],
+			"atlas": "res://assets/living_garden/environment.png",
+			"id": "lg_blossom_tree",
+			"level": 4,
+			"name": "Pohon Sakura Kebun",
+			"region": [
+				465,
+				459,
+				395,
+				407
+			],
+			"usage": "decoration"
+		},
+		{
+			"anchor": [
+				195.5,
+				384.46
+			],
+			"atlas": "res://assets/living_garden/environment.png",
+			"id": "lg_lantern_tree",
+			"level": 12,
+			"name": "Pohon Lentera Ungu",
+			"region": [
+				909,
+				457,
+				391,
+				409
+			],
+			"usage": "decoration"
+		},
+		{
+			"anchor": [
+				207.0,
+				312.4
+			],
+			"atlas": "res://assets/living_garden/environment.png",
+			"id": "lg_crystal_garden",
+			"level": 10,
+			"name": "Taman Batu Kristal",
+			"region": [
+				1341,
+				504,
+				414,
+				355
+			],
+			"usage": "decoration"
+		},
+		{
+			"anchor": [
+				200.5,
+				361.34
+			],
+			"atlas": "res://assets/living_garden/ecosystem.png",
+			"id": "lg_bee_habitat",
+			"level": 3,
+			"name": "Habitat Lebah Bunga",
+			"region": [
+				20,
+				19,
+				401,
+				406
+			],
+			"usage": "decoration"
+		},
+		{
+			"anchor": [
+				210.5,
+				347.13
+			],
+			"atlas": "res://assets/living_garden/ecosystem.png",
+			"id": "lg_frog_habitat",
+			"level": 6,
+			"name": "Habitat Katak",
+			"region": [
+				454,
+				30,
+				421,
+				399
+			],
+			"usage": "decoration"
+		},
+		{
+			"anchor": [
+				203.0,
+				360.45
+			],
+			"atlas": "res://assets/living_garden/ecosystem.png",
+			"id": "lg_butterfly_garden",
+			"level": 4,
+			"name": "Taman Kupu-kupu",
+			"region": [
+				906,
+				24,
+				406,
+				405
+			],
+			"usage": "decoration"
+		},
+		{
+			"anchor": [
+				201.5,
+				372.6
+			],
+			"atlas": "res://assets/living_garden/ecosystem.png",
+			"id": "lg_mushroom_grove",
+			"level": 5,
+			"name": "Rumpun Jamur Hias",
+			"region": [
+				1352,
+				16,
+				403,
+				414
+			],
+			"usage": "decoration"
+		},
+		{
+			"anchor": [
+				209.5,
+				250.56
+			],
+			"atlas": "res://assets/living_garden/strawberry_growth.png",
+			"id": "lg_crystal_stage_0",
+			"level": 20,
+			"name": "Stroberi Kristal Tahap 0",
+			"region": [
+				13,
+				551,
+				419,
+				288
+			],
+			"usage": "crop_stage"
+		},
+		{
+			"anchor": [
+				209.5,
+				250.56
+			],
+			"atlas": "res://assets/living_garden/strawberry_growth.png",
+			"id": "lg_crystal_stage_1",
+			"level": 20,
+			"name": "Stroberi Kristal Tahap 1",
+			"region": [
+				457,
+				550,
+				419,
+				288
+			],
+			"usage": "crop_stage"
+		},
+		{
+			"anchor": [
+				209.5,
+				276.66
+			],
+			"atlas": "res://assets/living_garden/strawberry_growth.png",
+			"id": "lg_crystal_stage_2",
+			"level": 20,
+			"name": "Stroberi Kristal Tahap 2",
+			"region": [
+				900,
+				521,
+				419,
+				318
+			],
+			"usage": "crop_stage"
+		},
+		{
+			"anchor": [
+				209.5,
+				296.67
+			],
+			"atlas": "res://assets/living_garden/strawberry_growth.png",
+			"id": "lg_crystal_stage_3",
+			"level": 20,
+			"name": "Stroberi Kristal Tahap 3",
+			"region": [
+				1344,
+				498,
+				419,
+				341
+			],
+			"usage": "crop_stage"
+		}
+	],
+	"contains_crop_stages": true,
+	"version": 1
+}

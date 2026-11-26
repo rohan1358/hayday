@@ -1,16 +1,32 @@
 class_name FarmGameState
 extends RefCounted
 
+signal cash_reward_progress_changed(amount: int)
+
+const WILD_TREE_DAILY_LIMIT := 3
+const WILD_TREE_COOLDOWN_MIN_SECONDS := 60
+const WILD_TREE_COOLDOWN_MAX_SECONDS := 120
+const WILD_TREE_SPAWN_MIN_SECONDS := 300
+const WILD_TREE_SPAWN_MAX_SECONDS := 600
+const DEFAULT_MAX_STANDING_TREES := 200
+const WILD_TREE_ID_CAPACITY := 1000
+const WILD_TREE_COOLDOWN_NOTICE := "Iklan belum tersedia. Coba lagi nanti."
 const SAVE_PATH := "user://kebun_ceria_v1.json"
 const BACKUP_PATH := "user://kebun_ceria_backup.json"
 const DECORATION_ORDER := [
+	"grass_patch", "garden_tree", "garden_stall",
 	"flower_patch", "flowering_bushes", "flower_garden", "flowering_hedge",
 	"fence_straight", "arched_fence", "rustic_lamp", "harvest_baskets",
 	"wooden_signpost", "wishing_well", "water_tower", "pollinator_house",
 	"herb_drying_rack", "rainwater_collector", "wildflower_crescent",
-	"decorative_pond"
+	"decorative_pond",
+	"lg_greenhouse", "lg_composter", "lg_stream", "lg_research_desk", "lg_seed_chest", "lg_blossom_tree", "lg_lantern_tree", "lg_crystal_garden", "lg_bee_habitat", "lg_frog_habitat", "lg_butterfly_garden", "lg_mushroom_grove",
+	"ref_sprinkler", "ref_tractor", "ref_kolam_bebek", "ref_silo", "ref_sortir_buah", "ref_pengatur_iklim", "ref_ayunan", "ref_kios_bunga", "ref_dermaga", "ref_bengkel_tambang", "ref_panggung_festival", "ref_penggergajian", "ref_tenda", "ref_air_mancur", "ref_kotak_surat", "ref_meja_kafe", "ref_istal_kuda", "ref_sinyal_kereta", "ref_kapal_dagang", "ref_rumah_kaca_besar", "ref_jembatan_batu"
 ]
 const DECORATIONS := {
+	"grass_patch": {"name":"Rumput Taman","cost":10,"width":148.0,"half":Vector2(67,33)},
+	"garden_tree": {"name":"Pohon Apel Hias","cost":90,"width":175.0,"half":Vector2(44,30)},
+	"garden_stall": {"name":"Kios Kebun Hias","cost":120,"width":160.0,"half":Vector2(62,36)},
 	"flower_patch": {"name": "Hamparan Bunga", "cost": 35, "width": 160.0, "half": Vector2(72, 30)},
 	"flowering_bushes": {"name": "Semak Berbunga", "cost": 45, "width": 145.0, "half": Vector2(65, 32)},
 	"flower_garden": {"name": "Taman Bunga", "cost": 55, "width": 145.0, "half": Vector2(67, 35)},
@@ -26,14 +42,51 @@ const DECORATIONS := {
 	"herb_drying_rack": {"name": "Rak Herbal", "cost": 90, "width": 150.0, "half": Vector2(60, 40)},
 	"rainwater_collector": {"name": "Penampung Hujan", "cost": 110, "width": 130.0, "half": Vector2(48, 40)},
 	"wildflower_crescent": {"name": "Bulan Sabit Bunga", "cost": 75, "width": 175.0, "half": Vector2(73, 34)},
-	"decorative_pond": {"name": "Kolam Hias", "cost": 190, "width": 235.0, "half": Vector2(103, 65)}
+	"decorative_pond": {"name": "Kolam Hias", "cost": 190, "width": 235.0, "half": Vector2(103, 65)},
+	"lg_greenhouse": {"level":8, "name": "Rumah Kaca Hias", "cost": 240, "width": 240.0, "half": Vector2(96, 65), "living_garden": true},
+	"lg_composter": {"level":5, "name": "Sudut Komposter", "cost": 95, "width": 150.0, "half": Vector2(62, 42), "living_garden": true},
+	"lg_stream": {"level":6, "name": "Aliran Air Mini", "cost": 170, "width": 220.0, "half": Vector2(94, 60), "living_garden": true},
+	"lg_research_desk": {"level":7, "name": "Meja Riset Kebun", "cost": 125, "width": 175.0, "half": Vector2(70, 45), "living_garden": true},
+	"lg_seed_chest": {"level":2, "name": "Peti Benih Warna", "cost": 75, "width": 130.0, "half": Vector2(52, 34), "living_garden": true},
+	"lg_blossom_tree": {"level":4, "name": "Pohon Sakura Kebun", "cost": 165, "width": 220.0, "half": Vector2(65, 43), "living_garden": true},
+	"lg_lantern_tree": {"level":12, "name": "Pohon Lentera Ungu", "cost": 230, "width": 235.0, "half": Vector2(75, 48), "living_garden": true},
+	"lg_crystal_garden": {"level":10, "name": "Taman Batu Kristal", "cost": 135, "width": 165.0, "half": Vector2(68, 43), "living_garden": true},
+	"lg_bee_habitat": {"level":3, "name": "Habitat Lebah Bunga", "cost": 90, "width": 160.0, "half": Vector2(67, 43), "living_garden": true},
+	"lg_frog_habitat": {"level":6, "name": "Habitat Katak", "cost": 110, "width": 180.0, "half": Vector2(75, 48), "living_garden": true},
+	"lg_butterfly_garden": {"level":4, "name": "Taman Kupu-kupu", "cost": 95, "width": 170.0, "half": Vector2(72, 45), "living_garden": true},
+	"lg_mushroom_grove": {"level":5, "name": "Rumpun Jamur Hias", "cost": 85, "width": 170.0, "half": Vector2(70, 44), "living_garden": true},
+	"ref_sprinkler":{"name":"Penyiram Taman","level":2,"cost":90,"width":145.0,"half":Vector2(65,44)},
+	"ref_tractor":{"name":"Traktor Hijau","level":5,"cost":400,"width":220.0,"half":Vector2(95,58)},
+	"ref_kolam_bebek":{"name":"Kolam Bebek","level":3,"cost":180,"width":190.0,"half":Vector2(85,55)},
+	"ref_pengolah_gula":{"name":"Rumah Pengolah Gula","level":7,"cost":450,"width":230.0,"half":Vector2(100,70)},
+	"ref_silo":{"name":"Silo Gandum","level":5,"cost":320,"width":180.0,"half":Vector2(75,55)},
+	"ref_sortir_buah":{"name":"Rumah Sortir Buah","level":6,"cost":360,"width":230.0,"half":Vector2(100,65)},
+	"ref_pengatur_iklim":{"name":"Pengatur Iklim","level":8,"cost":270,"width":160.0,"half":Vector2(68,48)},
+	"ref_ayunan":{"name":"Ayunan Taman","level":8,"cost":185,"width":175.0,"half":Vector2(77,50)},
+	"ref_kios_bunga":{"name":"Kios Bunga","level":10,"cost":330,"width":195.0,"half":Vector2(88,60)},
+	"ref_dermaga":{"name":"Dermaga Kayu","level":11,"cost":250,"width":210.0,"half":Vector2(95,60)},
+	"ref_bengkel_tambang":{"name":"Bengkel Tambang","level":14,"cost":520,"width":220.0,"half":Vector2(97,67)},
+	"ref_panggung_festival":{"name":"Panggung Festival","level":15,"cost":470,"width":230.0,"half":Vector2(105,70)},
+	"ref_penggergajian":{"name":"Penggergajian","level":14,"cost":440,"width":210.0,"half":Vector2(95,64)},
+	"ref_tenda":{"name":"Tenda Camping","level":18,"cost":220,"width":185.0,"half":Vector2(82,50)},
+	"ref_air_mancur":{"name":"Air Mancur Bunga","level":4,"cost":240,"width":170.0,"half":Vector2(73,48)},
+	"ref_kotak_surat":{"name":"Kotak Surat Desa","level":2,"cost":75,"width":115.0,"half":Vector2(43,35)},
+	"ref_meja_kafe":{"name":"Meja Kafe","level":22,"cost":170,"width":160.0,"half":Vector2(68,43)},
+	"ref_istal_kuda":{"name":"Istal Kuda","level":25,"cost":600,"width":240.0,"half":Vector2(105,77)},
+	"ref_sinyal_kereta":{"name":"Sinyal Kereta","level":26,"cost":190,"width":120.0,"half":Vector2(48,38)},
+	"ref_sekolah":{"name":"Sekolah Kecil","level":28,"cost":600,"width":230.0,"half":Vector2(100,70)},
+	"ref_papan_sekolah":{"name":"Papan Tulis","level":28,"cost":110,"width":155.0,"half":Vector2(65,43)},
+	"ref_arena_panen":{"name":"Arena Panen","level":40,"cost":650,"width":240.0,"half":Vector2(110,75)},
+	"ref_kapal_dagang":{"name":"Kapal Dagang","level":50,"cost":900,"width":250.0,"half":Vector2(108,75)},
+	"ref_rumah_kaca_besar":{"name":"Rumah Kaca Besar","level":8,"cost":650,"width":260.0,"half":Vector2(115,75)},
+	"ref_jembatan_batu":{"name":"Jembatan Batu","level":11,"cost":240,"width":190.0,"half":Vector2(85,50)},
 }
 const VISITOR_ACCEPT_COOLDOWN := 150
 const VISITOR_DECLINE_COOLDOWN := 90
 const VISITOR_NAMES := ["Bu Sari", "Pak Budi", "Kak Rina", "Pak Tono"]
 const CROP_ORDER := [
 	"gandum", "jagung", "wortel", "tebu", "stroberi", "kedelai", "kentang", "labu", "padi",
-	"tomat", "cabai", "kopi", "nanas"
+	"tomat", "cabai", "kopi", "nanas", "stroberi_kristal"
 ]
 const CROPS := {
 	"gandum":
@@ -139,6 +192,7 @@ const CROPS := {
 	"cabai": {"name": "Cabai Merah", "grow": 190, "seed_cost": 78, "sell": 108, "xp": 43, "level": 9, "yield": 3, "color": "#d8474e"},
 	"kopi": {"name": "Biji Kopi", "grow": 240, "seed_cost": 95, "sell": 132, "xp": 50, "level": 13, "yield": 3, "color": "#a77550"},
 	"nanas": {"name": "Nanas", "grow": 300, "seed_cost": 115, "sell": 162, "xp": 58, "level": 17, "yield": 3, "color": "#f1cb62"},
+	"stroberi_kristal": {"name": "Stroberi Kristal", "grow": 420, "seed_cost": 160, "sell": 225, "xp": 80, "level": 20, "yield": 3, "color": "#57d3f5"},
 }
 const PRODUCT_ORDER := [
 	"roti",
@@ -151,11 +205,25 @@ const PRODUCT_ORDER := [
 	"kue",
 	"bacon",
 	"yogurt_kambing",
-	"saus_tomat", "sambal", "selai_nanas"
+	"saus_tomat", "sambal", "selai_nanas", "sup_ikan", "jus_apel", "jus_jeruk", "puding_mangga", "roti_pisang", "selai_ceri", "limun", "jus_alpukat", "puding_kelapa", "selai_persik", "pai_pir", "cokelat", "kopi_seduh"
 ]
+const REGION_ITEMS := {
+	"tepung_jagung":{"name":"Tepung Jagung","sell":22,"color":"#f4cf55"},
+	"tepung_kedelai":{"name":"Tepung Kedelai","sell":26,"color":"#d9cb8b"},
+	"tepung_beras":{"name":"Tepung Beras","sell":28,"color":"#eee5d3"},
+	"ikan": {"name":"Ikan Segar", "sell":38, "color":"#69b8dc"},
+	"tepung": {"name":"Tepung Gandum", "sell":18, "color":"#f2d495"},
+	"surat_tetangga": {"name":"Surat Tetangga", "sell":95, "color":"#f7d07b"},
+	"hidangan_desa": {"name":"Hidangan Desa", "sell":160, "color":"#eab76c"},
+	"wawasan": {"name":"Wawasan Sekolah", "sell":145, "color":"#8cc4f0"},
+	"bunga_langka": {"name":"Bunga Langka", "sell":245, "color":"#dc88cf"},
+	"paket_wisata": {"name":"Paket Wisata", "sell":340, "color":"#7dc4bc"},
+	"piala_panen": {"name":"Piala Panen", "sell":410, "color":"#e9c65f"},
+}
 const COW_FEED := {"gandum": 2, "jagung": 1}
-const FEED_ORDER := ["pakan_sapi", "pakan_babi", "pakan_kambing"]
+const FEED_ORDER := ["pakan_ayam", "pakan_sapi", "pakan_babi", "pakan_kambing"]
 const FEED_RECIPES := {
+	"pakan_ayam": {"name":"Pakan Ayam","ingredients":{"gandum":2},"seconds":8,"yield":1,"xp":4,"sell":8,"level":3,"color":"#efc15a"},
 	"pakan_sapi": {"name": "Pakan Sapi", "ingredients": {"gandum": 3, "jagung": 2}, "seconds": 25, "yield": 2, "xp": 8, "sell": 13, "level": 2, "color": "#dec17a"},
 	"pakan_babi": {"name": "Pakan Babi", "ingredients": {"jagung": 3, "kedelai": 2}, "seconds": 35, "yield": 2, "xp": 10, "sell": 21, "level": 2, "color": "#ddac91"},
 	"pakan_kambing": {"name": "Pakan Kambing", "ingredients": {"wortel": 3, "gandum": 2}, "seconds": 40, "yield": 2, "xp": 12, "sell": 25, "level": 3, "color": "#b5d08e"}
@@ -188,6 +256,7 @@ const ANIMALS := {
 	},
 }
 const LIVESTOCK_PRODUCTS := {
+	"wol": {"name": "Wol Domba", "sell": 36, "color": "#eee6d3"},
 	"telur": {"name": "Telur Ayam", "sell": 18, "color": "#f1d890"},
 	"susu": {"name": "Susu Segar", "sell": 28, "color": "#e7f0ee"},
 	"daging_babi": {"name": "Daging Babi", "sell": 44, "color": "#e9abb4"},
@@ -200,7 +269,7 @@ const CONSTRUCTIONS := {
 	{
 		"name": "Pabrik Pakan",
 		"cost": 190,
-		"level": 2,
+		"level": 3,
 		"description": "Racik dua porsi pakan siap pakai per produksi.",
 		"color": "#c9aa73"
 	},
@@ -222,17 +291,17 @@ const CONSTRUCTIONS := {
 	},
 	"toko_roti":
 	{
-		"name": "Rumah Roti",
-		"cost": 185,
-		"level": 2,
+		"name": "Toko Roti",
+		"cost": 0,
+		"level": 1,
 		"description": "Produksi roti dan kue 20% lebih cepat.",
 		"color": "#e9b971"
 	},
 	"pabrik_susu":
 	{
-		"name": "Rumah Susu",
-		"cost": 240,
-		"level": 2,
+		"name": "Pabrik Susu",
+		"cost": 0,
+		"level": 1,
 		"description": "Produk susu 20% lebih cepat.",
 		"color": "#a3dbe4"
 	},
@@ -276,7 +345,7 @@ const SEED_RECOVERY_COUNT := 3
 const SEED_RECOVERY_COOLDOWN := 600
 const ONBOARDING_COMPLETE := 3
 const ORDER_REFRESH_SECONDS := 45
-const ORCHARD_SIZE := 2
+const ORCHARD_SIZE := 12
 const FRUITS := {
 	"jeruk":
 	{
@@ -300,6 +369,16 @@ const FRUITS := {
 		"yield": 3,
 		"color": "#ed655a"
 	},
+	"mangga": {"name":"Mangga", "grow":180, "cost":280, "sell":52, "xp":32, "level":4, "yield":3, "color":"#edb65b"},
+	"pisang": {"name":"Pisang", "grow":150, "cost":240, "sell":43, "xp":29, "level":3, "yield":3, "color":"#edb65b"},
+	"ceri": {"name":"Ceri", "grow":210, "cost":340, "sell":65, "xp":35, "level":5, "yield":3, "color":"#edb65b"},
+	"lemon": {"name":"Lemon", "grow":190, "cost":300, "sell":57, "xp":32, "level":4, "yield":3, "color":"#edb65b"},
+	"alpukat": {"name":"Alpukat", "grow":260, "cost":440, "sell":82, "xp":38, "level":6, "yield":3, "color":"#edb65b"},
+	"kelapa": {"name":"Kelapa", "grow":240, "cost":400, "sell":75, "xp":38, "level":6, "yield":3, "color":"#edb65b"},
+	"persik": {"name":"Persik", "grow":280, "cost":480, "sell":90, "xp":41, "level":7, "yield":3, "color":"#edb65b"},
+	"pir": {"name":"Pir", "grow":230, "cost":380, "sell":71, "xp":35, "level":5, "yield":3, "color":"#edb65b"},
+	"kakao": {"name":"Kakao", "grow":320, "cost":580, "sell":115, "xp":44, "level":8, "yield":3, "color":"#edb65b"},
+	"biji_kopi": {"name":"Buah Kopi", "grow":300, "cost":540, "sell":105, "xp":44, "level":8, "yield":3, "color":"#edb65b"},
 }
 const DAILY_TASK_ORDER := ["panen", "pesanan", "produksi"]
 const ACHIEVEMENT_ORDER := ["panen", "produksi", "pengiriman", "dagang"]
@@ -355,6 +434,7 @@ const DAILY_TASKS := {
 	},
 }
 const PRODUCTS := {
+	"sup_ikan": {"name":"Sup Ikan Desa", "ingredients":{"ikan":1,"wortel":1,"tepung":1}, "seconds":80, "yield":1, "sell":125, "xp":34, "level":11, "color":"#e8b76c"},
 	"roti":
 	{
 		"name": "Roti Hangat",
@@ -468,11 +548,28 @@ const PRODUCTS := {
 	"saus_tomat": {"name": "Saus Tomat", "ingredients": {"tomat": 2, "tebu": 1}, "seconds": 130, "yield": 1, "sell": 230, "xp": 55, "level": 8, "color": "#d76250"},
 	"sambal": {"name": "Sambal Desa", "ingredients": {"cabai": 2, "tomat": 1}, "seconds": 170, "yield": 1, "sell": 340, "xp": 66, "level": 12, "color": "#d63f48"},
 	"selai_nanas": {"name": "Selai Nanas", "ingredients": {"nanas": 2, "tebu": 1}, "seconds": 210, "yield": 1, "sell": 390, "xp": 82, "level": 18, "color": "#edbf50"},
+	"jus_apel": {"name":"Jus Apel", "ingredients":{"apel":2,"tebu":1}, "seconds":84, "yield":1, "sell":230, "xp":32, "level":2, "color":"#efb967"},
+	"jus_jeruk": {"name":"Jus Jeruk", "ingredients":{"jeruk":2,"tebu":1}, "seconds":84, "yield":1, "sell":230, "xp":32, "level":2, "color":"#efb967"},
+	"puding_mangga": {"name":"Puding Mangga", "ingredients":{"mangga":2,"tebu":1}, "seconds":108, "yield":1, "sell":320, "xp":44, "level":4, "color":"#efb967"},
+	"roti_pisang": {"name":"Roti Pisang", "ingredients":{"pisang":2,"gandum":1}, "seconds":96, "yield":1, "sell":275, "xp":38, "level":3, "color":"#efb967"},
+	"selai_ceri": {"name":"Selai Ceri", "ingredients":{"ceri":2,"tebu":1}, "seconds":120, "yield":1, "sell":365, "xp":50, "level":5, "color":"#efb967"},
+	"limun": {"name":"Limun Segar", "ingredients":{"lemon":2,"tebu":1}, "seconds":108, "yield":1, "sell":320, "xp":44, "level":4, "color":"#efb967"},
+	"jus_alpukat": {"name":"Jus Alpukat", "ingredients":{"alpukat":2,"tebu":1}, "seconds":132, "yield":1, "sell":410, "xp":56, "level":6, "color":"#efb967"},
+	"puding_kelapa": {"name":"Puding Kelapa", "ingredients":{"kelapa":2,"tebu":1}, "seconds":132, "yield":1, "sell":410, "xp":56, "level":6, "color":"#efb967"},
+	"selai_persik": {"name":"Selai Persik", "ingredients":{"persik":2,"tebu":1}, "seconds":144, "yield":1, "sell":455, "xp":62, "level":7, "color":"#efb967"},
+	"pai_pir": {"name":"Pai Pir", "ingredients":{"pir":2,"gandum":1}, "seconds":120, "yield":1, "sell":365, "xp":50, "level":5, "color":"#efb967"},
+	"cokelat": {"name":"Cokelat Kebun", "ingredients":{"kakao":2,"tebu":1}, "seconds":156, "yield":1, "sell":500, "xp":68, "level":8, "color":"#efb967"},
+	"kopi_seduh": {"name":"Kopi Seduh", "ingredients":{"biji_kopi":2,"tebu":1}, "seconds":156, "yield":1, "sell":500, "xp":68, "level":8, "color":"#efb967"},
 }
 
+var building_upgrades: Dictionary = {}
+var ranch: Dictionary={}
+var hybrid: Dictionary = {}
+var seasonal: Dictionary = {"epoch": 0, "preview": -1, "name": "Ujang", "owned": [], "outfit": -1, "accessory": -1, "claimed": []}
 var coins := 400
 var diamonds := 12
 var level := 1
+var level_journey: Dictionary = {}
 var xp := 0
 var selected_crop := "gandum"
 var plots: Array[Dictionary] = []
@@ -480,7 +577,25 @@ var layout_positions: Dictionary = {}
 var decorations: Array[Dictionary] = []
 var next_decoration_id := 1
 var road_tiles: Dictionary = {}
+var road_inventory: Dictionary = {}
 var cleared_wild_trees: Array[int] = []
+var wild_tree_chop_date := ""
+var wild_tree_chops_today := 0
+var max_daily_free_tree_cuts := WILD_TREE_DAILY_LIMIT
+var wild_tree_bonus_chops := 0
+var wild_tree_next_chop_at := 0
+var wild_tree_cooldown_min_seconds := WILD_TREE_COOLDOWN_MIN_SECONDS
+var wild_tree_cooldown_max_seconds := WILD_TREE_COOLDOWN_MAX_SECONDS
+var wild_tree_spawn_min_seconds := WILD_TREE_SPAWN_MIN_SECONDS
+var wild_tree_spawn_max_seconds := WILD_TREE_SPAWN_MAX_SECONDS
+var max_standing_trees := DEFAULT_MAX_STANDING_TREES
+var cash_reward_date := ""
+var cash_reward_chops_today := 0
+var cash_reward_real_device := false
+var cash_reward_allow_emulator := false
+var cash_reward_allow_all_regions := false
+var cash_reward_allowed_regions: Array[String] = []
+var cash_reward_ip_country := ""
 var seeds := {
 	"gandum": 8,
 	"jagung": 5,
@@ -491,9 +606,12 @@ var seeds := {
 	"kentang": 0,
 	"labu": 0,
 	"padi": 0,
-	"tomat": 0, "cabai": 0, "kopi": 0, "nanas": 0
+	"tomat": 0, "cabai": 0, "kopi": 0, "nanas": 0, "stroberi_kristal": 0
 }
 var inventory := {
+	"ikan": 0, "tepung": 0, "tepung_jagung":0,"tepung_kedelai":0,"tepung_beras":0, "sup_ikan": 0,
+	"surat_tetangga": 0, "hidangan_desa": 0, "wawasan": 0,
+	"bunga_langka": 0, "paket_wisata": 0, "piala_panen": 0,
 	"gandum": 0,
 	"jagung": 0,
 	"wortel": 0,
@@ -503,11 +621,12 @@ var inventory := {
 	"kentang": 0,
 	"labu": 0,
 	"padi": 0,
-	"tomat": 0, "cabai": 0, "kopi": 0, "nanas": 0,
+	"tomat": 0, "cabai": 0, "kopi": 0, "nanas": 0, "stroberi_kristal": 0,
 	"telur": 0,
 	"susu": 0,
 	"daging_babi": 0,
 	"susu_kambing": 0,
+		"wol": 0,
 	"roti": 0,
 	"popcorn": 0,
 	"jus_wortel": 0,
@@ -521,7 +640,7 @@ var inventory := {
 	"saus_tomat": 0, "sambal": 0, "selai_nanas": 0,
 	"jeruk": 0,
 	"apel": 0,
-	"pakan_sapi": 0,
+	"pakan_ayam": 0, "pakan_sapi": 0,
 	"pakan_babi": 0,
 	"pakan_kambing": 0
 }
@@ -544,11 +663,15 @@ var visitor_request: Dictionary = {}
 var visitor_counter := 0
 var visitor_next_at := 0
 var first_visit := true
+var ftue: Dictionary = {}
+var world_regions: Dictionary = {}
 var onboarding_step := 0
 var onboarding_plot_index := -1
 var onboarding_skipped := false
 var last_saved := 0
 var daily_date := ""
+var daily_specs: Dictionary = {}
+var mailbox: Dictionary = {}
 var daily_progress: Dictionary = {}
 var daily_claimed: Dictionary = {}
 var checkin_date := ""
@@ -559,14 +682,21 @@ var save_path := SAVE_PATH
 var backup_path := BACKUP_PATH
 
 
-func _init() -> void:
-	new_game()
+func _init(new_player: bool = true) -> void:
+	new_game(new_player)
 
 
-func new_game() -> void:
+func new_game(new_player: bool = true) -> void:
+	ftue={}
+	world_regions={}
+	building_upgrades={}
+	ranch={}
+	seasonal = {"epoch": 0, "preview": -1, "name": "Ujang", "owned": [], "outfit": -1, "accessory": -1, "claimed": []}
+	hybrid = {}
 	coins = 400
 	diamonds = 12
 	level = 1
+	level_journey={}
 	xp = 0
 	selected_crop = "gandum"
 	seeds = {
@@ -579,9 +709,12 @@ func new_game() -> void:
 		"kentang": 0,
 		"labu": 0,
 		"padi": 0,
-		"tomat": 0, "cabai": 0, "kopi": 0, "nanas": 0
+		"tomat": 0, "cabai": 0, "kopi": 0, "nanas": 0, "stroberi_kristal": 0
 	}
 	inventory = {
+		"ikan": 0, "tepung": 0, "tepung_jagung":0,"tepung_kedelai":0,"tepung_beras":0, "sup_ikan": 0,
+		"surat_tetangga": 0, "hidangan_desa": 0, "wawasan": 0,
+		"bunga_langka": 0, "paket_wisata": 0, "piala_panen": 0,
 		"gandum": 0,
 		"jagung": 0,
 		"wortel": 0,
@@ -591,11 +724,12 @@ func new_game() -> void:
 		"kentang": 0,
 		"labu": 0,
 		"padi": 0,
-		"tomat": 0, "cabai": 0, "kopi": 0, "nanas": 0,
+		"tomat": 0, "cabai": 0, "kopi": 0, "nanas": 0, "stroberi_kristal": 0,
 		"telur": 0,
 		"susu": 0,
 		"daging_babi": 0,
 		"susu_kambing": 0,
+		"wol": 0,
 		"roti": 0,
 		"popcorn": 0,
 		"jus_wortel": 0,
@@ -609,10 +743,12 @@ func new_game() -> void:
 		"saus_tomat": 0, "sambal": 0, "selai_nanas": 0,
 		"jeruk": 0,
 		"apel": 0,
-		"pakan_sapi": 0,
+		"pakan_ayam": 0, "pakan_sapi": 0,
 		"pakan_babi": 0,
 		"pakan_kambing": 0
 	}
+	for id in FRUITS: inventory[id] = 0
+	for id in PRODUCTS: inventory[id] = 0
 	orchard.clear()
 	for index in ORCHARD_SIZE:
 		orchard.append(
@@ -643,7 +779,14 @@ func new_game() -> void:
 	decorations.clear()
 	next_decoration_id = 1
 	road_tiles.clear()
+	road_inventory={}
 	cleared_wild_trees.clear()
+	wild_tree_chop_date = Time.get_date_string_from_system()
+	wild_tree_chops_today = 0
+	wild_tree_bonus_chops = 0
+	wild_tree_next_chop_at = 0
+	cash_reward_date = wild_tree_chop_date
+	cash_reward_chops_today = 0
 	for i in 16:
 		plots.append({"crop": "", "ready_at": 0, "planted_at": 0, "unlocked": i < 8})
 	# A new farm starts with a small harvestable demonstration patch. These
@@ -665,6 +808,8 @@ func new_game() -> void:
 		{"items": {"gandum": 4, "jagung": 2}, "coins": 115, "xp": 26, "title": "Warung Bu Sari"},
 	]
 	daily_date = ""
+	daily_specs.clear()
+	mailbox.clear()
 	daily_progress.clear()
 	daily_claimed.clear()
 	checkin_date = ""
@@ -676,35 +821,69 @@ func new_game() -> void:
 		achievement_claimed_tiers[id] = 0
 	ensure_daily_tasks()
 	visitor_request = make_visitor_request()
+	preload("res://scripts/wardrobe_catalog.gd").prepare(self)
+	preload("res://scripts/ranch_state.gd").prepare(self)
+	if new_player: preload("res://scripts/first_farm.gd").start(self)
+	preload("res://scripts/home_services.gd").prepare(self)
+
+
+func daily_task_available(id: String) -> bool:
+	return DAILY_TASKS.has(id) and (level >= int({"panen":1,"pesanan":3,"produksi":5}.get(id,999)) or int(daily_progress.get(id,0))>0)
+
+
+func daily_task_ids() -> Array:
+	var result=[]
+	for id in DAILY_TASK_ORDER:
+		if daily_task_available(id): result.append(id)
+	return result
+
+
+func daily_task_definition(id: String) -> Dictionary:
+	if not DAILY_TASKS.has(id): return {}
+	var result: Dictionary=DAILY_TASKS[id].duplicate(true)
+	var saved=daily_specs.get(id,{})
+	if saved is Dictionary and saved.has("goal"):
+		for key in ["goal","coins","xp","diamonds","level"]:
+			result[key]=clampi(int(saved.get(key,result.get(key,1))),0 if key in ["coins","xp","diamonds"] else 1,100000)
+	else:
+		result.level=level
+		var extra=maxi(0,level-int({"panen":1,"pesanan":3,"produksi":5}[id]))
+		result.goal=mini(60,6+extra*2) if id=="panen" else mini(8,2+int(extra/5))
+		result.coins+=mini(500,extra*5);result.xp+=mini(50,extra)
+	result.description={"panen":"Panen %d hasil tanaman","pesanan":"Kirim %d pesanan truk","produksi":"Ambil %d hasil olahan dapur"}[id]%int(result.goal)
+	return result
 
 
 func ensure_daily_tasks(date_override: String = "") -> bool:
-	var today := (
-		date_override if not date_override.is_empty() else Time.get_date_string_from_system()
-	)
-	if daily_date == today:
-		return false
-	daily_date = today
-	daily_progress.clear()
-	daily_claimed.clear()
-	for id in DAILY_TASK_ORDER:
-		daily_progress[id] = 0
-		daily_claimed[id] = false
-	return true
+	var today := date_override if not date_override.is_empty() else Time.get_date_string_from_system()
+	var changed=false
+	if daily_date!=today:
+		daily_date=today;daily_specs.clear();daily_progress.clear();daily_claimed.clear();changed=true
+	for id in daily_task_ids():
+		if not daily_specs.has(id):
+			if int(daily_progress.get(id,0))>0 or bool(daily_claimed.get(id,false)):
+				daily_specs[id]=DAILY_TASKS[id].duplicate(true);daily_specs[id].level=level
+			else: daily_specs[id]=daily_task_definition(id)
+			changed=true
+		elif int(daily_specs[id].get("level",level))!=level and int(daily_progress.get(id,0))==0 and not bool(daily_claimed.get(id,false)):
+			daily_specs.erase(id);daily_specs[id]=daily_task_definition(id);changed=true
+		if not daily_progress.has(id): daily_progress[id]=0
+		if not daily_claimed.has(id): daily_claimed[id]=false
+	return changed
 
 
 func add_daily_progress(id: String, amount: int = 1) -> void:
 	ensure_daily_tasks()
-	if not DAILY_TASKS.has(id) or amount <= 0:
+	if not daily_task_available(id) or amount <= 0:
 		return
-	daily_progress[id] = mini(int(DAILY_TASKS[id]["goal"]), int(daily_progress.get(id, 0)) + amount)
+	daily_progress[id] = mini(int(daily_task_definition(id)["goal"]), int(daily_progress.get(id, 0)) + amount)
 
 
 func claim_daily_task(id: String) -> bool:
 	ensure_daily_tasks()
-	if not DAILY_TASKS.has(id) or bool(daily_claimed.get(id, false)):
+	if not daily_task_available(id) or bool(daily_claimed.get(id, false)):
 		return false
-	var task: Dictionary = DAILY_TASKS[id]
+	var task: Dictionary = daily_task_definition(id)
 	if int(daily_progress.get(id, 0)) < int(task["goal"]):
 		return false
 	daily_claimed[id] = true
@@ -718,7 +897,7 @@ func claim_daily_task(id: String) -> bool:
 func daily_claimed_count() -> int:
 	ensure_daily_tasks()
 	var count := 0
-	for id in DAILY_TASK_ORDER:
+	for id in daily_task_ids():
 		if bool(daily_claimed.get(id, false)):
 			count += 1
 	return count
@@ -727,8 +906,8 @@ func daily_claimed_count() -> int:
 func claimable_rewards_count() -> int:
 	ensure_daily_tasks()
 	var count := 1 if bool(daily_checkin_preview()["available"]) else 0
-	for id in DAILY_TASK_ORDER:
-		if int(daily_progress.get(id, 0)) >= int(DAILY_TASKS[id]["goal"]) and not bool(daily_claimed.get(id, false)):
+	for id in daily_task_ids():
+		if int(daily_progress.get(id, 0)) >= int(daily_task_definition(id)["goal"]) and not bool(daily_claimed.get(id, false)):
 			count += 1
 	for id in ACHIEVEMENT_ORDER:
 		if bool(achievement_status(id)["ready"]):
@@ -777,6 +956,7 @@ func add_achievement_progress(id: String, amount: int = 1) -> void:
 		return
 	# Lifetime counters never reset with daily tasks and are saved by the caller.
 	achievement_progress[id] = mini(1000000000, int(achievement_progress.get(id, 0)) + amount)
+	if id == "pengiriman": preload("res://scripts/building_upgrades.gd").delivery(self)
 
 
 func achievement_status(id: String) -> Dictionary:
@@ -821,6 +1001,8 @@ func crop_info(id: String) -> Dictionary:
 
 
 func item_info(id: String) -> Dictionary:
+	if REGION_ITEMS.has(id):
+		return REGION_ITEMS[id]
 	if FEED_RECIPES.has(id):
 		return FEED_RECIPES[id]
 	if LIVESTOCK_PRODUCTS.has(id):
@@ -841,6 +1023,8 @@ func has_construction(id: String) -> bool:
 
 
 func buy_construction(id: String) -> bool:
+	if not ftue.is_empty() and level<(3 if id.begins_with("kandang_") else 5): return false
+	if not feature_unlocked("ranch" if id.begins_with("kandang") or id=="pabrik_pakan" else "production"): return false
 	if not CONSTRUCTIONS.has(id):
 		return false
 	var info: Dictionary = CONSTRUCTIONS[id]
@@ -851,10 +1035,15 @@ func buy_construction(id: String) -> bool:
 		return false
 	coins -= int(info["cost"])
 	constructions[id] = construction_count(id) + 1
+	preload("res://scripts/ranch_state.gd").prepare(self)
 	award_xp(12 if id in DECOR_ORDER else 20)
 	save_game()
 	return true
 
+
+func ranch_yield(species: String) -> int:
+	var base=2 if species in ["ayam","sapi"] else int(ANIMALS.get(species,{}).get("yield",1))
+	return preload("res://scripts/ranch_state.gd").units(self,species,base)
 
 func animal_hungry(id: String) -> bool:
 	return (
@@ -874,20 +1063,21 @@ func animal_ready(id: String) -> bool:
 
 
 func can_feed_animal(id: String) -> bool:
+	if not feature_unlocked("ranch"): return false
 	if not animal_hungry(id):
 		return false
-	if int(inventory.get("pakan_" + id, 0)) > 0:
+	if int(inventory.get("pakan_" + id, 0)) >= preload("res://scripts/ranch_state.gd").feed_multiplier(self,id):
 		return true
 	return missing_animal_feed(id).is_empty()
 
 
 func missing_animal_feed(id: String) -> Dictionary:
 	var shortage := {}
-	if not animal_hungry(id) or int(inventory.get("pakan_" + id, 0)) > 0:
+	if not animal_hungry(id) or int(inventory.get("pakan_" + id, 0)) >= preload("res://scripts/ranch_state.gd").feed_multiplier(self,id):
 		return shortage
 	var feed: Dictionary = ANIMALS[id]["feed"]
 	for ingredient in feed:
-		var amount := int(feed[ingredient]) - int(inventory.get(ingredient, 0))
+		var amount := int(feed[ingredient])*preload("res://scripts/ranch_state.gd").feed_multiplier(self,id) - int(inventory.get(ingredient, 0))
 		if amount > 0:
 			shortage[ingredient] = amount
 	return shortage
@@ -898,11 +1088,13 @@ func feed_animal(id: String) -> bool:
 		return false
 	var info: Dictionary = ANIMALS[id]
 	var feed_id := "pakan_" + id
-	if int(inventory.get(feed_id, 0)) > 0:
-		inventory[feed_id] = int(inventory[feed_id]) - 1
+	var multiplier:=preload("res://scripts/ranch_state.gd").feed_multiplier(self,id)
+	if int(inventory.get(feed_id, 0)) >= multiplier:
+		inventory[feed_id] = int(inventory[feed_id]) - multiplier
 	else:
 		for ingredient in info["feed"]:
-			inventory[ingredient] = int(inventory[ingredient]) - int(info["feed"][ingredient])
+			inventory[ingredient] = int(inventory[ingredient]) - int(info["feed"][ingredient])*multiplier
+	preload("res://scripts/ranch_state.gd").start_cycle(self,id)
 	livestock[id] = now() + int(info["seconds"])
 	save_game()
 	return true
@@ -912,7 +1104,7 @@ func collect_animal(id: String) -> bool:
 	if not animal_ready(id):
 		return false
 	var info: Dictionary = ANIMALS[id]
-	var amount := int(info["yield"])
+	var amount := preload("res://scripts/ranch_state.gd").units(self,id,int(info["yield"]))
 	if storage_used() + amount > storage_capacity:
 		return false
 	var item_id: String = info["item"]
@@ -1009,13 +1201,17 @@ func harvest_tree(index: int) -> int:
 
 
 func can_queue_product(id: String) -> bool:
-	if not PRODUCTS.has(id) or production_queue.size() >= 3:
+	if not feature_unlocked("production") and id not in ["roti","keju","mentega"]: return false
+	if id == "sup_ikan" and not preload("res://scripts/world_regions.gd").purchased(self,"pemancingan"): return false
+	if not PRODUCTS.has(id) or production_queue.size() >= production_capacity():
 		return false
 	var recipe: Dictionary = PRODUCTS[id]
-	if level < int(recipe["level"]):
+	if level < int(recipe["level"]) and id not in ["roti","keju","mentega"]:
 		return false
 	for ingredient in recipe["ingredients"]:
-		if int(inventory.get(ingredient, 0)) < int(recipe["ingredients"][ingredient]):
+		if FRUITS.has(ingredient) and not order_item_accessible(ingredient):
+			return false
+		if preload("res://scripts/first_farm.gd").spendable(self,ingredient) < int(recipe["ingredients"][ingredient]):
 			return false
 	return true
 
@@ -1034,7 +1230,8 @@ func queue_product(id: String) -> bool:
 		(id in ["roti", "roti_manis", "kue"] and has_construction("toko_roti"))
 		or (id in ["keju", "mentega", "yogurt_kambing"] and has_construction("pabrik_susu"))
 	):
-		duration = maxi(1, ceili(float(duration) * 0.8))
+		var station="roti" if id in ["roti","roti_manis","kue"] else "susu"
+		duration = maxi(1, ceili(float(duration) * (0.8-0.1*(preload("res://scripts/building_upgrades.gd").tier(self,station)-1))))
 	production_queue.append(
 		{"product": id, "started_at": start_at, "ready_at": start_at + duration}
 	)
@@ -1059,12 +1256,13 @@ func collect_ready_products() -> int:
 
 
 func can_plant(index: int, id: String) -> bool:
+	if not preload("res://scripts/first_farm.gd").allow_plant(self,index,id): return false
 	if index < 0 or index >= plots.size() or not CROPS.has(id):
 		return false
 	return (
 		plots[index]["unlocked"]
 		and plots[index]["crop"] == ""
-		and level >= int(CROPS[id]["level"])
+		and level >= crop_level(id)
 		and int(seeds.get(id, 0)) > 0
 	)
 
@@ -1074,8 +1272,11 @@ func plant(index: int, id: String) -> bool:
 		return false
 	var planted_at := now()
 	plots[index]["crop"] = id
+	if not hybrid.has("crop_generation"): hybrid["crop_generation"] = {}
+	hybrid.crop_generation[str(index)] = int(hybrid.crop_generation.get(str(index), 0)) + 1
 	plots[index]["planted_at"] = planted_at
 	plots[index]["ready_at"] = planted_at + int(CROPS[id]["grow"])
+	preload("res://scripts/first_farm.gd").planted(self,index)
 	seeds[id] = int(seeds[id]) - 1
 	first_visit = false
 	if onboarding_step == 1 and id == "gandum" and index == onboarding_plot_index:
@@ -1085,10 +1286,11 @@ func plant(index: int, id: String) -> bool:
 
 
 func can_queue_feed(id: String) -> bool:
-	if not has_construction("pabrik_pakan") or not FEED_RECIPES.has(id) or feed_queue.size() >= 3:
+	if not feature_unlocked("ranch"): return false
+	if (not has_construction("pabrik_pakan") and not (id=="pakan_ayam" and preload("res://scripts/first_coop.gd").built(self))) or not FEED_RECIPES.has(id) or feed_queue.size() >= 3:
 		return false
 	var recipe: Dictionary = FEED_RECIPES[id]
-	if level < int(recipe["level"]):
+	if level < int(recipe["level"]) and id not in ["roti","keju","mentega"]:
 		return false
 	for ingredient in recipe["ingredients"]:
 		if int(inventory.get(ingredient, 0)) < int(recipe["ingredients"][ingredient]):
@@ -1157,6 +1359,7 @@ func _collect_ready_queue(queue: Array[Dictionary], recipes: Dictionary, item_ke
 		queue.pop_front()
 		total_units += quantity
 		total_xp += int(recipes[id]["xp"])
+	if not ftue.is_empty() and int(inventory.get("pakan_ayam",0))>0 and str(ftue.get("poultry_step",""))=="craft": ftue.poultry_step="feed"
 	award_xp(total_xp)
 	add_daily_progress("produksi", total_units)
 	add_achievement_progress("produksi", total_units)
@@ -1190,6 +1393,7 @@ func harvest(index: int) -> int:
 	plots[index]["planted_at"] = 0
 	plots[index]["ready_at"] = 0
 	award_xp(int(CROPS[crop_id]["xp"]))
+	preload("res://scripts/first_farm.gd").harvested(self,index)
 	add_daily_progress("panen", quantity)
 	add_achievement_progress("panen", quantity)
 	if onboarding_step == 0 and crop_id == "gandum":
@@ -1206,6 +1410,9 @@ func onboarding_open_orders() -> void:
 
 
 func skip_onboarding() -> void:
+	if preload("res://scripts/first_farm.gd").active(self):
+		preload("res://scripts/first_farm.gd").skip(self)
+		return
 	if onboarding_step >= ONBOARDING_COMPLETE:
 		return
 	onboarding_step = ONBOARDING_COMPLETE
@@ -1214,22 +1421,24 @@ func skip_onboarding() -> void:
 
 
 func award_xp(amount: int) -> bool:
+	preload("res://scripts/island_journey.gd").award_city_xp(self,amount)
 	xp += amount
 	var leveled_up := false
 	while xp >= xp_target():
 		xp -= xp_target()
 		level += 1
+		preload("res://scripts/level_journey.gd").reached(self,level)
 		diamonds += 2
 		leveled_up = true
 	return leveled_up
 
 
 func xp_target() -> int:
-	return 30 + (level - 1) * 20
+	return 100 + (level-1)*25 if not ftue.is_empty() else 30 + (level - 1) * 20
 
 
 func buy_seeds(id: String, count: int = 5) -> bool:
-	if not CROPS.has(id) or count <= 0 or level < int(CROPS[id]["level"]):
+	if not CROPS.has(id) or count <= 0 or level < crop_level(id):
 		return false
 	var cost := int(CROPS[id]["seed_cost"]) * count
 	if coins < cost:
@@ -1252,7 +1461,7 @@ func needs_seed_recovery() -> bool:
 	if not has_unlocked_plot:
 		return false
 	for id in CROP_ORDER:
-		if level >= int(CROPS[id]["level"]) and int(seeds.get(id, 0)) > 0:
+		if level >= crop_level(id) and int(seeds.get(id, 0)) > 0:
 			return false
 	return true
 
@@ -1280,15 +1489,18 @@ func land_cost() -> int:
 	for plot in plots:
 		if plot["unlocked"]:
 			unlocked += 1
-	return 120 + (unlocked - 8) * 85
+	var initial_plots=3 if not ftue.is_empty() else 8
+	return 120 + maxi(0,unlocked-initial_plots)*85
 
 
 func unlock_plot(index: int) -> bool:
+	if not feature_unlocked("expansion"): return false
 	if index < 0 or index >= plots.size() or plots[index]["unlocked"]:
 		return false
-	if coins < land_cost():
+	var price=land_cost()
+	if price<=0 or coins < price:
 		return false
-	coins -= land_cost()
+	coins -= price
 	plots[index]["unlocked"] = true
 	award_xp(10)
 	save_game()
@@ -1296,14 +1508,47 @@ func unlock_plot(index: int) -> bool:
 
 
 func ready_eggs() -> bool:
+	if not ftue.is_empty(): return preload("res://scripts/first_coop.gd").built(self) and eggs_ready_at>0 and now()>=eggs_ready_at
 	return now() >= eggs_ready_at
 
 
+func can_feed_chickens() -> bool:
+	if not ftue.is_empty(): return preload("res://scripts/first_coop.gd").built(self) and eggs_ready_at==0 and int(inventory.get("pakan_ayam",0))>0
+	if not feature_unlocked("ranch"): return false
+	var herd=preload("res://scripts/ranch_state.gd")
+	herd.prepare(self)
+	return herd.count(self,"ayam")>1 and not ready_eggs() and int(ranch.chicken_feed_cycle)!=eggs_ready_at and int(inventory.get("gandum",0))>=herd.count(self,"ayam")
+
+func feed_chickens() -> bool:
+	if not ftue.is_empty():
+		if not can_feed_chickens(): return false
+		inventory.pakan_ayam=int(inventory.pakan_ayam)-1
+		eggs_ready_at=now()+38
+		preload("res://scripts/ranch_state.gd").start_cycle(self,"ayam")
+		ftue.poultry_step="eggs"
+		save_game()
+		return true
+	if not can_feed_chickens(): return false
+	var herd=preload("res://scripts/ranch_state.gd")
+	inventory.gandum=int(inventory.gandum)-herd.count(self,"ayam")
+	eggs_ready_at=now()+38
+	herd.start_cycle(self,"ayam")
+	ranch.chicken_feed_cycle=eggs_ready_at
+	save_game()
+	return true
+
 func collect_eggs() -> bool:
-	if not ready_eggs() or storage_used() + 2 > storage_capacity:
+	if not feature_unlocked("ranch"): return false
+	var amount:=preload("res://scripts/ranch_state.gd").units(self,"ayam",2)
+	if not ready_eggs() or storage_used() + amount > storage_capacity:
 		return false
-	inventory["telur"] = int(inventory["telur"]) + 2
+	inventory["telur"] = int(inventory["telur"]) + amount
+	ranch.production_counts.ayam=1
+	ranch.chicken_feed_cycle=0
 	eggs_ready_at = now() + 38
+	if not ftue.is_empty():
+		eggs_ready_at=0
+		ftue.poultry_step="done"
 	award_xp(8)
 	save_game()
 	return true
@@ -1314,16 +1559,19 @@ func cow_is_hungry() -> bool:
 
 
 func cow_milk_ready() -> bool:
+	if not ftue.is_empty() and preload("res://scripts/ranch_state.gd").count(self,"sapi")<=0: return false
 	return cow_ready_at > 0 and now() >= cow_ready_at
 
 
 func can_feed_cow() -> bool:
+	if not ftue.is_empty() and preload("res://scripts/ranch_state.gd").count(self,"sapi")<=0: return false
+	if not feature_unlocked("ranch"): return false
 	if not cow_is_hungry():
 		return false
-	if int(inventory.get("pakan_sapi", 0)) > 0:
+	if int(inventory.get("pakan_sapi", 0)) >= preload("res://scripts/ranch_state.gd").feed_multiplier(self,"sapi"):
 		return true
 	for ingredient in COW_FEED:
-		if int(inventory.get(ingredient, 0)) < int(COW_FEED[ingredient]):
+		if int(inventory.get(ingredient, 0)) < int(COW_FEED[ingredient])*preload("res://scripts/ranch_state.gd").feed_multiplier(self,"sapi"):
 			return false
 	return true
 
@@ -1331,20 +1579,23 @@ func can_feed_cow() -> bool:
 func feed_cow() -> bool:
 	if not can_feed_cow():
 		return false
-	if int(inventory.get("pakan_sapi", 0)) > 0:
-		inventory["pakan_sapi"] = int(inventory["pakan_sapi"]) - 1
+	var multiplier:=preload("res://scripts/ranch_state.gd").feed_multiplier(self,"sapi")
+	if int(inventory.get("pakan_sapi", 0)) >= multiplier:
+		inventory["pakan_sapi"] = int(inventory["pakan_sapi"]) - multiplier
 	else:
 		for ingredient in COW_FEED:
-			inventory[ingredient] = int(inventory[ingredient]) - int(COW_FEED[ingredient])
+			inventory[ingredient] = int(inventory[ingredient]) - int(COW_FEED[ingredient])*multiplier
+	preload("res://scripts/ranch_state.gd").start_cycle(self,"sapi")
 	cow_ready_at = now() + COW_PRODUCTION_SECONDS
 	save_game()
 	return true
 
 
 func collect_milk() -> bool:
-	if not cow_milk_ready() or storage_used() + COW_MILK_YIELD > storage_capacity:
+	var amount:=preload("res://scripts/ranch_state.gd").units(self,"sapi",COW_MILK_YIELD)
+	if not cow_milk_ready() or storage_used() + amount > storage_capacity:
 		return false
-	inventory["susu"] = int(inventory.get("susu", 0)) + COW_MILK_YIELD
+	inventory["susu"] = int(inventory.get("susu", 0)) + amount
 	cow_ready_at = 0
 	award_xp(10)
 	save_game()
@@ -1363,6 +1614,7 @@ func accelerate(index: int) -> bool:
 
 
 func order_can_fill(index: int) -> bool:
+	if not feature_unlocked("orders"): return false
 	if index < 0 or index >= orders.size():
 		return false
 	for id in orders[index]["items"]:
@@ -1481,7 +1733,7 @@ func repair_duplicate_orders() -> int:
 func _make_order_for_step(order_step: int) -> Dictionary:
 	var available: Array[String] = []
 	for id in CROP_ORDER:
-		if level >= int(CROPS[id]["level"]):
+		if level >= crop_level(id):
 			available.append(id)
 	# After the first deliveries, every third order asks for a crafted product.
 	# This makes production relevant without making early orders impossible.
@@ -1492,8 +1744,13 @@ func _make_order_for_step(order_step: int) -> Dictionary:
 				available_products.append(id)
 		if not available_products.is_empty() and order_step % 3 == 0:
 			available = available_products
+	if level >= 20 and deliveries >= 3 and order_step % 5 == 4:
+		var district_goods: Array[String] = []
+		for item_id in ["surat_tetangga", "hidangan_desa", "wawasan", "bunga_langka", "paket_wisata", "piala_panen"]:
+			if order_item_accessible(item_id): district_goods.append(item_id)
+		if not district_goods.is_empty(): available = district_goods
 	var id: String = available[order_step % available.size()]
-	var qty := 1 + order_step % 2 if PRODUCTS.has(id) else 2 + order_step % 3
+	var qty := 1 + order_step % 2 if PRODUCTS.has(id) or REGION_ITEMS.has(id) else 2 + order_step % 3
 	var items := {id: qty}
 	# Later contracts combine harvesting, livestock and cooking. Request only
 	# items already accessible at the current level or through owned buildings.
@@ -1527,6 +1784,11 @@ func _make_order_for_step(order_step: int) -> Dictionary:
 
 
 func order_item_accessible(id: String) -> bool:
+	if id == "sup_ikan" and not preload("res://scripts/world_regions.gd").purchased(self,"pemancingan"):
+		return false
+	var region_source := {"surat_tetangga":"permukiman", "hidangan_desa":"kafe", "wawasan":"sekolah", "bunga_langka":"botani", "paket_wisata":"resor_danau", "piala_panen":"arena"}
+	if region_source.has(id) and not preload("res://scripts/world_regions.gd").purchased(self,str(region_source[id])):
+		return false
 	if FRUITS.has(id):
 		for tree in orchard:
 			if str(tree.get("fruit", "")) == id:
@@ -1534,6 +1796,8 @@ func order_item_accessible(id: String) -> bool:
 		return false
 	if PRODUCTS.has(id):
 		for ingredient in PRODUCTS[id]["ingredients"]:
+			if CROPS.has(ingredient) and level < crop_level(ingredient): return false
+			if FRUITS.has(ingredient) and not order_item_accessible(ingredient): return false
 			for animal_id in ANIMAL_ORDER:
 				var animal: Dictionary = ANIMALS[animal_id]
 				if ingredient == animal["item"] and not has_construction(str(animal["building"])):
@@ -1544,7 +1808,7 @@ func order_item_accessible(id: String) -> bool:
 func make_visitor_request() -> Dictionary:
 	var available: Array[String] = []
 	for id in CROP_ORDER:
-		if level >= int(CROPS[id]["level"]):
+		if level >= crop_level(id):
 			available.append(id)
 	# Every fourth visitor may request a locally craftable product once
 	# deliveries introduce the player to the production loop.
@@ -1569,6 +1833,7 @@ func make_visitor_request() -> Dictionary:
 
 
 func refresh_visitor(timestamp: int = -1) -> bool:
+	if preload("res://scripts/first_farm.gd").active(self): return false
 	var current_time := timestamp if timestamp >= 0 else now()
 	if not visitor_request.is_empty() or current_time < visitor_next_at:
 		return false
@@ -1591,8 +1856,9 @@ func fulfill_visitor() -> bool:
 	var item_id := str(visitor_request["item"])
 	var quantity := int(visitor_request["quantity"])
 	inventory[item_id] = int(inventory[item_id]) - quantity
-	coins += int(visitor_request["coins"])
+	coins += int(visitor_request["coins"]) + floori(int(visitor_request["coins"]) * 0.05 * (preload("res://scripts/building_upgrades.gd").tier(self,"rumah")-1))
 	award_xp(int(visitor_request["xp"]))
+	preload("res://scripts/first_farm.gd").sold(self)
 	visitor_request.clear()
 	add_achievement_progress("dagang")
 	visitor_next_at = now() + VISITOR_ACCEPT_COOLDOWN
@@ -1601,6 +1867,7 @@ func fulfill_visitor() -> bool:
 
 
 func decline_visitor() -> bool:
+	if preload("res://scripts/first_farm.gd").active(self): return false
 	if visitor_request.is_empty():
 		return false
 	visitor_request.clear()
@@ -1610,6 +1877,7 @@ func decline_visitor() -> bool:
 
 
 func sell_quantity(id: String, quantity: int) -> int:
+	if quantity>preload("res://scripts/first_farm.gd").spendable(self,id): return 0
 	if quantity <= 0 or not inventory.has(id) or int(inventory[id]) < quantity:
 		return 0
 	var info := item_info(id)
@@ -1629,6 +1897,7 @@ func sell_all(id: String) -> int:
 
 
 func list_market_item(id: String, quantity: int) -> bool:
+	if preload("res://scripts/first_farm.gd").active(self): return false
 	if not inventory.has(id) or item_info(id).is_empty():
 		return false
 	if quantity < 1 or quantity > 3 or market_listings.size() >= MARKET_MAX_SLOTS:
@@ -1688,14 +1957,12 @@ func settle_market_sales(timestamp: int = -1) -> int:
 	return earned
 
 
+func production_capacity() -> int:
+	return 2 + preload("res://scripts/building_upgrades.gd").tier(self,"dapur") + preload("res://scripts/building_upgrades.gd").tier(self,"roti")-1 + preload("res://scripts/building_upgrades.gd").tier(self,"susu")-1
+
+
 func upgrade_storage() -> bool:
-	var cost := 180 + (storage_capacity - 60) * 3
-	if coins < cost:
-		return false
-	coins -= cost
-	storage_capacity += 30
-	save_game()
-	return true
+	return preload("res://scripts/building_upgrades.gd").claim(self,"gudang")
 
 
 func decoration_by_key(key: String) -> Dictionary:
@@ -1714,10 +1981,11 @@ func stored_decoration_count(kind: String) -> int:
 
 
 func buy_decoration(kind: String) -> String:
+	if not feature_unlocked("decorations"): return ""
 	if not DECORATIONS.has(kind):
 		return ""
 	var price := int(DECORATIONS[kind]["cost"])
-	if coins < price:
+	if coins < price or level<int(DECORATIONS[kind].get("level",1)):
 		return ""
 	coins -= price
 	var key := "dekor_%d" % next_decoration_id
@@ -1728,10 +1996,11 @@ func buy_decoration(kind: String) -> String:
 
 
 func set_decoration_position(key: String, at: Vector2) -> bool:
-	if not at.is_finite() or at.x < 25.0 or at.x > 3575.0 or at.y < 25.0 or at.y > 2875.0:
+	if not at.is_finite() or at.x < 25.0 or at.x > 4295.0 or at.y < 25.0 or at.y > 7655.0:
 		return false
 	for item in decorations:
 		if str(item.get("key", "")) == key:
+			if level<int(DECORATIONS[str(item["kind"])].get("level",1)): return false
 			item["position"] = [at.x, at.y]
 			save_game()
 			return true
@@ -1748,12 +2017,21 @@ func store_decoration(key: String) -> bool:
 
 
 func save_game() -> void:
+	preload("res://scripts/island_journey.gd").capture(self)
 	ensure_daily_tasks()
+	refresh_wild_tree_chop_quota()
+	refresh_cash_reward_day()
 	var data := {
 		"version": 1,
+		"seasonal": seasonal,
+		"hybrid": hybrid,
+		"ranch": ranch,
+		"building_upgrades": building_upgrades,
+		"world_regions": world_regions,
 		"coins": coins,
 		"diamonds": diamonds,
 		"level": level,
+		"level_journey": level_journey,
 		"xp": xp,
 		"selected_crop": selected_crop,
 		"plots": plots,
@@ -1761,7 +2039,15 @@ func save_game() -> void:
 		"decorations": decorations,
 		"next_decoration_id": next_decoration_id,
 		"road_tiles": road_tiles.keys(),
+		"road_styles": road_tiles,
+		"road_inventory": road_inventory,
 		"cleared_wild_trees": cleared_wild_trees,
+		"wild_tree_chop_date": wild_tree_chop_date,
+		"wild_tree_chops_today": wild_tree_chops_today,
+		"wild_tree_bonus_chops": wild_tree_bonus_chops,
+		"wild_tree_next_chop_at": wild_tree_next_chop_at,
+		"cash_reward_date": cash_reward_date,
+		"cash_reward_chops_today": cash_reward_chops_today,
 		"seeds": seeds,
 		"inventory": inventory,
 		"storage_capacity": storage_capacity,
@@ -1783,10 +2069,13 @@ func save_game() -> void:
 		"visitor_next_at": visitor_next_at,
 		"orchard": orchard,
 		"first_visit": first_visit,
+		"ftue": ftue,
 		"onboarding_step": onboarding_step,
 		"onboarding_plot_index": onboarding_plot_index,
 		"onboarding_skipped": onboarding_skipped,
 		"daily_date": daily_date,
+		"daily_specs": daily_specs,
+		"mailbox": mailbox,
 		"daily_progress": daily_progress,
 		"daily_claimed": daily_claimed,
 		"checkin_date": checkin_date,
@@ -1817,9 +2106,18 @@ func load_game() -> bool:
 			continue
 		if not data.get("plots", null) is Array or data["plots"].size() != 16:
 			continue
+		ftue = data.get("ftue", {}).duplicate(true) if data.get("ftue", {}) is Dictionary else {}
+		preload("res://scripts/first_farm.gd").restore(self)
+		building_upgrades = data.get("building_upgrades", {}).duplicate(true) if data.get("building_upgrades", {}) is Dictionary else {}
+		world_regions = data.get("world_regions", {}).duplicate(true) if data.get("world_regions", {}) is Dictionary else {}
+		ranch = data.get("ranch", {}).duplicate(true) if data.get("ranch", {}) is Dictionary else {}
+		hybrid = data.get("hybrid", {}).duplicate(true) if data.get("hybrid", {}) is Dictionary else {}
+		seasonal = {"epoch": 0, "preview": -1, "name": "Ujang", "owned": [], "outfit": -1, "accessory": -1, "claimed": []}
+		seasonal.merge(data.get("seasonal", {}), true)
 		coins = maxi(0, int(data.get("coins", 400)))
 		diamonds = maxi(0, int(data.get("diamonds", 12)))
 		level = maxi(1, int(data.get("level", 1)))
+		level_journey=data.get("level_journey",{}).duplicate(true) if data.get("level_journey",{}) is Dictionary else {}
 		xp = maxi(0, int(data.get("xp", 0)))
 		selected_crop = str(data.get("selected_crop", "gandum"))
 		if not CROPS.has(selected_crop):
@@ -1832,6 +2130,16 @@ func load_game() -> bool:
 		layout_positions.clear()
 		road_tiles.clear()
 		cleared_wild_trees.clear()
+		wild_tree_chop_date = str(data.get("wild_tree_chop_date", ""))
+		wild_tree_chops_today = maxi(0, int(data.get("wild_tree_chops_today", 0)))
+		wild_tree_bonus_chops = maxi(0, int(data.get("wild_tree_bonus_chops", 0)))
+		wild_tree_next_chop_at = maxi(0, int(data.get("wild_tree_next_chop_at", 0)))
+		refresh_wild_tree_chop_quota()
+		cash_reward_date = str(data.get("cash_reward_date", wild_tree_chop_date))
+		cash_reward_chops_today = maxi(0, int(data.get("cash_reward_chops_today", 0)))
+		refresh_cash_reward_day()
+		road_inventory=data.get("road_inventory",{}).duplicate(true) if data.get("road_inventory",{}) is Dictionary else {}
+		var saved_styles=data.get("road_styles",{}) if data.get("road_styles",{}) is Dictionary else {}
 		var saved_roads = data.get("road_tiles", [])
 		if saved_roads is Array:
 			for entry in saved_roads:
@@ -1842,12 +2150,15 @@ func load_game() -> bool:
 					continue
 				var column := int(parts[0])
 				var row := int(parts[1])
-				if column >= 0 and column < 45 and row >= 0 and row < 36:
-					road_tiles["%d,%d" % [column, row]] = true
+				if column >= 0 and column < 384 and row >= 0 and row < 384:
+					var key="%d,%d" % [column,row]
+					var variant=str(saved_styles.get(key,"stone"))
+					if variant=="wood": variant="moss"
+					road_tiles[key]=variant if preload("res://scripts/road_catalog.gd").ITEMS.has(variant) else "stone"
 		var saved_cleared = data.get("cleared_wild_trees", [])
 		if saved_cleared is Array:
 			for entry in saved_cleared:
-				if (entry is int or entry is float) and int(entry) >= 0 and int(entry) < 1000:
+				if (entry is int or entry is float) and int(entry) >= 0 and int(entry) < WILD_TREE_ID_CAPACITY:
 					var tree_id := int(entry)
 					if not cleared_wild_trees.has(tree_id):
 						cleared_wild_trees.append(tree_id)
@@ -1884,7 +2195,7 @@ func load_game() -> bool:
 				var saved_at = entry.get("position", [])
 				if saved_at is Array and saved_at.size() == 2 and (saved_at[0] is int or saved_at[0] is float) and (saved_at[1] is int or saved_at[1] is float):
 					var at := Vector2(float(saved_at[0]), float(saved_at[1]))
-					if at.is_finite() and at.x >= 25.0 and at.x <= 3575.0 and at.y >= 25.0 and at.y <= 2875.0:
+					if at.is_finite() and at.x >= 25.0 and at.x <= 6375.0 and at.y >= 25.0 and at.y <= 7655.0:
 						position = [at.x, at.y]
 				decorations.append({"key": key, "kind": kind, "position": position})
 		for id in seeds:
@@ -1917,7 +2228,7 @@ func load_game() -> bool:
 		var saved_queue = data.get("production_queue", [])
 		if saved_queue is Array:
 			for task in saved_queue:
-				if not task is Dictionary or production_queue.size() >= 3:
+				if not task is Dictionary or production_queue.size() >= production_capacity():
 					break
 				var product_id := str(task.get("product", ""))
 				var started_at := int(task.get("started_at", 0))
@@ -2026,7 +2337,9 @@ func load_game() -> bool:
 			achievement_progress[id] = clampi(maxi(baseline, total), 0, 1000000000)
 			var claimed := int(saved_tiers.get(id, 0)) if saved_tiers is Dictionary else 0
 			achievement_claimed_tiers[id] = clampi(claimed, 0, 3)
+		mailbox=data.get("mailbox",{}).duplicate(true) if data.get("mailbox",{}) is Dictionary else {}
 		daily_date = str(data.get("daily_date", ""))
+		daily_specs=data.get("daily_specs",{}).duplicate(true) if data.get("daily_specs",{}) is Dictionary else {}
 		checkin_date = str(data.get("checkin_date", ""))
 		checkin_day = clampi(int(data.get("checkin_day", 0)), 0, 7)
 		if checkin_date.length() != 10 or checkin_date.substr(4, 1) != "-" or checkin_date.substr(7, 1) != "-" or checkin_day == 0:
@@ -2038,22 +2351,83 @@ func load_game() -> bool:
 		daily_claimed.clear()
 		for id in DAILY_TASK_ORDER:
 			var progress := int(saved_progress.get(id, 0)) if saved_progress is Dictionary else 0
-			daily_progress[id] = clampi(progress, 0, int(DAILY_TASKS[id]["goal"]))
+			daily_progress[id] = clampi(progress, 0, 100000)
 			daily_claimed[id] = (
 				bool(saved_claims.get(id, false)) if saved_claims is Dictionary else false
 			)
 		ensure_daily_tasks()
 		last_saved = int(data.get("last_saved", now()))
-		if repaired_orders > 0:
+		preload("res://scripts/ranch_state.gd").prepare(self)
+		var wardrobe_changed=preload("res://scripts/wardrobe_catalog.gd").prepare(self)
+		if repaired_orders > 0 or wardrobe_changed:
 			save_game()
 		return true
 	return false
 
 
-func clear_wild_tree(tree_id: int) -> bool:
-	if tree_id < 0 or tree_id >= 1000 or cleared_wild_trees.has(tree_id):
+func refresh_wild_tree_chop_quota() -> bool:
+	var today := Time.get_date_string_from_system()
+	if wild_tree_chop_date == today:
 		return false
+	wild_tree_chop_date = today
+	wild_tree_chops_today = 0
+	wild_tree_bonus_chops = 0
+	wild_tree_next_chop_at = 0
+	return true
+
+
+func refresh_cash_reward_day() -> bool:
+	var today := Time.get_date_string_from_system()
+	if cash_reward_date == today:
+		return false
+	cash_reward_date = today
+	cash_reward_chops_today = 0
+	cash_reward_progress_changed.emit(cash_reward_chops_today)
+	return true
+
+
+func can_chop_wild_tree() -> bool:
+	refresh_wild_tree_chop_quota()
+	return wild_tree_chops_today < max_daily_free_tree_cuts or wild_tree_bonus_chops > 0
+
+
+func wild_tree_chop_cooling_down() -> bool:
+	refresh_wild_tree_chop_quota()
+	return wild_tree_chops_today >= max_daily_free_tree_cuts and Time.get_unix_time_from_system() < wild_tree_next_chop_at
+
+
+func grant_wild_tree_bonus_chop() -> void:
+	refresh_wild_tree_chop_quota()
+	wild_tree_bonus_chops += 1
+	save_game()
+
+
+func cash_reward_region_allowed() -> bool:
+	return cash_reward_allow_all_regions or (
+		not cash_reward_ip_country.is_empty() and cash_reward_ip_country in cash_reward_allowed_regions
+	)
+
+
+func clear_wild_tree(tree_id: int) -> bool:
+	if tree_id < 0 or tree_id >= WILD_TREE_ID_CAPACITY or cleared_wild_trees.has(tree_id) or wild_tree_chop_cooling_down() or not can_chop_wild_tree():
+		return false
+	if wild_tree_chops_today < max_daily_free_tree_cuts:
+		wild_tree_chops_today += 1
+		wild_tree_next_chop_at = 0
+	else:
+		wild_tree_bonus_chops -= 1
+		wild_tree_next_chop_at = int(Time.get_unix_time_from_system()) + randi_range(wild_tree_cooldown_min_seconds, wild_tree_cooldown_max_seconds)
 	cleared_wild_trees.append(tree_id)
+	refresh_cash_reward_day()
+	if (cash_reward_real_device or cash_reward_allow_emulator) and cash_reward_region_allowed():
+		cash_reward_chops_today += 1
+		cash_reward_progress_changed.emit(cash_reward_chops_today)
+	preload("res://scripts/building_upgrades.gd").wood(self)
 	coins += 6
 	award_xp(3)
 	return true
+
+func feature_unlocked(id: String) -> bool:
+	return preload("res://scripts/first_farm.gd").feature(self,id)
+func crop_level(id: String) -> int:
+	return preload("res://scripts/first_farm.gd").crop_level(self,id)

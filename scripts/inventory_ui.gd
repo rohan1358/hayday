@@ -49,19 +49,21 @@ static func populate(
 	if usage >= 0.85:
 		var warning := "GUDANG PENUH!" if usage >= 1.0 else "HAMPIR PENUH"
 		ui.call("label", capacity_card, warning, Vector2(191, 89), Vector2(200, 24), 16, bar_color, true)
-	var up_cost := 180 + (game.storage_capacity - 60) * 3
 	var upgrade: Button = ui.call(
 		"button",
 		capacity_card,
-		"+30  •  " + str(up_cost) + " KOIN",
+		"MISI UPGRADE",
 		Vector2(391, 61),
 		Vector2(196, 57),
-		GREEN if game.coins >= up_cost else Color("b9c5b3"),
+		GREEN,
 		Color.WHITE,
 		16
 	)
-	upgrade.disabled = game.coins < up_cost
+	upgrade.name="WarehouseUpgrade"
 	upgrade.pressed.connect(upgrade_action)
+	if preload("res://scripts/first_farm.gd").active(game):
+		upgrade.hide()
+		ui.call("callout",list,"PESANAN PERTAMA", "Simpan 3 gandum untuk Bu Sari.\nSelesaikan penjualan tutorial melalui tombol TAMU.",Color("fff1d8"))
 	var groups := group_items(game)
 	var stocked: Array[String] = groups["stocked"]
 	var empty: Array[String] = groups["empty"]
@@ -78,6 +80,7 @@ static func populate(
 		)
 	for id in stocked:
 		add_item_row(ui, list, game, id, sell_action, false)
+	if preload("res://scripts/first_farm.gd").active(game): return
 	if not empty.is_empty():
 		var toggle_card: Panel = ui.call("row_card", list, 89, Color("edf1e8"))
 		var toggle: Button = ui.call(
@@ -137,7 +140,17 @@ static func add_item_row(
 	var price: int = int(info["sell"])
 	var item: Panel = ui.call("row_card", list, 192, Color("fff4df"))
 	item.name = ("EmptyRow_" if is_empty else "StockRow_") + id
-	item.add_child(ui.call("circle", Vector2(43, 45), 24, Color(info["color"])))
+	var icon=TextureRect.new()
+	icon.name="InventoryIcon_"+id
+	icon.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	icon.position=Vector2(13,13)
+	icon.size=Vector2(60,60)
+	icon.texture=ui.call("inventory_icon_texture",id)
+	icon.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	icon.size=Vector2(60,60)
+	icon.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	item.add_child(icon)
 	ui.call("label", item, name, Vector2(79, 16), Vector2(278, 32), 23, INK, true)
 	ui.call(
 		"label", item, str(amount) + " stok  ·  " + str(price) + " koin/satuan",
@@ -158,7 +171,7 @@ static func add_item_row(
 	]:
 		var quantity: int = option["quantity"]
 		var free_quantity: int = maxi(0, amount - order_need)
-		var enabled := quantity > 0 and amount >= quantity
+		var enabled := quantity > 0 and amount >= quantity and quantity <= preload("res://scripts/first_farm.gd").spendable(game,id)
 		var sell: Button = ui.call(
 			"button", item, str(option["label"]),
 			Vector2(float(option["x"]), 104 if order_need > 0 and not is_empty else 90),

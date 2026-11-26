@@ -16,16 +16,16 @@ func check(condition: bool, what: String) -> void:
 
 
 func run_tests() -> void:
-	var tutorial := FarmGameState.new()
+	var tutorial := FarmGameState.new(false)
 	tutorial.save_path = "user://kebun_ceria_onboarding_test.json"
 	tutorial.backup_path = "user://kebun_ceria_onboarding_test_backup.json"
-	tutorial.new_game()
+	tutorial.new_game(false)
 	check(tutorial.onboarding_step == 0 and not tutorial.onboarding_skipped, "pemain baru mendapat panduan panen")
 	check(tutorial.harvest(6) > 0 and tutorial.onboarding_step == 0, "panen bukan gandum tidak memajukan panduan")
 	check(tutorial.harvest(5) > 0 and tutorial.onboarding_step == 1 and tutorial.onboarding_plot_index == 5, "panen gandum membuka panduan tanam ulang")
 	tutorial.onboarding_open_orders()
 	check(tutorial.onboarding_step == 1, "membuka pesanan terlalu awal tidak melewati tutorial")
-	var tutorial_resume := FarmGameState.new()
+	var tutorial_resume := FarmGameState.new(false)
 	tutorial_resume.save_path = tutorial.save_path
 	tutorial_resume.backup_path = tutorial.backup_path
 	check(tutorial_resume.load_game() and tutorial_resume.onboarding_step == 1 and tutorial_resume.onboarding_plot_index == 5, "tutorial berlanjut dari langkah tersimpan")
@@ -33,20 +33,20 @@ func run_tests() -> void:
 	check(tutorial_resume.plant(5, "gandum") and tutorial_resume.onboarding_step == 2, "tanam ulang gandum membuka panduan pesanan")
 	tutorial_resume.onboarding_open_orders()
 	check(tutorial_resume.onboarding_step == 3 and not tutorial_resume.onboarding_skipped, "buka PESANAN menyelesaikan panduan")
-	var tutorial_done := FarmGameState.new()
+	var tutorial_done := FarmGameState.new(false)
 	tutorial_done.save_path = tutorial.save_path
 	tutorial_done.backup_path = tutorial.backup_path
 	check(tutorial_done.load_game() and tutorial_done.onboarding_step == 3, "tutorial selesai tetap selesai setelah restart")
-	tutorial_done.new_game()
+	tutorial_done.new_game(false)
 	tutorial_done.skip_onboarding()
-	var tutorial_skipped := FarmGameState.new()
+	var tutorial_skipped := FarmGameState.new(false)
 	tutorial_skipped.save_path = tutorial.save_path
 	tutorial_skipped.backup_path = tutorial.backup_path
 	check(tutorial_skipped.load_game() and tutorial_skipped.onboarding_step == 3 and tutorial_skipped.onboarding_skipped, "melewati tutorial tersimpan lintas restart")
-	var visitors := FarmGameState.new()
+	var visitors := FarmGameState.new(false)
 	visitors.save_path = "user://kebun_ceria_visitor_test.json"
 	visitors.backup_path = "user://kebun_ceria_visitor_test_backup.json"
-	visitors.new_game()
+	visitors.new_game(false)
 	check(not visitors.visitor_request.is_empty(), "pengunjung pertama datang ke kebun baru")
 	var first_offer: Dictionary = visitors.visitor_request.duplicate(true)
 	check(first_offer["item"] == "gandum" and first_offer["quantity"] == 2, "permintaan awal dapat dipenuhi panen tutorial")
@@ -67,7 +67,7 @@ func run_tests() -> void:
 	check(visitors.refresh_visitor(visitors.visitor_next_at), "tamu baru menggantikan tawaran yang ditolak")
 	check(visitors.visitor_request != second_offer, "tawaran berganti setelah penolakan")
 	visitors.save_game()
-	var loaded_visitors := FarmGameState.new()
+	var loaded_visitors := FarmGameState.new(false)
 	loaded_visitors.save_path = visitors.save_path
 	loaded_visitors.backup_path = visitors.backup_path
 	check(loaded_visitors.load_game(), "save pengunjung berhasil dimuat")
@@ -80,20 +80,22 @@ func run_tests() -> void:
 	var old_save_file := FileAccess.open(visitors.save_path, FileAccess.WRITE)
 	old_save_file.store_string(JSON.stringify(old_save))
 	old_save_file.close()
-	var legacy_visitors := FarmGameState.new()
+	var legacy_visitors := FarmGameState.new(false)
 	legacy_visitors.save_path = visitors.save_path
 	legacy_visitors.backup_path = visitors.backup_path
 	check(legacy_visitors.load_game(), "save lama tanpa data pengunjung tetap terbaca")
 	check(legacy_visitors.refresh_visitor() and not legacy_visitors.visitor_request.is_empty(), "save lama mendapat pengunjung saat permainan dibuka")
 	check(legacy_visitors.coins == visitors.coins, "migrasi pengunjung tidak mengubah koin lama")
-	var game := FarmGameState.new()
+	var game := FarmGameState.new(false)
 	game.save_path = "user://kebun_ceria_test.json"
 	game.backup_path = "user://kebun_ceria_test_backup.json"
-	game.new_game()
-	var harvest_guard := FarmGameState.new()
+	game.new_game(false)
+	# Check startup timing before the lengthy economy simulations advance wall-clock time.
+	var tutorial_seed_was_growing := not game.is_ready(7)
+	var harvest_guard := FarmGameState.new(false)
 	harvest_guard.save_path = "user://kebun_ceria_harvest_guard_test.json"
 	harvest_guard.backup_path = "user://kebun_ceria_harvest_guard_test_backup.json"
-	harvest_guard.new_game()
+	harvest_guard.new_game(false)
 	var xp_before_harvest := harvest_guard.xp
 	var wheat_before_harvest := int(harvest_guard.inventory["gandum"])
 	harvest_guard.storage_capacity = harvest_guard.storage_used() + 1
@@ -102,10 +104,10 @@ func run_tests() -> void:
 	harvest_guard.storage_capacity = harvest_guard.storage_used() + 2
 	check(harvest_guard.harvest(5) == 2 and int(harvest_guard.inventory["gandum"]) == wheat_before_harvest + 2, "dua slot kosong menerima hasil panen utuh")
 	check(not harvest_guard.is_ready(5) and harvest_guard.harvest(5) == 0, "panen penuh hanya dapat diambil sekali")
-	var sale := FarmGameState.new()
+	var sale := FarmGameState.new(false)
 	sale.save_path = "user://kebun_ceria_partial_sale_test.json"
 	sale.backup_path = "user://kebun_ceria_partial_sale_test_backup.json"
-	sale.new_game()
+	sale.new_game(false)
 	sale.inventory["gandum"] = 8
 	sale.save_game()
 	var sale_start_coins := sale.coins
@@ -117,17 +119,17 @@ func run_tests() -> void:
 	check(sale.sell_quantity("item_tanpa_harga", 1) == 0 and sale.inventory["item_tanpa_harga"] == 3, "item tanpa harga jual tidak bisa dijual")
 	sale.inventory.erase("item_tanpa_harga")
 	check(sale.inventory["gandum"] == 2 and sale.coins == sale_start_coins + 30, "transaksi ditolak tidak mengubah stok atau koin")
-	var sale_restored := FarmGameState.new()
+	var sale_restored := FarmGameState.new(false)
 	sale_restored.save_path = sale.save_path
 	sale_restored.backup_path = sale.backup_path
 	check(sale_restored.load_game() and sale_restored.inventory["gandum"] == 2 and sale_restored.coins == sale.coins, "penjualan parsial tersimpan dan dapat dimuat")
 	check(sale.sell_all("gandum") == 10 and sale.inventory["gandum"] == 0 and sale.coins == sale_start_coins + 40, "jual semua menghabiskan sisa stok lewat fungsi kompatibel")
 	check(sale.sell_all("gandum") == 0 and sale.sell_quantity("gandum", 1) == 0, "stok habis tidak dapat dijual ulang")
 	check(sale_restored.load_game() and sale_restored.inventory["gandum"] == 0 and sale_restored.coins == sale.coins, "jual semua tersimpan tanpa transaksi ganda")
-	var economy := FarmGameState.new()
+	var economy := FarmGameState.new(false)
 	economy.save_path = "user://kebun_ceria_early_economy_test.json"
 	economy.backup_path = "user://kebun_ceria_early_economy_test_backup.json"
-	economy.new_game()
+	economy.new_game(false)
 	var economy_actions_valid := true
 	for cycle in 4:
 		for plot_index in 8:
@@ -147,7 +149,7 @@ func run_tests() -> void:
 	check(game.plots[0]["unlocked"] and not game.plots[15]["unlocked"], "8 petak terbuka")
 	check(game.plots[5]["crop"] == "gandum" and game.is_ready(5), "gandum pertama siap dipanen")
 	check(game.plots[6]["crop"] == "jagung" and game.is_ready(6), "jagung pertama siap dipanen")
-	check(game.plots[7]["crop"] == "gandum" and not game.is_ready(7), "bibit tutorial sedang tumbuh")
+	check(game.plots[7]["crop"] == "gandum" and tutorial_seed_was_growing, "bibit tutorial sedang tumbuh")
 	check(game.plant(0, "gandum"), "bisa menanam gandum")
 	check(not game.plant(0, "gandum"), "tidak bisa menanam dua kali")
 	check(game.seeds["gandum"] == 7, "bibit berkurang")
@@ -192,7 +194,7 @@ func run_tests() -> void:
 	check(game.claim_daily_task("pesanan"), "misi pengiriman dapat diklaim")
 	check(game.diamonds >= gems_before_mission + 1, "hadiah misi pengiriman memberi permata")
 	game.save_game()
-	var restored := FarmGameState.new()
+	var restored := FarmGameState.new(false)
 	restored.save_path = game.save_path
 	restored.backup_path = game.backup_path
 	check(restored.load_game(), "progres dimuat dari JSON")
@@ -205,10 +207,10 @@ func run_tests() -> void:
 	)
 	check(not restored.claim_daily_task("panen"), "misi terklaim tetap terkunci setelah load")
 	check(not game.can_queue_product("tidak_ada"), "produk tidak dikenal ditolak")
-	var contracts := FarmGameState.new()
+	var contracts := FarmGameState.new(false)
 	contracts.save_path = "user://kebun_ceria_contract_test.json"
 	contracts.backup_path = "user://kebun_ceria_contract_test_backup.json"
-	contracts.new_game()
+	contracts.new_game(false)
 	check(not contracts.can_refresh_order(-1), "kontrak negatif tidak dapat diganti")
 	check(not contracts.can_refresh_order(3), "kontrak di luar slot tidak dapat diganti")
 	var first_contract: Dictionary = contracts.orders[0].duplicate(true)
@@ -239,7 +241,7 @@ func run_tests() -> void:
 	check(not contracts.refresh_order(2), "koin tidak cukup menolak penggantian")
 	contracts.coins = 250
 	contracts.save_game()
-	var restored_contracts := FarmGameState.new()
+	var restored_contracts := FarmGameState.new(false)
 	restored_contracts.save_path = contracts.save_path
 	restored_contracts.backup_path = contracts.backup_path
 	check(restored_contracts.load_game(), "save kontrak dapat dibaca")
@@ -316,10 +318,10 @@ func run_tests() -> void:
 		contracts.coins == coins_before_delivery + int(multi_contract["coins"]),
 		"hadiah kontrak gabungan dibayar tepat",
 	)
-	var kitchen := FarmGameState.new()
+	var kitchen := FarmGameState.new(false)
 	kitchen.save_path = "user://kebun_ceria_production_test.json"
 	kitchen.backup_path = "user://kebun_ceria_production_test_backup.json"
-	kitchen.new_game()
+	kitchen.new_game(false)
 	check(not kitchen.queue_product("roti"), "bahan kosong menolak pembuatan roti")
 	kitchen.inventory["gandum"] = 9
 	kitchen.inventory["jagung"] = 3
@@ -344,7 +346,7 @@ func run_tests() -> void:
 		),
 		"resep ketiga dimulai setelah resep kedua",
 	)
-	var queued_copy := FarmGameState.new()
+	var queued_copy := FarmGameState.new(false)
 	queued_copy.save_path = kitchen.save_path
 	queued_copy.backup_path = kitchen.backup_path
 	check(queued_copy.load_game(), "antrian produksi dapat dimuat")
@@ -387,10 +389,10 @@ func run_tests() -> void:
 		FarmGameState.PRODUCTS.has(crafted_order.keys()[0]),
 		"pesanan kota dapat meminta hasil olahan setelah dua pengiriman"
 	)
-	var dairy := FarmGameState.new()
+	var dairy := FarmGameState.new(false)
 	dairy.save_path = "user://kebun_ceria_dairy_test.json"
 	dairy.backup_path = "user://kebun_ceria_dairy_test_backup.json"
-	dairy.new_game()
+	dairy.new_game(false)
 	check(dairy.cow_is_hungry(), "sapi baru memerlukan pakan")
 	check(not dairy.feed_cow(), "sapi tidak bisa makan tanpa bahan")
 	dairy.inventory["gandum"] = 2
@@ -402,7 +404,7 @@ func run_tests() -> void:
 	)
 	check(not dairy.feed_cow(), "tidak bisa memberi pakan dua kali saat produksi")
 	check(not dairy.cow_milk_ready(), "susu tidak langsung siap")
-	var loaded_dairy := FarmGameState.new()
+	var loaded_dairy := FarmGameState.new(false)
 	loaded_dairy.save_path = dairy.save_path
 	loaded_dairy.backup_path = dairy.backup_path
 	check(loaded_dairy.load_game(), "progres kandang sapi disimpan")
@@ -432,7 +434,7 @@ func run_tests() -> void:
 	check(dairy.collect_product() and dairy.inventory["keju"] == 1, "keju matang dapat dipanen")
 	check(dairy.sell_all("keju") == 85, "keju dapat dijual untuk koin")
 	dairy.save_game()
-	var reread_dairy := FarmGameState.new()
+	var reread_dairy := FarmGameState.new(false)
 	reread_dairy.save_path = dairy.save_path
 	reread_dairy.backup_path = dairy.backup_path
 	check(reread_dairy.load_game(), "progres sapi dan keju dapat dimuat ulang")
@@ -440,7 +442,7 @@ func run_tests() -> void:
 		reread_dairy.inventory["susu"] == 0 and reread_dairy.cow_is_hungry(),
 		"status kandang setelah perah tersimpan"
 	)
-	var market := FarmGameState.new()
+	var market := FarmGameState.new(false)
 	market.save_path = "user://kebun_ceria_market_test.json"
 	market.backup_path = "user://kebun_ceria_market_test_backup.json"
 	market.inventory["gandum"] = 8
@@ -460,7 +462,7 @@ func run_tests() -> void:
 	check(market.market_listings.size() == 2, "pembatalan membebaskan slot")
 	check(market.list_market_item("jagung", 3), "slot dibebaskan dapat dipakai lagi")
 	market.save_game()
-	var listed_market := FarmGameState.new()
+	var listed_market := FarmGameState.new(false)
 	listed_market.save_path = market.save_path
 	listed_market.backup_path = market.backup_path
 	check(listed_market.load_game(), "lapak pasar dapat dimuat dari save")
@@ -482,7 +484,7 @@ func run_tests() -> void:
 	for listing in listed_market.market_listings:
 		listing["ready_at"] = listed_market.now() - 1
 	listed_market.save_game()
-	var offline_market := FarmGameState.new()
+	var offline_market := FarmGameState.new(false)
 	offline_market.save_path = market.save_path
 	offline_market.backup_path = market.backup_path
 	check(offline_market.load_game(), "penjualan offline dapat dimuat")
@@ -491,12 +493,12 @@ func run_tests() -> void:
 	check(offline_market.coins == offline_before + 88, "hadiah offline dibayar dengan benar")
 	check(offline_market.market_sales_count == 3, "jumlah penjualan kumulatif benar")
 	check(offline_market.market_listings.is_empty(), "lapak kosong setelah pembelian offline")
-	var paid_market := FarmGameState.new()
+	var paid_market := FarmGameState.new(false)
 	paid_market.save_path = market.save_path
 	paid_market.backup_path = market.backup_path
 	check(paid_market.load_game(), "transaksi offline yang dibayar tersimpan")
 	check(paid_market.settle_market_sales() == 0, "restart tidak mengulang hadiah offline")
-	market.new_game()
+	market.new_game(false)
 	market.inventory["gandum"] = 1
 	market.inventory["jagung"] = 60
 	check(market.list_market_item("gandum", 1), "barang bisa dipasang saat gudang padat")
@@ -504,7 +506,7 @@ func run_tests() -> void:
 	check(market.market_listings.size() == 1, "pembatalan gagal mempertahankan lapak")
 	market.inventory["jagung"] = 59
 	check(market.cancel_market_listing(0), "barang dapat kembali setelah ada ruang")
-	var orchard := FarmGameState.new()
+	var orchard := FarmGameState.new(false)
 	orchard.save_path = "user://kebun_ceria_orchard_test.json"
 	orchard.backup_path = "user://kebun_ceria_orchard_test_backup.json"
 	check(orchard.orchard.size() == 2, "dua petak pohon buah tersedia")
@@ -541,7 +543,7 @@ func run_tests() -> void:
 	check(orchard.list_market_item("jeruk", 1), "buah dapat dijual lewat pasar")
 	check(orchard.sell_all("apel") == 123, "apel dapat dijual lewat gudang")
 	orchard.save_game()
-	var orchard_restored := FarmGameState.new()
+	var orchard_restored := FarmGameState.new(false)
 	orchard_restored.save_path = orchard.save_path
 	orchard_restored.backup_path = orchard.backup_path
 	check(orchard_restored.load_game(), "kebun buah tetap tersedia setelah restart")
@@ -561,11 +563,11 @@ func run_tests() -> void:
 		"stok dan lapak buah bertahan setelah restart"
 	)
 	# Expansion: new crops, livestock, buildings, decoration and backward-compatible saves.
-	var expanded := FarmGameState.new()
+	var expanded := FarmGameState.new(false)
 	expanded.save_path = "user://kebun_ceria_expansion_test.json"
 	expanded.backup_path = "user://kebun_ceria_expansion_test_backup.json"
-	expanded.new_game()
-	check(FarmGameState.CROP_ORDER.size() == 13, "tiga belas jenis tanaman tersedia")
+	expanded.new_game(false)
+	check(FarmGameState.CROP_ORDER.size() == 14, "empat belas tanaman termasuk stroberi kristal tersedia")
 	check(FarmGameState.PRODUCT_ORDER.size() == 13, "tiga belas resep produksi tersedia")
 	check(not expanded.buy_seeds("kedelai", 0), "pembelian nol bibit ditolak")
 	check(not expanded.buy_seeds("padi", 1), "padi terkunci sebelum naik level")
@@ -652,7 +654,7 @@ func run_tests() -> void:
 	for decoration in ["gazebo", "kincir_angin", "kolam"]:
 		check(expanded.buy_construction(decoration), "%s dapat dibangun" % decoration)
 	expanded.save_game()
-	var expanded_copy := FarmGameState.new()
+	var expanded_copy := FarmGameState.new(false)
 	expanded_copy.save_path = expanded.save_path
 	expanded_copy.backup_path = expanded.backup_path
 	check(expanded_copy.load_game(), "save ekspansi dimuat kembali")
@@ -675,7 +677,7 @@ func run_tests() -> void:
 	var expansion_legacy_file := FileAccess.open(expanded.save_path, FileAccess.WRITE)
 	expansion_legacy_file.store_string(JSON.stringify(expansion_legacy))
 	expansion_legacy_file.close()
-	var expanded_old := FarmGameState.new()
+	var expanded_old := FarmGameState.new(false)
 	expanded_old.save_path = expanded.save_path
 	expanded_old.backup_path = expanded.backup_path
 	check(expanded_old.load_game(), "save lama tanpa ternak dan bangunan tetap dapat dimuat")
@@ -687,16 +689,16 @@ func run_tests() -> void:
 		"save lama memakai default ternak"
 	)
 	# Feed mill: unlock, FIFO offline timer, warehouse, cow/pig/goat lifecycle, and legacy save.
-	var feed_test := FarmGameState.new()
+	var feed_test := FarmGameState.new(false)
 	feed_test.save_path = "user://kebun_ceria_feed_mill_test.json"
 	feed_test.backup_path = "user://kebun_ceria_feed_mill_test_backup.json"
-	feed_test.new_game()
+	feed_test.new_game(false)
 	check(not feed_test.buy_construction("pabrik_pakan") and not feed_test.queue_feed("pakan_sapi"), "pabrik pakan dan produksi terkunci di level satu")
 	feed_test.inventory["gandum"] = 2
 	feed_test.inventory["jagung"] = 1
 	check(feed_test.feed_cow() and feed_test.inventory["gandum"] == 0 and feed_test.inventory["jagung"] == 0, "sapi pemain baru tetap bisa diberi hasil panen langsung")
 	check(feed_test.onboarding_step == 0, "alur pakan sapi tidak mengganggu tutorial awal")
-	feed_test.new_game()
+	feed_test.new_game(false)
 	feed_test.level = 2
 	feed_test.coins = 189
 	check(not feed_test.buy_construction("pabrik_pakan"), "pembelian pabrik ditolak jika koin kurang")
@@ -720,7 +722,7 @@ func run_tests() -> void:
 		task["started_at"] = int(task["started_at"]) - 200
 		task["ready_at"] = int(task["ready_at"]) - 200
 	feed_test.save_game()
-	var offline_feed := FarmGameState.new()
+	var offline_feed := FarmGameState.new(false)
 	offline_feed.save_path = feed_test.save_path
 	offline_feed.backup_path = feed_test.backup_path
 	check(offline_feed.load_game() and offline_feed.feed_queue.size() == 3 and offline_feed.feed_ready(), "tiga timer pakan tetap matang setelah save/load offline")
@@ -744,7 +746,7 @@ func run_tests() -> void:
 	offline_feed.livestock["kambing"] = offline_feed.now() - 1
 	check(offline_feed.collect_animal("kambing") and offline_feed.inventory["susu_kambing"] == 2 and not offline_feed.collect_feed(), "pakan kambing menghasilkan susu dan klaim kosong ditolak")
 	offline_feed.save_game()
-	var restored_feed := FarmGameState.new()
+	var restored_feed := FarmGameState.new(false)
 	restored_feed.save_path = feed_test.save_path
 	restored_feed.backup_path = feed_test.backup_path
 	check(restored_feed.load_game() and restored_feed.inventory["pakan_sapi"] == 1 and restored_feed.inventory["pakan_babi"] == 1 and restored_feed.inventory["pakan_kambing"] == 1 and restored_feed.feed_queue.is_empty(), "inventori pakan dan antrean tersimpan benar setelah restart")
@@ -755,12 +757,12 @@ func run_tests() -> void:
 	var legacy_feed_file := FileAccess.open(feed_test.save_path, FileAccess.WRITE)
 	legacy_feed_file.store_string(JSON.stringify(legacy_feed_data))
 	legacy_feed_file.close()
-	var legacy_feed := FarmGameState.new()
+	var legacy_feed := FarmGameState.new(false)
 	legacy_feed.save_path = feed_test.save_path
 	legacy_feed.backup_path = feed_test.backup_path
 	check(legacy_feed.load_game() and legacy_feed.feed_queue.is_empty(), "save lama tanpa feed_queue tetap dimuat")
 	check(legacy_feed.inventory["pakan_sapi"] == 0 and legacy_feed.inventory["pakan_babi"] == 0 and legacy_feed.inventory["pakan_kambing"] == 0, "save lama tanpa kunci paket diberi stok nol")
-	legacy_feed.new_game()
+	legacy_feed.new_game(false)
 	check(legacy_feed.feed_queue.is_empty() and legacy_feed.inventory["pakan_sapi"] == 0 and not legacy_feed.has_construction("pabrik_pakan"), "permainan baru mereset antrean dan bangunan pakan")
 	kitchen.save_game()
 	var legacy_data: Dictionary = JSON.parse_string(
@@ -789,7 +791,7 @@ func run_tests() -> void:
 	var legacy_file := FileAccess.open(kitchen.save_path, FileAccess.WRITE)
 	legacy_file.store_string(JSON.stringify(legacy_data))
 	legacy_file.close()
-	var legacy := FarmGameState.new()
+	var legacy := FarmGameState.new(false)
 	legacy.save_path = kitchen.save_path
 	legacy.backup_path = kitchen.backup_path
 	check(legacy.load_game(), "save lama tanpa data produksi tetap dapat dimuat")
@@ -820,7 +822,11 @@ func run_tests() -> void:
 	var screen: Control = load("res://scenes/Main.tscn").instantiate()
 	screen.game.save_path = "user://kebun_ceria_ui_test.json"
 	screen.game.backup_path = "user://kebun_ceria_ui_test_backup.json"
+	screen.game.new_game(false) # Legacy onboarding/save regression fixture.
 	root.add_child(screen)
+	# Verify legacy immediate interactions in the preserved management mode.
+	screen.farm.hybrid_controller.data.manager = true
+	screen.farm.hybrid_controller.set_process(false)
 	await process_frame
 	check(
 		absf(screen.farm.position.y + screen.farm.size.y - screen.navbar.position.y) < 1.0,
@@ -880,8 +886,8 @@ func run_tests() -> void:
 			is_equal_approx(first_fill.size.x / first_bar.size.x, 0.25),
 			"indikator pesanan menampilkan 25 persen"
 		)
-	var progress_game := FarmGameState.new()
-	progress_game.new_game()
+	var progress_game := FarmGameState.new(false)
+	progress_game.new_game(false)
 	check(progress_game.order_progress(-1) == 0.0, "progres pesanan invalid adalah nol")
 	check(progress_game.order_progress(0) == 0.0, "pesanan kosong belum memiliki progres")
 	progress_game.inventory["gandum"] = 2
@@ -1176,7 +1182,7 @@ func run_tests() -> void:
 	check(screen.selected_plot == 4, "geser kamera tidak dianggap sebagai tap petak")
 	camera.reset_camera()
 	# Farm swipes commit only on release; the same swipe must work on touch and mouse.
-	screen.game.new_game()
+	screen.game.new_game(false)
 	screen.game.selected_crop = "gandum"
 	var ripe_wheat_at := camera.plot_center(5)
 	var ripe_corn_at := camera.plot_center(6)
@@ -1221,11 +1227,11 @@ func run_tests() -> void:
 	check(not camera.swipe_active and camera.swipe_indices.is_empty(), "pratinjau tanam terhapus setelah klik dilepas")
 	check(screen.game.plots[0]["crop"] == "gandum" and screen.game.plots[1]["crop"] == "gandum", "usap mouse menanam dua petak sekaligus")
 	check(int(screen.game.seeds["gandum"]) == 6, "usap menanam tidak mengurangi bibit berulang")
-	var saved_swipe := FarmGameState.new()
+	var saved_swipe := FarmGameState.new(false)
 	saved_swipe.save_path = screen.game.save_path
 	saved_swipe.backup_path = screen.game.backup_path
 	check(saved_swipe.load_game() and saved_swipe.plots[0]["crop"] == "gandum" and saved_swipe.plots[6]["crop"] == "", "hasil usap disimpan dan dapat dimuat kembali")
-	screen.game.new_game()
+	screen.game.new_game(false)
 	touch.pressed = true
 	touch.position = ripe_wheat_screen
 	camera.handle_screen_touch(touch)
@@ -1277,12 +1283,12 @@ func run_tests() -> void:
 	check(camera.pointers.is_empty(), "status sentuhan pulih setelah pinch")
 	# Moving a planted field must keep its harvest state and survive restarting the game.
 	camera.reset_camera()
-	screen.game.new_game()
+	screen.game.new_game(false)
 	check(screen.game.plant(4, "gandum"), "petak bisa ditanami sebelum dipindahkan")
 	screen.call("toggle_arrange_mode")
 	check(camera.edit_mode, "tombol ATUR membuka mode pemindahan")
 	var original_plot := camera.plot_center(4)
-	var moved_plot := Vector2(1600, 1080)
+	var moved_plot := clear_layout_spot(camera, "petak_4", Vector2(1600, 1080))
 	var plot_screen := (original_plot - camera.camera_center) * camera.camera_zoom * camera.size / camera.get_virtual_size() + camera.size * 0.5
 	var destination_screen := (moved_plot - camera.camera_center) * camera.camera_zoom * camera.size / camera.get_virtual_size() + camera.size * 0.5
 	camera.begin_edit_drag(plot_screen)
@@ -1302,7 +1308,7 @@ func run_tests() -> void:
 	check(camera.visual_feedback.back()["kind"] == "reject", "pemindahan terhalang memunculkan efek penolakan")
 	check(not camera.can_place("petak_4", Vector2(-50, -50)), "petak di luar area ditolak")
 	var original_pen := camera.object_position("sapi")
-	var moved_pen := Vector2(1750, 900)
+	var moved_pen := clear_layout_spot(camera, "sapi", Vector2(1750, 900))
 	var pen_screen := (original_pen - camera.camera_center) * camera.camera_zoom * camera.size / camera.get_virtual_size() + camera.size * 0.5
 	var pen_dest_screen := (moved_pen - camera.camera_center) * camera.camera_zoom * camera.size / camera.get_virtual_size() + camera.size * 0.5
 	camera.begin_edit_drag(pen_screen)
@@ -1310,13 +1316,15 @@ func run_tests() -> void:
 	camera.move_edit_drag(pen_dest_screen)
 	camera.finish_edit_drag()
 	check(camera.object_position("sapi").distance_to(moved_pen) < 2.0, "kandang sapi berhasil dipindahkan")
-	var saved_layout := FarmGameState.new()
+	var saved_layout := FarmGameState.new(false)
 	saved_layout.save_path = screen.game.save_path
 	saved_layout.backup_path = screen.game.backup_path
 	check(saved_layout.load_game(), "layout baru bisa dimuat ulang")
 	check(saved_layout.layout_positions.has("petak_4") and saved_layout.layout_positions.has("sapi"), "lokasi petak dan kandang disimpan permanen")
 	check(saved_layout.plots[4]["crop"] == "gandum", "status tanaman tersimpan bersama layout")
 	# Roads are painted continuously on a grid and saved when a stroke finishes.
+	screen.game.coins=maxi(screen.game.coins,15)
+	check(preload("res://scripts/road_catalog.gd").buy(screen.game,"stone",5),"beli stok jalan sebelum menguji sapuan")
 	screen.select_road_tool("draw")
 	check(camera.road_tool == "draw" and screen.road_tool_buttons["draw"].visible, "kuas jalan tersedia di mode ATUR")
 	camera.camera_center = Vector2(2370, 1320)
@@ -1340,7 +1348,7 @@ func run_tests() -> void:
 	check(screen.game.road_tiles.has("28,16") and screen.game.road_tiles.has("32,16"), "jalan tergambar sepanjang sapuan jari")
 	check(screen.game.road_tiles.has("29,16") and screen.game.road_tiles.has("30,16") and screen.game.road_tiles.has("31,16"), "ruas jalan tersambung tanpa celah")
 	check(not camera.can_paint_road(camera.road_cell_from_world(camera.object_position("dapur"))), "jalan tidak boleh menimpa bangunan")
-	var roads_saved := FarmGameState.new()
+	var roads_saved := FarmGameState.new(false)
 	roads_saved.save_path = screen.game.save_path
 	roads_saved.backup_path = screen.game.backup_path
 	check(roads_saved.load_game() and roads_saved.road_tiles.has("30,16"), "jalan tetap ada setelah game dimuat ulang")
@@ -1362,7 +1370,7 @@ func run_tests() -> void:
 	check(camera.ujang_patrol_points().size() >= 5, "Ujang berpatroli memantau peternakan dan pertanian")
 	check(is_equal_approx(FarmView.UJANG_SCALE, 0.8), "ukuran Ujang berkurang 20 persen")
 	var walker := FarmView.new()
-	walker.game = FarmGameState.new()
+	walker.game = FarmGameState.new(false)
 	walker.ujang_position = Vector2(650, 845)
 	var plot_route := walker.ujang_route_to(Vector2(1550, 845))
 	check(plot_route.size() >= 3, "Ujang memilih rute memutar ketika petak menutup jalan langsung")
@@ -1390,7 +1398,7 @@ func run_tests() -> void:
 	check(walker.ujang_point_blocked(walker.object_position("sapi")), "Ujang menghindari kandang sapi")
 	check(walker.ujang_point_blocked(walker.object_position("ayam")), "Ujang menghindari kandang ayam")
 	check(walker.ujang_point_blocked(walker.orchard_center(0)), "Ujang menghindari pohon buah besar")
-	var standing_tree: Vector2 = FarmView.WILD_TREES[0]
+	var standing_tree: Vector2 = walker.WILD_TREES[0]
 	check(walker.ujang_point_blocked(standing_tree), "Ujang menghindari pohon liar yang masih berdiri")
 	check(not walker.ujang_segment_clear(standing_tree + Vector2(-90, 0), standing_tree + Vector2(90, 0)), "rute lurus tidak menembus pohon besar")
 	walker.game.cleared_wild_trees.append(0)
@@ -1430,17 +1438,17 @@ func run_tests() -> void:
 	var coins_before_tree: int = screen.game.coins
 	var xp_before_tree: int = screen.game.xp
 	var tree_id := 0
-	check(camera.wild_tree_at(FarmView.WILD_TREES[tree_id]) == tree_id, "pohon liar bisa diketuk")
+	check(camera.wild_tree_at(camera.WILD_TREES[tree_id]) == tree_id, "pohon liar bisa diketuk")
 	var axe_hits := [0]
 	camera.wild_tree_struck.connect(func() -> void: axe_hits[0] += 1)
-	camera.ujang_position = FarmView.WILD_TREES[tree_id] + Vector2(450, 24)
+	camera.ujang_position = camera.WILD_TREES[tree_id] + Vector2(450, 24)
 	check(camera.start_chopping(tree_id), "Ujang mulai menebang pohon liar")
 	check(camera.visual_feedback.back()["kind"] == "target", "target pohon diberi penanda sentuhan")
 	var ujang_before_walk: Vector2 = camera.ujang_position
 	camera.update_ujang(0.25)
 	check(camera.ujang_walking and camera.ujang_position.distance_to(ujang_before_walk) > 0.0, "Ujang berjalan mendekati pohon")
 	check(axe_hits[0] == 0, "suara kapak belum diputar saat Ujang berjalan")
-	camera.ujang_position = FarmView.WILD_TREES[tree_id] + Vector2(57, 24)
+	camera.ujang_position = camera.WILD_TREES[tree_id] + Vector2(57, 24)
 	camera.update_ujang(0.65)
 	check(camera.chopping_tree == tree_id and camera.chop_progress > 0.0, "animasi ayunan kapak berlangsung sebelum pohon jatuh")
 	check(camera.visual_feedback.back()["kind"] == "chop_hit", "efek pukulan kapak selaras dengan ayunan")
@@ -1454,11 +1462,11 @@ func run_tests() -> void:
 	check(screen.game.coins == coins_before_tree + 6, "tebang pohon memberi enam koin")
 	check(screen.game.xp >= xp_before_tree + 3, "tebang pohon memberi XP")
 	check(not camera.start_chopping(tree_id), "pohon yang ditebang tidak dapat ditebang ulang")
-	var tree_saved := FarmGameState.new()
+	var tree_saved := FarmGameState.new(false)
 	tree_saved.save_path = screen.game.save_path
 	tree_saved.backup_path = screen.game.backup_path
 	check(tree_saved.load_game() and tree_saved.cleared_wild_trees.has(tree_id), "pohon yang ditebang tetap hilang setelah load")
-	screen.game.new_game()
+	screen.game.new_game(false)
 	check(screen.game.cleared_wild_trees.is_empty(), "permainan baru mengembalikan pohon liar")
 	screen.call("switch_tab", "kebun")
 	screen.call("refresh_all")
@@ -1485,7 +1493,7 @@ func run_tests() -> void:
 	check(screen.game.onboarding_step == 3 and not screen.tutorial_panel.visible, "UI buka PESANAN menutup tutorial")
 	if orders_guide_badge:
 		check(not orders_guide_badge.visible, "penanda PESANAN hilang setelah panduan selesai")
-	screen.game.new_game()
+	screen.game.new_game(false)
 	screen.call("switch_tab", "kebun")
 	screen.call("refresh_all")
 	var tutorial_skip_button := screen.tutorial_panel.get_node("TutorialSkip") as Button
@@ -1495,6 +1503,7 @@ func run_tests() -> void:
 	if orders_guide_badge:
 		check(not orders_guide_badge.visible, "melewati panduan tidak meninggalkan penanda PESANAN")
 	screen.queue_free()
+	await process_frame
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(tutorial.save_path))
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(tutorial.backup_path))
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(game.save_path))
@@ -1527,3 +1536,14 @@ func run_tests() -> void:
 	)
 	print("TOTAL FAILURES: ", failures)
 	quit(0 if failures == 0 else 1)
+
+# Artwork/scenery added after the original smoke test now occupies its old
+# hardcoded destinations. Pick a valid destination; keep overlap rejection tests.
+func clear_layout_spot(view: FarmView, key: String, preferred: Vector2) -> Vector2:
+	for radius in range(0,1400,60):
+		for angle in 16:
+			var candidate:=preferred+Vector2.from_angle(angle*TAU/16.0)*radius
+			candidate=view.snap_edit_position(key,candidate)
+			if view.can_place(key,candidate): return candidate
+	check(false,"free placement fixture exists")
+	return preferred

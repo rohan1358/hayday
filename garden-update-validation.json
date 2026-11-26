@@ -1,0 +1,31 @@
+{
+  "tests": {
+    "garden-verified-garden_access_test": {
+      "pass": true,
+      "checks": 26
+    },
+    "garden-verified-isometric_roads_test": {
+      "pass": true,
+      "checks": 11
+    },
+    "garden-verified-road_move_test": {
+      "pass": true,
+      "checks": 12
+    },
+    "garden-verified-roads_purchase_test": {
+      "pass": true,
+      "checks": 24
+    },
+    "garden-regression-first_farm_test": {
+      "pass": true,
+      "checks": 65
+    },
+    "garden-regression-smoke": {
+      "pass": true,
+      "checks": 528
+    }
+  },
+  "checks": 666,
+  "one_purchased_road_cell_one_tile": true,
+  "physical_android_device_tested": false
+}

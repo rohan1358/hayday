@@ -1,0 +1,61 @@
+{
+  "date": "2026-11-11",
+  "checks": 840,
+  "suites": {
+    "new_player_state": {
+      "checks": 65,
+      "log": "work/ftue-complete-first_farm_test.log",
+      "result": "pass"
+    },
+    "android_ui_layout": {
+      "checks": 14,
+      "log": "work/ftue-complete-first_farm_layout_test.log",
+      "result": "pass"
+    },
+    "legacy_smoke": {
+      "checks": 528,
+      "log": "work/ftue-acceptance-smoke.log",
+      "result": "pass"
+    },
+    "hybrid_movement": {
+      "checks": 60,
+      "log": "work/ftue-regression-hybrid_system.log",
+      "result": "pass"
+    },
+    "ranch": {
+      "checks": 54,
+      "log": "work/ftue-regression-ranch_system_test.log",
+      "result": "pass"
+    },
+    "building_upgrades": {
+      "checks": 63,
+      "log": "work/ftue-regression-building_upgrade_test.log",
+      "result": "pass"
+    },
+    "road_purchases": {
+      "checks": 24,
+      "log": "work/ftue-regression-roads_purchase_test.log",
+      "result": "pass"
+    },
+    "road_drag": {
+      "checks": 12,
+      "log": "work/ftue-road-move-final.log",
+      "result": "pass"
+    },
+    "delivery_layout": {
+      "checks": 20,
+      "log": "work/ftue-complete-delivery_layout_test.log",
+      "result": "pass"
+    }
+  },
+  "real_ui_end_to_end": "pass, including real 8-second feed and 38-second egg production timers",
+  "android_resolutions": [
+    "360x640",
+    "720x1280",
+    "720x1600",
+    "1080x2400"
+  ],
+  "physical_android_device_tested": false,
+  "old_save_overwritten": false,
+  "apk": "outputs/KebunCeria-FTUE-Android.apk"
+}

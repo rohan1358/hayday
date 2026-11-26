@@ -1,0 +1,56 @@
+HYBRID CHARACTER MOVEMENT & INTERACTION — LAPORAN IMPLEMENTASI
+10 November 2026 • Godot 4.7.2 • Windows / GDScript 2D
+
+Aplikasi Windows portable: Kebun-Ceria-Windows/KebunCeria.exe.
+Paket lengkap: Kebun-Ceria-Windows.zip. Ekstrak seluruh folder, kemudian buka KebunCeria.exe. Runtime dan PCK harus tetap berada di folder yang sama. Tidak memerlukan instalasi Git/Godot. Progres yang sudah tersimpan disalin ke Data/Godot/app_userdata/Kebun Ceria; folder Data adalah backup/profil aplikasi portable.
+
+Implementasi menggunakan arsitektur 2D proyek yang sudah ada: FarmView berbasis Control/CanvasItem, koordinat dunia isometrik, FarmGameState untuk transaksi dan JSON save. Navigasi memakai AStarGrid2D, bukan memaksakan NavigationAgent3D atau mengganti aset kebun menjadi 3D.
+
+Fitur dan cara penggunaan
+
+- WASD untuk berjalan; Shift untuk berlari. Joystick virtual mengendalikan karakter; dorong penuh untuk berlari. Joystick memiliki kepemilikan jari sendiri, sehingga jari lain tetap dapat menggeser/cubit kamera.
+- Ketuk tanah untuk berjalan otomatis. Ketuk tanaman/hewan/bangunan untuk mendekati lalu melakukan aksi. Input manual langsung membatalkan antrean, perjalanan otomatis, kerja berulang, dan idle berjalan.
+- KONTROL & TUGAS membuka mode Karakter/Kelola, pilihan alat, antrean, kebutuhan ternak dan zona. Mode Kelola mempertahankan interaksi langsung, usap tanam/panen beberapa petak, panel lama, serta pengaturan posisi objek.
+- Pilihan alat: otomatis, tanam, siram, pupuk, panen, pakan, minum, ambil hasil, bersihkan, elus. Batch petak dan batch hewan masuk antrean yang sama. Kerja berulang memeriksa pekerjaan yang memenuhi kondisi tiap 5 detik.
+- Antrean maksimum 64; perintah identik tidak digandakan. Target yang berubah, gudang penuh, bahan habis, gerbang tertutup atau jalur buntu menghasilkan alasan kegagalan dan antrean melanjutkan tugas berikutnya. Ada tombol BATALKAN TUGAS, pembatalan individual dan Esc. Antrean belum selesai disimpan dan dipulihkan saat restart.
+- Penyiraman memerlukan 1 air dan mengurangi sisa waktu tumbuh 10%; pupuk memerlukan 1 pupuk dan mengurangi sisa waktu tumbuh 20%. Masing-masing hanya sekali untuk satu generasi tanaman. Air dapat diisi sampai 100 di sumur; 5 pupuk dibeli dengan 10 koin, atau diperoleh dari pembersihan kandang.
+- Hewan yang dikelola dapat berkeliaran di zona berpagar berbentuk isometrik, bukan terkunci permanen di kandang. Buat zona dengan dua ketukan sudut; gerbang dapat dibuka/ditutup dan dipindahkan ke salah satu dari empat sisi. Maksimal 12 zona untuk membatasi beban navigasi. Zona yang masih ditempati tidak dapat dihapus.
+- Untuk menggiring, buka gerbang asal dan tujuan, lalu pilih hewan dan zona tujuan pada menu TERNAK. Karakter mendekati dan mengiringi, hewan mengikuti jalur bebas tabrakan. Dalam mode Kelola, pemindahan hewan dapat diperintahkan tanpa menggerakkan karakter.
+- Hewan memiliki kenyang, haus, energi, kebersihan dan afeksi. Mereka berjalan, berhenti, makan/minum dari stok palung, tidur untuk memulihkan energi, menoleh saat pemain mendekat, dan bereaksi pada pemain yang berlari. Kebutuhan offline dihitung dengan batas 6 jam; posisi/jalur tidak disimulasikan dengan loop panjang selama game tertutup.
+- Ayam, sapi, babi, kambing menggunakan hasil dan transaksi pakan lama. Domba tersedia pada level 3 seharga 180 koin, membutuhkan pakan, lalu menghasilkan 2 wol. Wol dapat disimpan dan dijual melalui sistem gudang yang sama. Produk tidak dihapus bila gudang penuh.
+- Kamera mendukung mengikuti karakter atau eksplorasi bebas. Menggeser peta mematikan follow; roda mouse/cubit tetap mengendalikan zoom.
+- Idle alami meliputi mengamati, melihat hewan, duduk, dan berjalan santai. Semua dapat dibatalkan oleh perintah pemain.
+- Animasi memakai rig cutout 2D dengan deformasi langkah/gerakan lengan dan alat terpisah: benih, penyiram, pupuk, keranjang, ember perah, telur, gunting wol, sapu, hati saat mengelus, tongkat penggiring, dan kapak. Frame arah depan, tiga-perempat, samping, belakang-tiga-perempat, serta belakang disediakan untuk kedua karakter dan empat kostum; arah kiri memakai pencerminan. Aksesori mengikuti arah, kacamata depan disembunyikan saat membelakangi kamera, dan ransel berada di punggung.
+
+Struktur kode
+
+- scripts/hybrid/controller.gd: perpindahan mode, input, lifecycle tugas, pembatalan, follow camera, idle, batching dan recurring planner.
+- scripts/hybrid/navigation.gd: rasterisasi footprint, cache AStarGrid2D, uji ruas, pagar/gerbang dan penghindaran hewan dinamis tanpa membangun ulang grid statis setiap frame.
+- scripts/hybrid/job_actions.gd: validasi ulang target, biaya, transaksi tanaman/ternak dan pemetaan animasi aksi.
+- scripts/hybrid/animal_simulation.gd: kebutuhan dan state machine hewan, area gerak, penggiringan, penghindaran dan spawn aman.
+- scripts/hybrid/hybrid_state.gd: schema tambahan versi 2, koordinat JSON, migrasi pasture awal dan kebutuhan offline.
+- scripts/hybrid/joystick.gd: ownership jari, deadzone, pelepasan sentuhan/mouse dan penghentian saat aplikasi kehilangan fokus.
+- scripts/hybrid/control_ui.gd: panel kontrol, antrean, batch pekerjaan, ternak, palung dan editor zona.
+- scripts/hybrid/world_overlay.gd: hewan dinamis, pagar/gerbang, rute, indikator kebutuhan serta indikator perawatan petak.
+- scripts/hybrid/character_animation.gd: rig dan animasi peralatan/aksi; mesh dipertahankan selama draw command masih digunakan.
+- scripts/hybrid/hybrid_farm_view.gd: adapter input FarmView dan pemisahan mode Kelola. Layer cache lama dipakai juga di PC agar pergerakan tidak memaksa seluruh dunia digambar ulang.
+- game_state.gd: field hybrid additive, generation ID tanaman dan item wol. main.gd menghubungkan adapter dan pengendali; fitur ekonomi, iklan, misi dan toko lama tetap dipakai.
+- assets/wardrobe/male_directions.png dan female_directions.png: atlas arah hasil built-in image_gen. Prompt/referensi tersimpan pada hybrid-art-prompts.json. Sprite depan dan katalog menggunakan aset referensi yang sudah dipasang sebelumnya.
+
+Pengujian
+
+1. hybrid_system.gd: 56 pemeriksaan, 0 kegagalan. Meliputi bootstrap, ekonomi lama, tabrakan bangunan/pagar, gerbang, hewan bergerak, target tak terjangkau, tugas tanaman, perawatan sekali per generasi, pakan/air/kebersihan/afeksi, telur/susu/wol/hasil lain, gudang penuh, makan/minum/tidur mandiri, batas zona, menggiring, WASD, pembatalan, joystick, sentuhan kedua, kamera, save/load, antrean maksimum, resume, same-second replant, recurring, pause dan reset game baru.
+2. smoke.gd: 0 kegagalan; skenario interaksi langsung dijalankan dalam mode Kelola. Fixture pemindahan memakai tujuan yang benar-benar kosong, karena koordinat hardcoded lama sudah ditempati dekorasi dalam repo. Uji tumpang tindih tetap dipertahankan. Diagnosis tanpa controller baru menunjukkan enam kegagalan fixture yang sama sebelum fixture diperbaiki.
+3. continuous_layout_edit, decorations, collect_ready_batch, daily_checkin, inventory_ui_smoke, economy_recovery: seluruhnya exit 0.
+4. wardrobe_test: pembelian/pemakaian/pelepasan/save-load lulus. accessory_alignment_test: 64 pemasangan lensa lintas kostum/karakter/skala lulus.
+5. hybrid_visual.gd: UI, pasture dan pose seluruh aksi dirender. hybrid_direction_visual.gd: 40 kombinasi kostum/sudut dengan aksesori dirender dan diperiksa.
+6. Semua petak awal yang dapat diakses mempunyai jalur pendekatan: 0 petak gagal.
+7. Aplikasi Windows portable diuji dari folder kerja yang tidak berisi project.godot: exit 0. Render atlas arah menggunakan modul dari PCK aplikasi juga exit 0. Ini memastikan aplikasi tidak bergantung pada instalasi Godot atau file project di luar paket.
+
+Performa dan batas verifikasi
+
+Pengukuran pendek 2,5 detik pada PC AMD Radeon, scene lima hewan: renderer desktop penuh sekitar 1.824 draw calls/frame dan 10 FPS; setelah layer cache digunakan sekitar 250 draw calls/frame dan 27 FPS. Rata-rata process monitor pada dua sampel sekitar 110,55 ms dan 46,24 ms. Ini hasil pengamatan lokal pendek, bukan jaminan FPS lintas perangkat; target 60 FPS belum tercapai pada pengukuran ini. Navigasi dibangun ulang hanya ketika layout/pagar/gerbang berubah; stok palung dan kebutuhan hewan tidak membangun ulang grid. AI berjalan 5 tick/detik, overlay 10 tick/detik, dan animasi karakter dibatasi sekitar 20 pembaruan/detik.
+
+Kontrol sentuh diuji dengan event sentuh sintetis, termasuk kepemilikan jari dan pelepasan saat pause. Belum dilakukan pengujian pada perangkat Android fisik dan belum dibuat APK baru. Paket yang disertakan adalah Windows x64 portable, dengan runtime Godot yang dibundel.
+
+Log pemeriksaan yang lulus berada di folder validation. Progres workspace asal tetap tersedia; aplikasi portable memakai salinan di folder Data milik paket.

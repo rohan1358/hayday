@@ -1,0 +1,9 @@
+[gd_resource type="AtlasTexture" load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/terrain_kit/props/001_environment.png" id="1"]
+
+[resource]
+atlas = ExtResource("1")
+region = Rect2(23.0, 27.0, 405.0, 405.0)
+filter_clip = true
+metadata/ground_anchor = Vector2(202.5, 356.399993896484)

@@ -1,0 +1,307 @@
+[
+  {
+    "key": "desa",
+    "name": "Desa Utama",
+    "level": 1,
+    "description": "Rumah, tetangga, dan papan pesanan.",
+    "main": "",
+    "sheets": [
+      "village",
+      "people"
+    ],
+    "status": "Aset utama tersedia.",
+    "missing": []
+  },
+  {
+    "key": "ladang",
+    "name": "Pertanian",
+    "level": 1,
+    "description": "Tanam, rawat, dan panen tanaman.",
+    "main": "",
+    "sheets": [
+      "crops",
+      "crop_stages"
+    ],
+    "status": "Aset utama tersedia.",
+    "missing": []
+  },
+  {
+    "key": "hutan",
+    "name": "Hutan",
+    "level": 1,
+    "description": "Tebang pohon liar untuk memperoleh kayu.",
+    "main": "",
+    "sheets": [
+      "forest"
+    ],
+    "status": "Aset utama tersedia.",
+    "missing": []
+  },
+  {
+    "key": "kebun_buah",
+    "name": "Kebun Buah",
+    "level": 1,
+    "description": "Rawat dan panen pohon buah yang sudah ada.",
+    "main": "",
+    "sheets": [
+      "orchard",
+      "orchard_harvested"
+    ],
+    "status": "Aset utama tersedia.",
+    "missing": []
+  },
+  {
+    "key": "tambang",
+    "name": "Tambang",
+    "level": 2,
+    "description": "Tambang untuk memperoleh palu dan batu bagi upgrade bangunan.",
+    "main": "region_mine",
+    "sheets": [
+      "mine"
+    ],
+    "status": "Aset utama tersedia.",
+    "missing": []
+  },
+  {
+    "key": "peternakan",
+    "name": "Peternakan",
+    "level": 3,
+    "description": "Beli kandang, rawat hewan, dan kumpulkan hasil.",
+    "main": "",
+    "sheets": [
+      "ranch"
+    ],
+    "status": "Aset utama tersedia.",
+    "missing": []
+  },
+  {
+    "key": "pasar_desa",
+    "name": "Pasar Desa",
+    "level": 3,
+    "description": "Jual hasil kebun dan olahan melalui pasar yang sudah ada.",
+    "main": "",
+    "sheets": [
+      "market"
+    ],
+    "status": "Aset utama tersedia.",
+    "missing": []
+  },
+  {
+    "key": "produksi",
+    "name": "Produksi",
+    "level": 5,
+    "description": "Olah panen di dapur dan pabrik pakan.",
+    "main": "",
+    "sheets": [
+      "production"
+    ],
+    "status": "Aset utama tersedia.",
+    "missing": []
+  },
+  {
+    "key": "logistik",
+    "name": "Gudang & Logistik",
+    "level": 5,
+    "description": "Simpan barang dan kirim pesanan truk.",
+    "main": "",
+    "sheets": [
+      "logistics"
+    ],
+    "status": "Aset utama tersedia.",
+    "missing": []
+  },
+  {
+    "key": "penggilingan",
+    "name": "Penggilingan",
+    "level": 7,
+    "description": "Giling 2 gandum menjadi tepung untuk dapur.",
+    "main": "region_mill",
+    "sheets": [
+      "production"
+    ],
+    "status": "Aset utama tersedia.",
+    "missing": []
+  },
+  {
+    "key": "rumah_kaca",
+    "name": "Rumah Kaca",
+    "level": 8,
+    "description": "Budidayakan bibit stroberi setiap musim.",
+    "main": "lg_greenhouse",
+    "sheets": [
+      "greenhouse"
+    ],
+    "status": "Aset utama tersedia.",
+    "missing": []
+  },
+  {
+    "key": "taman_bermain",
+    "name": "Taman Bermain",
+    "level": 8,
+    "description": "Sambut pengunjung dan kumpulkan kebahagiaan.",
+    "main": "region_playground",
+    "sheets": [
+      "playground"
+    ],
+    "status": "Aset utama tersedia.",
+    "missing": []
+  },
+  {
+    "key": "pemancingan",
+    "name": "Pemancingan",
+    "level": 11,
+    "description": "Tangkap ikan untuk dimasak dan dikirim.",
+    "main": "region_fishing",
+    "sheets": [
+      "fishing"
+    ],
+    "status": "Aset utama tersedia.",
+    "missing": []
+  },
+  {
+    "key": "festival",
+    "name": "Pusat Festival",
+    "level": 15,
+    "description": "Tukar kebahagiaan dan panen untuk hadiah.",
+    "main": "region_festival",
+    "sheets": [
+      "festival",
+      "festival_extra"
+    ],
+    "status": "Aset utama tersedia.",
+    "missing": []
+  },
+  {
+    "key": "camping",
+    "name": "Area Camping",
+    "level": 18,
+    "description": "Ajak pengunjung berkemah di alam.",
+    "main": "region_camp",
+    "sheets": [
+      "camping"
+    ],
+    "status": "Aset utama tersedia.",
+    "missing": []
+  },
+  {
+    "key": "permukiman",
+    "name": "Permukiman NPC",
+    "level": 20,
+    "description": "Penuhi kebutuhan tetangga dan bangun komunitas.",
+    "main": "region_village",
+    "sheets": [
+      "village",
+      "people"
+    ],
+    "status": "Aset utama tersedia.",
+    "missing": []
+  },
+  {
+    "key": "kafe",
+    "name": "Kafe & Restoran",
+    "level": 22,
+    "description": "Olah tepung dan susu menjadi hidangan desa.",
+    "main": "region_cafe",
+    "sheets": [
+      "cafe"
+    ],
+    "status": "Aset utama tersedia.",
+    "missing": []
+  },
+  {
+    "key": "berkuda",
+    "name": "Pusat Berkuda",
+    "level": 24,
+    "description": "Rawat kuda dan ajak wisatawan berkuda.",
+    "main": "region_stable",
+    "sheets": [
+      "horse"
+    ],
+    "status": "Aset utama tersedia.",
+    "missing": []
+  },
+  {
+    "key": "stasiun",
+    "name": "Stasiun Kereta",
+    "level": 26,
+    "description": "Kirim ikan dan makanan ke desa lain.",
+    "main": "region_station",
+    "sheets": [
+      "train"
+    ],
+    "status": "Aset utama tersedia.",
+    "missing": []
+  },
+  {
+    "key": "sekolah",
+    "name": "Sekolah Desa",
+    "level": 28,
+    "description": "Bantu kegiatan belajar dan raih wawasan.",
+    "main": "region_school",
+    "sheets": [
+      "school"
+    ],
+    "status": "Bangunan utama memakai rumah desa.",
+    "missing": []
+  },
+  {
+    "key": "botani",
+    "name": "Taman Botani",
+    "level": 30,
+    "description": "Teliti tanaman untuk bunga langka.",
+    "main": "region_botanical",
+    "sheets": [
+      "greenhouse"
+    ],
+    "status": "Bangunan utama memakai rumah kaca.",
+    "missing": []
+  },
+  {
+    "key": "resor_danau",
+    "name": "Resor Danau",
+    "level": 35,
+    "description": "Siapkan paket wisata danau untuk tamu.",
+    "main": "region_resort",
+    "sheets": [
+      "fishing"
+    ],
+    "status": "Bangunan utama memakai aset pemancingan.",
+    "missing": []
+  },
+  {
+    "key": "kota_wisata",
+    "name": "Kota Wisata",
+    "level": 40,
+    "description": "Layani wisatawan dengan makanan dan paket wisata.",
+    "main": "region_tourism",
+    "sheets": [
+      "market"
+    ],
+    "status": "Bangunan utama memakai kios pasar.",
+    "missing": []
+  },
+  {
+    "key": "arena",
+    "name": "Arena Kompetisi",
+    "level": 45,
+    "description": "Ikuti lomba panen untuk mendapatkan piala.",
+    "main": "region_arena",
+    "sheets": [
+      "festival_extra"
+    ],
+    "status": "Aset utama tersedia.",
+    "missing": []
+  },
+  {
+    "key": "pelabuhan",
+    "name": "Pelabuhan Dagang",
+    "level": 50,
+    "description": "Kirim barang langka untuk kontrak besar.",
+    "main": "region_harbor",
+    "sheets": [
+      "harbor"
+    ],
+    "status": "Aset utama tersedia.",
+    "missing": []
+  }
+]

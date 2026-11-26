@@ -15,9 +15,9 @@ dest_files=["res://.godot/imported/flowering_hedge.png-c02943f59f6a993c945d90f53
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
-compress/lossy_quality=0.7
+compress/lossy_quality=0.93
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1

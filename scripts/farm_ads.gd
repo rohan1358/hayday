@@ -3,6 +3,10 @@ extends Node
 
 ## Google test units are used for debug APKs. Release APKs use the owner's units.
 signal reward_granted(gems: int)
+signal speedup_rewarded(request_id: String)
+signal speedup_finished(request_id: String, earned: bool)
+signal tree_chop_rewarded
+signal tree_chop_finished(earned: bool)
 signal message_requested(message: String)
 signal config_changed
 signal visible_ad_changed
@@ -43,6 +47,8 @@ var _initializing := false
 var _view_mode := "kebun"
 var _fullscreen_active := false
 var _pending_reward := ""
+var _speedup_request := ""
+var _tree_chop_request := false
 var _reward_paid := false
 var _last_interstitial_at := 0
 var _paused_at := 0
@@ -192,11 +198,11 @@ func _on_config_ready(json: String) -> void:
 		else:
 			# Individual ad formats stay disabled unless enabled remotely.
 			_config_flags[key] = values.get(key, false) == true
-	if OS.is_debug_build():
-		print("FarmAds: config master=%s (published=%s), enabled formats=%s" % [
-			str(_config_flags["EnableAdmob"]), str(values.has("EnableAdmob")),
-			str(_any_ads_enabled())
-		])
+	print("FarmAds: config master=%s (published=%s), enabled formats=%s, banner=%s, app_open=%s" % [
+		str(_config_flags["EnableAdmob"]), str(values.has("EnableAdmob")),
+		str(_any_ads_enabled()), str(_config_flags["EnableAdmobBanner"]),
+		str(_config_flags["EnableAdmobOpeningApp"])
+	])
 	if is_supported():
 		_release_disabled_ads()
 		if _any_ads_enabled():
@@ -484,6 +490,63 @@ func _on_rewarded_interstitial_loaded(ad: RewardedInterstitialAd) -> void:
 	ad.full_screen_content_callback = _make_fullscreen_callbacks("rewarded_interstitial")
 
 
+func speedup_unavailable_reason() -> String:
+	if not is_supported(): return "Iklan percepatan tersedia di Android, bukan di versi PC."
+	if not can_show_kind("rewarded"): return "Iklan berhadiah belum diaktifkan. Coba lagi nanti."
+	if _fullscreen_active: return "Iklan lain sedang ditampilkan."
+	if not _ready_for_ads or _rewarded==null: return "Iklan belum tersedia. Periksa internet dan coba lagi."
+	return ""
+
+
+func request_speedup(request_id: String) -> bool:
+	if request_id.is_empty(): return false
+	var reason=speedup_unavailable_reason()
+	if not reason.is_empty():
+		message_requested.emit(reason)
+		if can_show_kind("rewarded") and _ready_for_ads: _load_rewarded()
+		return false
+	# No gem/free-reward fallback: only the SDK earned-reward event grants speedup.
+	_speedup_request=request_id
+	_pending_reward="rewarded"
+	_reward_paid=false
+	_fullscreen_active=true
+	_rewarded.show(_reward_listener)
+	return true
+
+
+func request_tree_chop() -> bool:
+	if not is_supported():
+		message_requested.emit("Iklan tebang tambahan tersedia di Android.")
+		return false
+	if not can_show_kind("rewarded") and not can_show_kind("rewarded_interstitial"):
+		message_requested.emit("Iklan berhadiah belum diaktifkan. Coba lagi nanti.")
+		return false
+	if _fullscreen_active:
+		message_requested.emit("Iklan lain sedang ditampilkan.")
+		return false
+	var kind := ""
+	if _ready_for_ads:
+		if can_show_kind("rewarded") and _rewarded != null:
+			kind = "rewarded"
+		elif can_show_kind("rewarded_interstitial") and _rewarded_interstitial != null:
+			kind = "rewarded_interstitial"
+	if kind.is_empty():
+		message_requested.emit("Iklan belum tersedia. Periksa internet dan coba lagi.")
+		if _ready_for_ads:
+			_load_rewarded()
+			_load_rewarded_interstitial()
+		return false
+	_tree_chop_request = true
+	_pending_reward = kind
+	_reward_paid = false
+	_fullscreen_active = true
+	if kind == "rewarded":
+		_rewarded.show(_reward_listener)
+	else:
+		_rewarded_interstitial.show(_rewarded_interstitial_listener)
+	return true
+
+
 func show_rewarded(kind: String) -> void:
 	if kind != "rewarded" and kind != "rewarded_interstitial":
 		return
@@ -511,7 +574,12 @@ func _grant_reward(kind: String, gems: int) -> void:
 	if _pending_reward != kind or _reward_paid or not _fullscreen_active:
 		return
 	_reward_paid = true
-	reward_granted.emit(gems)
+	if _tree_chop_request:
+		tree_chop_rewarded.emit()
+	elif not _speedup_request.is_empty():
+		speedup_rewarded.emit(_speedup_request)
+	else:
+		reward_granted.emit(gems)
 
 
 func _load_app_open() -> void:
@@ -564,8 +632,15 @@ func _make_fullscreen_callbacks(kind: String) -> FullScreenContentCallback:
 
 
 func _cleanup_fullscreen(kind: String) -> void:
+	var request_id=_speedup_request if kind==_pending_reward else ""
+	var tree_chop_requested := _tree_chop_request and kind == _pending_reward
+	var earned=_reward_paid
+	if not request_id.is_empty(): _speedup_request=""
+	if tree_chop_requested: _tree_chop_request = false
 	_fullscreen_active = false
 	_pending_reward = ""
+	if not request_id.is_empty(): speedup_finished.emit(request_id,earned)
+	if tree_chop_requested: tree_chop_finished.emit(earned)
 	match kind:
 		"interstitial":
 			if _interstitial:

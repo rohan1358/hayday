@@ -1,0 +1,67 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /User/{uid} {
+      function validPhone(data) {
+        return !('PhoneNumber' in data) ||
+          (data.PhoneNumber is string && data.PhoneNumber.matches('^\\+628[0-9]{8,11}$'));
+      }
+
+      function validUser(data) {
+        return data.keys().hasOnly(['DeviceID', 'PhoneNumber', 'CutDownTreesAmount']) &&
+          data.keys().hasAll(['DeviceID']) &&
+          data.DeviceID is string && data.DeviceID.matches('^[a-f0-9]{64}$') &&
+          (!('CutDownTreesAmount' in data) ||
+            (data.CutDownTreesAmount is int && data.CutDownTreesAmount >= 0)) &&
+          validPhone(data);
+      }
+
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow create: if request.auth != null && request.auth.uid == uid &&
+        validUser(request.resource.data);
+      allow update: if request.auth != null && request.auth.uid == uid &&
+        validUser(request.resource.data) &&
+        request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['DeviceID', 'PhoneNumber', 'CutDownTreesAmount']);
+    }
+
+    match /RequestedReward/{requestId} {
+      function validRequest() {
+        let data = request.resource.data;
+        return data.keys().hasOnly([
+            'UserID', 'PhoneNumber', 'Amount', 'Status', 'ClaimDate',
+            'TreeCount', 'MinimumTrees', 'PricePerTree', 'RequestedAt'
+          ]) &&
+          data.keys().hasAll([
+            'UserID', 'PhoneNumber', 'Amount', 'Status', 'ClaimDate',
+            'TreeCount', 'MinimumTrees', 'PricePerTree', 'RequestedAt'
+          ]) &&
+          data.UserID == request.auth.uid &&
+          data.ClaimDate is string &&
+          data.ClaimDate.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$') &&
+          requestId == request.auth.uid + '_' + data.ClaimDate &&
+          data.PhoneNumber is string &&
+          data.PhoneNumber.matches('^\\+628[0-9]{8,11}$') &&
+          data.Status == 'pending' &&
+          data.Amount is int && data.Amount > 0 &&
+          data.TreeCount is int && data.TreeCount > 0 &&
+          data.MinimumTrees is int && data.MinimumTrees > 0 &&
+          data.TreeCount >= data.MinimumTrees &&
+          data.PricePerTree is int && data.PricePerTree > 0 &&
+          data.Amount == data.TreeCount * data.PricePerTree &&
+          data.RequestedAt == request.time;
+      }
+
+      // The client reads its deterministic document ID inside a transaction,
+      // including before the document exists. Query/list remains owner-scoped.
+      allow get: if request.auth != null &&
+        requestId.matches('^' + request.auth.uid + '_[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+      allow list: if request.auth != null &&
+        resource.data.UserID == request.auth.uid;
+      allow create: if request.auth != null && validRequest();
+      // Only the Firebase Admin SDK / authorized administrator may change status.
+      allow update, delete: if false;
+    }
+  }
+}

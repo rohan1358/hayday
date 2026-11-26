@@ -1,0 +1,9 @@
+[gd_resource type="AtlasTexture" load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/terrain_kit/props/022_wooden_crates.png" id="1"]
+
+[resource]
+atlas = ExtResource("1")
+region = Rect2(19.0, 7.0, 461.0, 455.0)
+filter_clip = true
+metadata/ground_anchor = Vector2(230.5, 391.299987792969)

@@ -1,0 +1,61 @@
+{
+	"pens": [
+		{
+			"anchor": [
+				364.0,
+				362.366790771484
+			],
+			"id": "chicken_coop",
+			"path": "res://assets/ranch/chicken_coop.png",
+			"region": [
+				20,
+				22,
+				736,
+				572
+			]
+		},
+		{
+			"anchor": [
+				384.0,
+				378.999969482422
+			],
+			"id": "cow_pen",
+			"path": "res://assets/ranch/cow_pen.png",
+			"region": [
+				0,
+				19,
+				759,
+				602
+			]
+		},
+		{
+			"anchor": [
+				384.0,
+				344.380310058594
+			],
+			"id": "pig_pen",
+			"path": "res://assets/ranch/pig_pen.png",
+			"region": [
+				0,
+				20,
+				754,
+				553
+			]
+		},
+		{
+			"anchor": [
+				384.0,
+				359.380310058594
+			],
+			"id": "goat_pen",
+			"path": "res://assets/ranch/goat_pen.png",
+			"region": [
+				0,
+				5,
+				759,
+				583
+			]
+		}
+	],
+	"version": 1
+}

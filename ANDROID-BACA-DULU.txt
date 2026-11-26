@@ -1,0 +1,20 @@
+KEBUN CERIA HYBRID — APK ANDROID
+
+File: KebunCeria-Hybrid-Android.apk
+Versi: 1.1-hybrid (versionCode 2)
+Package: com.kebunceria.hybrid
+Minimum: Android 7.0 / API 24
+Prosesor: ARM64 dan ARMv7
+Target API: 36
+
+Unduh atau salin APK ke HP Android, lalu buka filenya untuk menginstal.
+Aplikasi tampil dengan nama Kebun Ceria Hybrid.
+Package terpisah agar tidak menimpa aplikasi Kebun Ceria lain yang sudah terpasang.
+
+Ini APK uji bertanda tangan debug, mode offline. Integrasi iklan native tidak disertakan.
+Gameplay, joystick, kontrol karakter, antrean tugas, ternak, musim dan kostum terbaru disertakan.
+
+Verifikasi: tanda tangan APK v2/v3, ZIP CRC, alignment ZIP 16 KB dan segmen ELF ARM64 16 KB lulus.
+Pemeriksaan isi memastikan modul hybrid, joystick dan aset karakter arah masuk dalam APK.
+Belum diuji langsung pada perangkat Android fisik.
+Rincian pemeriksaan tersedia dalam folder validation.

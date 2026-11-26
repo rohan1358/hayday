@@ -1,0 +1,24 @@
+{
+  "tool": "Built-in image_gen",
+  "assets": [
+    {
+      "id": "stone",
+      "prompt": "Production game sprite: ONE thin square path tile in precise ISOMETRIC DIAMOND projection, top face twice as wide as tall (2:1 diamond), made of four individually rounded irregular pale warm-gray sandstone paving slabs, subtle lavender-gray and creamy beige variation, narrow natural seams between slabs, softly worn bevels, a few tiny emerald moss flecks inside two seams. Cozy richly colorful 3D stylized handpainted Living Garden farming game, tactile high quality materials and soft sunlight upper left. Very thin tile, only a tiny 2-3% dark beveled edge visible underneath, NO chunky block, NO dirt platform, NO surrounding terrain, NO grass base. The FOUR OUTER TOP CORNERS must form one clean 2:1 rhombus aligned left/right/top/bottom so identical tiles tessellate seamlessly along BOTH diagonal axes. Top vertex and bottom vertex horizontally centered; left and right vertices vertically centered. Whole tile fully visible, centered with 10% genuine transparent margin. Gentle ambient contact shadow only underneath tile, no long cast shadow. No objects, animals, people, flowers, text, UI or border. Readable at 50 pixels wide. Match natural individual garden paving stones in the Living Garden reference rather than a continuous painted road strip.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-d1e25ff2-41b8-4fbe-8cf1-b2972714aa61.png",
+      "path": "res://assets/roads/stone_tile.png"
+    },
+    {
+      "id": "brick",
+      "prompt": "Production game sprite: ONE thin square path tile in precise ISOMETRIC DIAMOND projection, top face twice as wide as tall (2:1 diamond), made of a small neatly interlocking pattern of warm terracotta and soft red clay paving bricks, subtle coral and honey highlights, staggered rows with thin warm beige mortar, lightly worn beveled edges. Cozy richly colorful 3D stylized handpainted Living Garden farming game, tactile high quality materials and soft sunlight upper left. Very thin tile, only a tiny 2-3% dark beveled edge visible underneath, NO chunky block, NO dirt platform, NO surrounding terrain, NO grass base. The FOUR OUTER TOP CORNERS must form one clean 2:1 rhombus aligned left/right/top/bottom so identical tiles tessellate seamlessly along BOTH diagonal axes. Top vertex and bottom vertex horizontally centered; left and right vertices vertically centered. Whole tile fully visible, centered with 10% genuine transparent margin. Gentle ambient contact shadow only underneath tile, no long cast shadow. No objects, animals, people, flowers, text, UI or border. Readable at 50 pixels wide. Match natural individual garden paving stones in the Living Garden reference rather than a continuous painted road strip.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-d4291600-93f3-472b-ab1e-6eca69c2becc.png",
+      "path": "res://assets/roads/brick_tile.png"
+    },
+    {
+      "id": "moss",
+      "prompt": "Production game sprite: ONE very thin square garden path tile in precise ISOMETRIC DIAMOND projection, top face 2:1 width to height. Made of five rounded, gently irregular NATURAL GRAY-BEIGE STEPPING STONES, each individually shaped with worn pale lavender-gray and warm sandstone surfaces, mossy emerald green narrow seams, tiny clover on two corner seams. No wood or planks, no bricks, no chunky base, no soil platform. Cozy richly colorful 3D stylized handpainted Living Garden mobile farming game, rich tactile stone surface readable at 48px, warm sunlight upper left, soft short ambient shadow directly under tile. FOUR outer corners form a clean rhombus aligned top/bottom/left/right, so copies tessellate along both diagonal axes. Very thin 2-3% beveled edge. Full asset visible with 10% genuine transparent margin. No other scenery, flowers, people, animals, UI, text, labels, border or ground landscape. Match natural stone garden pathways in the user's Living Garden reference.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-333936c7-af69-4d38-b678-acfed95e6470.png",
+      "path": "res://assets/roads/moss_tile.png"
+    }
+  ],
+  "rejected": "Wooden planks removed at user request; prior stock and placed roads migrate to moss stone."
+}

@@ -1,0 +1,57 @@
+[
+  {
+    "file": "lilitaone/LilitaOne-Regular.ttf",
+    "source": "https://github.com/google/fonts/tree/main/ofl/lilitaone",
+    "sha256": "f5b641c45c69d772ee4eda687bc9fda411d5cad6b0b45371491da4580cbc8d59"
+  },
+  {
+    "file": "lilitaone/METADATA.pb",
+    "source": "https://github.com/google/fonts/tree/main/ofl/lilitaone",
+    "sha256": "1045331154273565add79cda145f6bd70d3cf331508566a3791f50f6a4dd2548"
+  },
+  {
+    "file": "lilitaone/OFL.txt",
+    "source": "https://github.com/google/fonts/tree/main/ofl/lilitaone",
+    "sha256": "255d5debbb80eb2ea762644311f266a279e8778f00156655a516e2b7781a63e1"
+  },
+  {
+    "file": "fredoka/Fredoka[wdth,wght].ttf",
+    "source": "https://github.com/google/fonts/tree/main/ofl/fredoka",
+    "sha256": "2ba02e68b152868aef9ba28e24b3648c7d457fe6f25c761f2c2c53fb61a73fc8"
+  },
+  {
+    "file": "fredoka/METADATA.pb",
+    "source": "https://github.com/google/fonts/tree/main/ofl/fredoka",
+    "sha256": "17f260d0faf7c588c9331a9a1b720b55c2b871563423f42704c8cbb0953a574a"
+  },
+  {
+    "file": "fredoka/OFL.txt",
+    "source": "https://github.com/google/fonts/tree/main/ofl/fredoka",
+    "sha256": "5c9e7eee5c6b25f4b05b8d53b2e470ea4962f9ced742d044a98f7d95d1375bab"
+  },
+  {
+    "file": "nunito/METADATA.pb",
+    "source": "https://github.com/google/fonts/tree/main/ofl/nunito",
+    "sha256": "3e20743c7ddab54c6ac57d79a6be522d4bae795223855ce90a1b13c4132f0754"
+  },
+  {
+    "file": "nunito/Nunito[wght].ttf",
+    "source": "https://github.com/google/fonts/tree/main/ofl/nunito",
+    "sha256": "bb55a5ca5c2042335b3991af27c4d0705d0ef41cac6164ac737fd8f2a1e85207"
+  },
+  {
+    "file": "nunito/OFL.txt",
+    "source": "https://github.com/google/fonts/tree/main/ofl/nunito",
+    "sha256": "580df76c95a1ec5ab878ceb25bb3d85c6a076804e9c970c8c6972aea775fdf65"
+  },
+  {
+    "file": "symbols/NotoSansSymbols2-Regular.ttf",
+    "source": "https://github.com/google/fonts/tree/main/ofl/notosanssymbols2",
+    "sha256": "7d5fb73b7ca67a6798101741f5d280a3d016a56a197afcd4199dbb57b4b82a21"
+  },
+  {
+    "file": "symbols/OFL.txt",
+    "source": "https://github.com/google/fonts/tree/main/ofl/notosanssymbols2",
+    "sha256": "b118dd41337806a5d4797052c77caf3bd096aed783e5eb21b4d11154351e1ac0"
+  }
+]

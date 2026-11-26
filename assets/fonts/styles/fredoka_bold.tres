@@ -1,0 +1,10 @@
+[gd_resource type="FontVariation" load_steps=3 format=3]
+
+[ext_resource type="FontFile" path="../fredoka/Fredoka[wdth,wght].ttf" id="1"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/symbols/NotoSansSymbols2-Regular.ttf" id="2_symbols"]
+
+[resource]
+base_font = ExtResource("1")
+variation_opentype = {2003265652: 700.0}
+fallbacks = Array[Font]([ExtResource("2_symbols")])

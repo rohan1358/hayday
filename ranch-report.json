@@ -1,0 +1,34 @@
+{
+  "tool": "built-in image_gen",
+  "assets": [
+    "hayday/assets/ranch/chicken_coop.png",
+    "hayday/assets/ranch/cow_pen.png",
+    "hayday/assets/ranch/pig_pen.png",
+    "hayday/assets/ranch/goat_pen.png",
+    "hayday/assets/ranch/animal_poses.png"
+  ],
+  "prompts": {
+    "chicken_coop": "Precise object removal for a production game asset. Remove ALL animals from this existing isometric farm enclosure, including every cow/chicken/pig/goat, and reconstruct the exposed grass/soil naturally. Preserve the exact original building, fence, feeding troughs, mud patch, objects, colors, low-poly rendered style, camera angle, full ground base, framing, and transparency. No new objects, no animals, no people, no text. Output the empty enclosure only on a genuine transparent alpha background. Preserve original proportions and composition. This is an edit, not a redesign.",
+    "cow_pen": "Precise object removal for a production game asset. Remove ALL animals from this existing isometric farm enclosure, including every cow/chicken/pig/goat, and reconstruct the exposed grass/soil naturally. Preserve the exact original building, fence, feeding troughs, mud patch, objects, colors, low-poly rendered style, camera angle, full ground base, framing, and transparency. No new objects, no animals, no people, no text. Output the empty enclosure only on a genuine transparent alpha background. Preserve original proportions and composition. This is an edit, not a redesign.",
+    "pig_pen": "Precise object removal for a production game asset. Remove ALL animals from this existing isometric farm enclosure, including every cow/chicken/pig/goat, and reconstruct the exposed grass/soil naturally. Preserve the exact original building, fence, feeding troughs, mud patch, objects, colors, low-poly rendered style, camera angle, full ground base, framing, and transparency. No new objects, no animals, no people, no text. Output the empty enclosure only on a genuine transparent alpha background. Preserve original proportions and composition. This is an edit, not a redesign.",
+    "goat_pen": "Precise object removal for a production game asset. Remove ALL animals from this existing isometric farm enclosure, including every cow/chicken/pig/goat, and reconstruct the exposed grass/soil naturally. Preserve the exact original building, fence, feeding troughs, mud patch, objects, colors, low-poly rendered style, camera angle, full ground base, framing, and transparency. No new objects, no animals, no people, no text. Output the empty enclosure only on a genuine transparent alpha background. Preserve original proportions and composition. This is an edit, not a redesign."
+  },
+  "animal_prompt": "Production transparent isometric farming game animal animation sprite atlas. EXACT 4 EQUAL COLUMNS and 4 EQUAL ROWS, sixteen completely isolated full-body cutouts, generous transparent margins, no text, grid, ground base, shadows on backdrop or scenery. Same orthographic isometric camera facing lower-left in every cell, same size/ground-foot alignment across frames of each row. Match simple charming low-poly 3D rendered toy farming enclosures with warm soft lighting and smooth readable silhouettes. Row1 white chicken with red comb; row2 cream dairy cow with brown patches and pink muzzle; row3 pink pig; row4 cream goat with short horns. Column1 standing relaxed head raised, column2 head lowered grazing/pecking, column3 walking stride left feet forward, column4 walking stride right feet forward. Keep exact animal identity/proportions consistent across each row and every foot fully visible. Genuine transparent alpha, no checkerboard. Square canvas, each animal inside its own equal cell. No duplicate animals per cell.",
+  "features": [
+    "four original-style pens cleaned of baked-in animals",
+    "live per-animal sprites: walking, standing, grazing; movement constrained inside yard, avoids pen furniture and nearby animals",
+    "purchase by species and capacity; 3/6/9 slots",
+    "land expansion at player levels 5 and 10, with placement/space preflight before payment",
+    "expanded artwork, placement bounds and navigation",
+    "scaled feed and harvest; current production cycle snapshots prevent newly purchased animals inflating a fed cycle",
+    "extra chickens need grain; starter free-foraging cycle preserved",
+    "save migration preserves old production and starter herd"
+  ],
+  "validation": [
+    "ranch system test: zero failures",
+    "smoke: zero failures",
+    "hybrid movement and jobs: 60 checks, zero failures"
+  ],
+  "entry": "Toko > Toko Hewan & Perluas Kandang",
+  "apk": "not rebuilt"
+}

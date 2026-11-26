@@ -1,0 +1,6 @@
+{
+  "asset": "hayday/assets/colorful_garden/neighbor.png",
+  "tool": "Built-in image_gen",
+  "prompt": "Preserve attached female neighbor with bun, pink open shirt, blue trousers, brown shoes and wicker basket. Remove cream background and floor shadow, transparent full-body cutout.",
+  "processing": "Resize to 512px high, preserve alpha; feet ground anchor; same visitor interaction and idle bounce."
+}

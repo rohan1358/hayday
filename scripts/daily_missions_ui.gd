@@ -99,6 +99,10 @@ static func populate(
 		)
 		claim.disabled = not ready
 		claim.pressed.connect(func() -> void: on_claim.call(id))
+	populate_achievements(ui,list,game,on_achievement)
+
+
+static func populate_achievements(ui: Control,list: VBoxContainer,game: FarmGameState,on_achievement: Callable) -> void:
 	ui.call(
 		"callout", list, "PRESTASI KEBUN  ·  SELAMANYA",
 		"Panen, masak, kirim, dan berdagang. Progres tetap tersimpan.",

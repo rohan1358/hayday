@@ -1,0 +1,215 @@
+{
+  "tool": "Built-in image_gen",
+  "assets": [
+    {
+      "id": "grass_meadow",
+      "file": "res://assets/colorful_garden/grass_meadow.png",
+      "prompt": "Production game texture, ONE perfectly SEAMLESS TILEABLE square grass ground texture for a colorful cozy fantasy isometric farming game, rich handpainted 3D stylized Living Garden aesthetic. Orthographic straight top-down ground surface, NO horizon, NO isometric diamond, NO border, NO raised tile edges. Lush finely textured lime and emerald meadow grass, tiny painterly overlapping blades and soft clover leaves, very subtle irregular warm sunlight mottling, appealing saturated natural greens without neon. A few extremely small pink, lavender, pale yellow and cornflower-blue wildflower specks scattered sparingly, each at most 1% image width, 90% usable green grass. Grass texture density consistent throughout. No objects, trees, rocks, animals, buildings, text, paths, large plants or shadows of offscreen objects. All four edges must tile continuously without a visible seam or vignette. Fully opaque ground texture. Suitable to repeat across a large farm and remain subtle behind buildings.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-1f1fffa5-4eba-48b0-a424-4e6bfcd9d909.png"
+    },
+    {
+      "id": "flowering_bushes",
+      "file": "res://assets/colorful_garden/flowering_bushes.png",
+      "prompt": "Production game asset: ONE isolated a low rounded flower-covered bush cluster with emerald and lime tiny sculpted leaves, abundant pink, lilac, cornflower blue and golden daisy flowers. Low wide silhouette, no tall stems, tiny exposed roots, no pot. wide low shrub. Richly colorful cozy fantasy Living Garden farming game, polished 3D stylized handpainted art, rounded charming forms, beautifully detailed materials readable at 150px, warm sunlight upper left, soft ambient occlusion. Orthographic isometric view showing front/right, camera 30 degrees downward. Genuine transparent background. Entire asset with 12% transparent padding, compact root/ground footprint. No large terrain tile, no other objects, no people, no text, no letters, UI or border. Match cobalt-roof cottages, bright orange wood, emerald grass and magenta flowers from a premium colorful farm.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-87aba6bf-aa87-4a4b-87dd-c0b7a702811e.png"
+    },
+    {
+      "id": "flowering_hedge",
+      "file": "res://assets/colorful_garden/flowering_hedge.png",
+      "prompt": "Production game asset: ONE isolated a single short straight lush trimmed hedge segment with rounded dense sculpted emerald foliage, bright lime leaf tips, magenta hydrangeas and tiny yellow, blue and lavender blossoms. A rich golden timber border at ground level. wide low hedge. Richly colorful cozy fantasy Living Garden farming game, polished 3D stylized handpainted art, rounded charming forms, beautifully detailed materials readable at 150px, warm sunlight upper left, soft ambient occlusion. Orthographic isometric view showing front/right, camera 30 degrees downward. Genuine transparent background. Entire asset with 12% transparent padding, compact root/ground footprint. No large terrain tile, no other objects, no people, no text, no letters, UI or border. Match cobalt-roof cottages, bright orange wood, emerald grass and magenta flowers from a premium colorful farm.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-07161a7a-7bec-493b-bf57-e17f6b106421.png"
+    },
+    {
+      "id": "apple_tree",
+      "file": "res://assets/colorful_garden/apple_tree.png",
+      "prompt": "Production game asset: ONE isolated a charming compact orchard APPLE TREE with a warm gnarled golden brown trunk, layered sculpted rounded emerald and lime canopy, numerous glossy rich RED APPLES nestled naturally among leaves. A few tiny pink and gold flowers at its roots. whole tall fruit tree. Richly colorful cozy fantasy Living Garden farming game, polished 3D stylized handpainted art, rounded charming forms, beautifully detailed materials readable at 150px, warm sunlight upper left, soft ambient occlusion. Orthographic isometric view showing front/right, camera 30 degrees downward. Genuine transparent background. Entire asset with 12% transparent padding, compact root/ground footprint. No large terrain tile, no other objects, no people, no text, no letters, UI or border. Match cobalt-roof cottages, bright orange wood, emerald grass and magenta flowers from a premium colorful farm.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-2c9004d5-c225-4085-ac3b-6edaa06245a0.png"
+    },
+    {
+      "id": "decorative_pond",
+      "file": "res://assets/colorful_garden/decorative_pond.png",
+      "prompt": "Production game asset: ONE isolated a small garden pond with crystal clear turquoise and sapphire water, rounded lavender-gray and golden sandstone rim rocks, two lily pads and one pink water lily, a few bright pink and blue flowers around the edge. No animals. No waterfall. compact horizontal oval pond. Richly colorful cozy fantasy Living Garden farming game, polished 3D stylized handpainted art, rounded charming forms, beautifully detailed materials readable at 150px, warm sunlight upper left, soft ambient occlusion. Orthographic isometric view showing front/right, camera 30 degrees downward. Genuine transparent background. Entire asset with 12% transparent padding, compact root/ground footprint. No large terrain tile, no other objects, no people, no text, no letters, UI or border. Match cobalt-roof cottages, bright orange wood, emerald grass and magenta flowers from a premium colorful farm.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-45509321-b4ad-429d-9ed7-f457e7259157.png"
+    },
+    {
+      "id": "delivery_depot",
+      "file": "res://assets/colorful_garden/delivery_depot.png",
+      "prompt": "Production game sprite, ONE isolated a compact farm order-delivery pavilion and parcel loading depot: cobalt and turquoise tiled gable roof, warm honey wooden beams, coral-red and cream walls, violet window shutters, empty cream hanging sign WITHOUT LETTERS, bright produce crates stacked on its small wooden loading platform, tiny magenta flowers at corners. No vehicle. Entire asset completely within frame with 12% genuine transparent padding. Richly colorful fantasy cozy Living Garden farming game aesthetic, 3D stylized handpainted premium game art, softly rounded charming geometry, saturated joyful colors, detailed tactile materials readable at 350px, warm sunlight upper left, soft ambient occlusion. Orthographic isometric camera 30 degrees downward, see front and right face. Genuine transparent background. Compact footprint, no surrounding scenery, no animals, people, lettering, text, logo, UI or border.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-4c80240a-dde9-4533-93d6-006a82062077.png"
+    },
+    {
+      "id": "delivery_truck",
+      "file": "res://assets/colorful_garden/delivery_truck.png",
+      "prompt": "Production game sprite, ONE isolated one cute small vintage farm delivery pickup truck, cabin at RIGHT end and open wooden cargo bed to LEFT, rounded bright turquoise and sky blue cabin with golden brass details, cobalt fenders, rich orange wooden produce crates with colorful vegetables in the back, dark tires and cream hubs, shiny blue windows. Show front/right side of vehicle. Entire asset completely within frame with 12% genuine transparent padding. Richly colorful fantasy cozy Living Garden farming game aesthetic, 3D stylized handpainted premium game art, softly rounded charming geometry, saturated joyful colors, detailed tactile materials readable at 210px, warm sunlight upper left, soft ambient occlusion. Orthographic isometric camera 30 degrees downward, see front and right face. Genuine transparent background. Compact footprint, no surrounding scenery, no animals, people, lettering, text, logo, UI or border.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-52be51b7-6c51-4428-810a-de9c1c843ed9.png"
+    },
+    {
+      "id": "hay_stack",
+      "file": "res://assets/colorful_garden/hay_stack.png",
+      "prompt": "Production game sprite, ONE isolated one small stack of three golden yellow and honey orange hay bales, two at bottom and one on top, detailed soft straw fibers, turquoise and violet binding cords, a few small magenta flowers tucked at bottom edge. Entire asset completely within frame with 12% genuine transparent padding. Richly colorful fantasy cozy Living Garden farming game aesthetic, 3D stylized handpainted premium game art, softly rounded charming geometry, saturated joyful colors, detailed tactile materials readable at 150px, warm sunlight upper left, soft ambient occlusion. Orthographic isometric camera 30 degrees downward, see front and right face. Genuine transparent background. Compact footprint, no surrounding scenery, no animals, people, lettering, text, logo, UI or border.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-257183d2-3e87-4e39-a9c9-fb7f4069ea2f.png"
+    },
+    {
+      "id": "wooden_crates",
+      "file": "res://assets/colorful_garden/wooden_crates.png",
+      "prompt": "Production game sprite, ONE isolated one compact cluster of three farm produce crates, golden honey wood with turquoise and raspberry painted corner reinforcements, full of red strawberries, purple grapes, bright carrots and green leaves. Entire asset completely within frame with 12% genuine transparent padding. Richly colorful fantasy cozy Living Garden farming game aesthetic, 3D stylized handpainted premium game art, softly rounded charming geometry, saturated joyful colors, detailed tactile materials readable at 150px, warm sunlight upper left, soft ambient occlusion. Orthographic isometric camera 30 degrees downward, see front and right face. Genuine transparent background. Compact footprint, no surrounding scenery, no animals, people, lettering, text, logo, UI or border.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-15074373-3998-4146-b66f-22d0467b2f92.png"
+    },
+    {
+      "id": "wishing_well",
+      "file": "res://assets/colorful_garden/wishing_well.png",
+      "prompt": "Production game sprite, ONE isolated one cozy village wishing well, low rounded lavender-gray stone ring with bright turquoise water, honey timber posts, a cobalt-blue and periwinkle tiled little roof, copper bucket with aqua handle, small pink and golden flowers climbing one post. Entire asset completely within frame with 12% genuine transparent padding. Richly colorful fantasy cozy Living Garden farming game aesthetic, 3D stylized handpainted premium game art, softly rounded charming geometry, saturated joyful colors, detailed tactile materials readable at 150px, warm sunlight upper left, soft ambient occlusion. Orthographic isometric camera 30 degrees downward, see front and right face. Genuine transparent background. Compact footprint, no surrounding scenery, no animals, people, lettering, text, logo, UI or border.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-c89368a9-795e-4970-81ea-d9e82ca57796.png"
+    },
+    {
+      "id": "rustic_lamp",
+      "file": "res://assets/colorful_garden/rustic_lamp.png",
+      "prompt": "Production game sprite, ONE isolated one short cozy farm garden lantern on a honey-gold carved wooden post, warm glowing amber glass lantern in turquoise/brass metal frame with a small cobalt pitched cap, a few pink flowers at the rounded stone base. Entire asset completely within frame with 12% genuine transparent padding. Richly colorful fantasy cozy Living Garden farming game aesthetic, 3D stylized handpainted premium game art, softly rounded charming geometry, saturated joyful colors, detailed tactile materials readable at 110px, warm sunlight upper left, soft ambient occlusion. Orthographic isometric camera 30 degrees downward, see front and right face. Genuine transparent background. Compact footprint, no surrounding scenery, no animals, people, lettering, text, logo, UI or border.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-c9bc81ac-d87a-4c90-8244-82e125275cc5.png"
+    },
+    {
+      "id": "soil_plot_empty",
+      "file": "res://assets/colorful_garden/soil_plot_empty.png",
+      "prompt": "Production game asset: ONE empty square farm planting bed rotated as an isometric diamond, warm rich chocolate soil with neat golden furrows and a honey orange wooden raised border. No plants. Ground diamond fully visible, a tiny bright green clover only at one outside corner. Colorful cozy fantasy Living Garden farming game, polished 3D stylized handpainted premium mobile game art, saturated joyful colors, rounded forms, warm sunlight upper left, gentle ambient occlusion. Orthographic isometric 30 degree downward camera, entire asset at center with 12% genuine transparent margin, compact ground footprint. Clear legible at 150px. No text, UI, labels, animals, people, backgrounds or surrounding terrain.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-658cc44b-7b3c-444b-bea7-e02a78a52d51.png"
+    },
+    {
+      "id": "young_seedlings",
+      "file": "res://assets/colorful_garden/young_seedlings.png",
+      "prompt": "Production game asset: ONE square farm planting bed as an isometric diamond, rich warm chocolate soil in a honey-orange wood raised border with six neat evenly spaced tiny emerald and lime two-leaf seedlings, each small and vibrant. No mature crops. Colorful cozy fantasy Living Garden farming game, polished 3D stylized handpainted premium mobile game art, saturated joyful colors, rounded forms, warm sunlight upper left, gentle ambient occlusion. Orthographic isometric 30 degree downward camera, entire asset at center with 12% genuine transparent margin, compact ground footprint. Clear legible at 150px. No text, UI, labels, animals, people, backgrounds or surrounding terrain.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-9b1c90ba-0737-4bec-8e8f-ec71947092eb.png"
+    },
+    {
+      "id": "wheat_plot_ready",
+      "file": "res://assets/colorful_garden/wheat_plot_ready.png",
+      "prompt": "Production game asset: ONE square farm planting bed as an isometric diamond, a compact planted patch of fully mature bright golden wheat, lush emerald blades at base and warm yellow-orange grain heads, rich chocolate soil and honey-orange timber border. No loose harvested items. Colorful cozy fantasy Living Garden farming game, polished 3D stylized handpainted premium mobile game art, saturated joyful colors, rounded forms, warm sunlight upper left, gentle ambient occlusion. Orthographic isometric 30 degree downward camera, entire asset at center with 12% genuine transparent margin, compact ground footprint. Clear legible at 150px. No text, UI, labels, animals, people, backgrounds or surrounding terrain.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-b768e3d1-87a3-40d4-8d6b-bbaeddf75a50.png"
+    },
+    {
+      "id": "corn_plot_ready",
+      "file": "res://assets/colorful_garden/corn_plot_ready.png",
+      "prompt": "Production game asset: ONE square farm planting bed as an isometric diamond, nine mature bright green corn plants with thick sculpted emerald and lime leaves and sunny golden yellow corn cobs with orange tips. Chocolate soil in honey-orange wooden raised border. Colorful cozy fantasy Living Garden farming game, polished 3D stylized handpainted premium mobile game art, saturated joyful colors, rounded forms, warm sunlight upper left, gentle ambient occlusion. Orthographic isometric 30 degree downward camera, entire asset at center with 12% genuine transparent margin, compact ground footprint. Clear legible at 150px. No text, UI, labels, animals, people, backgrounds or surrounding terrain.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-5a3c3de4-cf43-4e90-9f81-76d737888d55.png"
+    },
+    {
+      "id": "carrot_plot_ready",
+      "file": "res://assets/colorful_garden/carrot_plot_ready.png",
+      "prompt": "Production game asset: ONE square farm planting bed as an isometric diamond, orderly compact rows of ripe bright orange carrots with lively emerald and lime curly leaves, plump carrot tops peeking out of chocolate soil, honey-orange timber raised border. Colorful cozy fantasy Living Garden farming game, polished 3D stylized handpainted premium mobile game art, saturated joyful colors, rounded forms, warm sunlight upper left, gentle ambient occlusion. Orthographic isometric 30 degree downward camera, entire asset at center with 12% genuine transparent margin, compact ground footprint. Clear legible at 150px. No text, UI, labels, animals, people, backgrounds or surrounding terrain.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-84bbbf9e-183f-477b-8cbe-ad858ad1c986.png"
+    },
+    {
+      "id": "flower_garden",
+      "file": "res://assets/colorful_garden/flower_garden.png",
+      "prompt": "Production game asset: ONE compact oval ornamental flower bed with a rounded honey-colored timber and sandstone rim, thick lush green leaves and abundant sculpted pink daisies, lilac blossoms, blue cornflowers, yellow marigolds and white tiny daisies. Low mound, no tall tree or extra furniture. Colorful cozy fantasy Living Garden farming game, polished 3D stylized handpainted premium mobile game art, saturated joyful colors, rounded forms, warm sunlight upper left, gentle ambient occlusion. Orthographic isometric 30 degree downward camera, entire asset at center with 12% genuine transparent margin, compact ground footprint. Clear legible at 150px. No text, UI, labels, animals, people, backgrounds or surrounding terrain.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-aa2b4315-7364-4b5b-863d-578ada3315d4.png"
+    },
+    {
+      "id": "fence_straight",
+      "file": "res://assets/colorful_garden/fence_straight.png",
+      "prompt": "Production game sprite: ONE isolated one short straight two-post rustic garden fence section, golden honey carved wood rails and posts with turquoise painted caps, little magenta and yellow flowers only around post bases, low fence no walls. Richly colorful cozy fantasy Living Garden farm game, premium 3D stylized handpainted art, warm sunlight upper left, soft ambient occlusion, richly detailed materials yet readable at 130px. Orthographic isometric front/right view, 30 degree downward camera. Entire asset with 12% transparent margin, genuinely transparent background, compact ground footprint. No additional surrounding scenery, no animals, people, text, labels, logos, UI or border.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-3d50dd90-c923-4ce0-b172-db774f08a4d8.png"
+    },
+    {
+      "id": "fence_corner",
+      "file": "res://assets/colorful_garden/fence_corner.png",
+      "prompt": "Production game sprite: ONE isolated one compact L-shaped corner garden fence section with three posts, golden honey carved wood rails and turquoise painted post caps, a few pink and yellow flowers at bases. Richly colorful cozy fantasy Living Garden farm game, premium 3D stylized handpainted art, warm sunlight upper left, soft ambient occlusion, richly detailed materials yet readable at 130px. Orthographic isometric front/right view, 30 degree downward camera. Entire asset with 12% transparent margin, genuinely transparent background, compact ground footprint. No additional surrounding scenery, no animals, people, text, labels, logos, UI or border.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-477a10f3-5789-4d6c-b279-0e86faffc44c.png"
+    },
+    {
+      "id": "stone_path_tile",
+      "file": "res://assets/colorful_garden/stone_path_tile.png",
+      "prompt": "Production game sprite: ONE isolated one compact square garden paving tile in an isometric diamond orientation, four individually rounded lavender gray and warm golden sandstone slabs with pale cream grout and subtle blue highlights, a tiny emerald moss leaf in a crack, low profile no raised grassy platform. Richly colorful cozy fantasy Living Garden farm game, premium 3D stylized handpainted art, warm sunlight upper left, soft ambient occlusion, richly detailed materials yet readable at 130px. Orthographic isometric front/right view, 30 degree downward camera. Entire asset with 12% transparent margin, genuinely transparent background, compact ground footprint. No additional surrounding scenery, no animals, people, text, labels, logos, UI or border.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-3739318f-1a28-44c3-bf4e-d14d23c06695.png"
+    },
+    {
+      "id": "flower_patch",
+      "file": "res://assets/colorful_garden/flower_patch.png",
+      "prompt": "Production game sprite: ONE isolated one low dense wildflower patch of short emerald and lime clover and tiny grass tufts with vibrant magenta daisies, violet-blue flowers, golden yellow buttercups and creamy white tiny blossoms, broad low irregular rounded silhouette, no planter or border. Richly colorful cozy fantasy Living Garden farm game, premium 3D stylized handpainted art, warm sunlight upper left, soft ambient occlusion, richly detailed materials yet readable at 130px. Orthographic isometric front/right view, 30 degree downward camera. Entire asset with 12% transparent margin, genuinely transparent background, compact ground footprint. No additional surrounding scenery, no animals, people, text, labels, logos, UI or border.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-e1a0ec0e-1567-4263-8eb0-10d2ddc4d5a0.png"
+    },
+    {
+      "id": "harvest_baskets",
+      "file": "res://assets/colorful_garden/harvest_baskets.png",
+      "prompt": "Production game sprite: ONE isolated one cluster of two golden wicker harvest baskets with bright turquoise and raspberry cloth liners, overflowing glossy red strawberries, purple grapes, orange carrots, golden ears of corn and emerald leaves. Richly colorful cozy fantasy Living Garden farm game, premium 3D stylized handpainted art, warm sunlight upper left, soft ambient occlusion, richly detailed materials yet readable at 130px. Orthographic isometric front/right view, 30 degree downward camera. Entire asset with 12% transparent margin, genuinely transparent background, compact ground footprint. No additional surrounding scenery, no animals, people, text, labels, logos, UI or border.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-b067e68b-2136-4fd4-9c15-7cc4e0be1d2a.png"
+    },
+    {
+      "id": "wooden_signpost",
+      "file": "res://assets/colorful_garden/wooden_signpost.png",
+      "prompt": "Production game sprite: ONE isolated one short honey golden wood farm signpost with two arrow boards pointing opposite ways, one board painted turquoise and one raspberry pink, NO letters or symbols, a few magenta and blue flowers at its small stone base. Richly colorful cozy fantasy Living Garden farm game, premium 3D stylized handpainted art, warm sunlight upper left, soft ambient occlusion, richly detailed materials yet readable at 130px. Orthographic isometric front/right view, 30 degree downward camera. Entire asset with 12% transparent margin, genuinely transparent background, compact ground footprint. No additional surrounding scenery, no animals, people, text, labels, logos, UI or border.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-d7910443-c5e7-4e44-9f77-3e1d3b7e12f5.png"
+    },
+    {
+      "id": "arched_fence",
+      "file": "res://assets/colorful_garden/arched_fence.png",
+      "prompt": "Production game sprite: ONE isolated one charming garden entrance arch of honey golden curved timber with a short gate and two supporting posts, lush flowering emerald vines with magenta and lavender blossoms over arch, brass golden hinges, no letters. Richly colorful cozy fantasy Living Garden farm game, premium 3D stylized handpainted art, warm sunlight upper left, soft ambient occlusion, richly detailed materials yet readable at 130px. Orthographic isometric front/right view, 30 degree downward camera. Entire asset with 12% transparent margin, genuinely transparent background, compact ground footprint. No additional surrounding scenery, no animals, people, text, labels, logos, UI or border.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-a5cec746-b8d6-450b-ab71-8c11ff3a797c.png"
+    },
+    {
+      "id": "water_tower",
+      "file": "res://assets/colorful_garden/water_tower.png",
+      "prompt": "Production game sprite: ONE isolated one small charming elevated farm water tower with a rounded bright turquoise tank, cobalt and periwinkle conical roof, honey-gold timber supporting legs, copper tap and pipe, a short warm wood ladder, tiny pink blossoms at bases. Colorful cozy fantasy Living Garden farming game, premium 3D stylized handpainted illustration, richly saturated joyful colors, rounded sculpted forms, warm sunlight upper left and soft ambient occlusion. Orthographic isometric front/right view, 30 degree downward camera. Full asset fully visible with 12% genuine transparent padding. Compact ground footprint, legible at 150px. No other scenery, text, labels, letters, people, animals, logo, UI, border or terrain tile.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-acddd771-e0cc-4f29-921f-d5ebb5a993ea.png"
+    },
+    {
+      "id": "sorting_trolley",
+      "file": "res://assets/colorful_garden/sorting_trolley.png",
+      "prompt": "Production game sprite: ONE isolated one small low golden honey wooden produce sorting trolley with four tiny dark wheels and turquoise metal corner accents, two stacked crates holding glossy red apples, golden corn and purple grapes, empty cream hanging tag with NO text. Colorful cozy fantasy Living Garden farming game, premium 3D stylized handpainted illustration, richly saturated joyful colors, rounded sculpted forms, warm sunlight upper left and soft ambient occlusion. Orthographic isometric front/right view, 30 degree downward camera. Full asset fully visible with 12% genuine transparent padding. Compact ground footprint, legible at 150px. No other scenery, text, labels, letters, people, animals, logo, UI, border or terrain tile.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-c8c6f1a0-f931-488e-9dfc-791c02125064.png"
+    },
+    {
+      "id": "village_waypost",
+      "file": "res://assets/colorful_garden/village_waypost.png",
+      "prompt": "Production game sprite: ONE isolated one charming village wayfinding post with three colorful arrow boards in turquoise, raspberry and gold, honey wooden post on a small lavender-gray stone footing surrounded by tiny bright flowers, NO text or symbols on arrows. Colorful cozy fantasy Living Garden farming game, premium 3D stylized handpainted illustration, richly saturated joyful colors, rounded sculpted forms, warm sunlight upper left and soft ambient occlusion. Orthographic isometric front/right view, 30 degree downward camera. Full asset fully visible with 12% genuine transparent padding. Compact ground footprint, legible at 150px. No other scenery, text, labels, letters, people, animals, logo, UI, border or terrain tile.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-0c896287-dfab-4622-8e5b-f7127dea6ea4.png"
+    },
+    {
+      "id": "pollinator_house",
+      "file": "res://assets/colorful_garden/pollinator_house.png",
+      "prompt": "Production game sprite: ONE isolated one small whimsical garden bee and pollinator habitat house, tiny honey timber hut on short posts with a periwinkle and violet tiled roof, stacked golden bamboo tubes and a bright turquoise circular entrance, magenta and gold flowers at base, no animals or bees. Colorful cozy fantasy Living Garden farming game, premium 3D stylized handpainted illustration, richly saturated joyful colors, rounded sculpted forms, warm sunlight upper left and soft ambient occlusion. Orthographic isometric front/right view, 30 degree downward camera. Full asset fully visible with 12% genuine transparent padding. Compact ground footprint, legible at 150px. No other scenery, text, labels, letters, people, animals, logo, UI, border or terrain tile.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-c95c099e-fdea-4502-940e-673a8b5838c2.png"
+    },
+    {
+      "id": "herb_drying_rack",
+      "file": "res://assets/colorful_garden/herb_drying_rack.png",
+      "prompt": "Production game sprite: ONE isolated one compact farm herb drying rack, honey golden carved wood frame with turquoise corner pegs and small cobalt roof slats, bundles of emerald mint, lavender purple flowers and pink herbs hanging from golden hooks, no ground planter. Colorful cozy fantasy Living Garden farming game, premium 3D stylized handpainted illustration, richly saturated joyful colors, rounded sculpted forms, warm sunlight upper left and soft ambient occlusion. Orthographic isometric front/right view, 30 degree downward camera. Full asset fully visible with 12% genuine transparent padding. Compact ground footprint, legible at 150px. No other scenery, text, labels, letters, people, animals, logo, UI, border or terrain tile.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-070668c7-a646-4463-9aed-3adc6b0d0aac.png"
+    },
+    {
+      "id": "rainwater_collector",
+      "file": "res://assets/colorful_garden/rainwater_collector.png",
+      "prompt": "Production game sprite: ONE isolated one compact farm rainwater collector, turquoise and sky-blue round water barrel with golden brass bands and tap, honey wood stand, one small periwinkle sloped catchment roof with copper gutter, small vivid pink flowers at bottom. Colorful cozy fantasy Living Garden farming game, premium 3D stylized handpainted illustration, richly saturated joyful colors, rounded sculpted forms, warm sunlight upper left and soft ambient occlusion. Orthographic isometric front/right view, 30 degree downward camera. Full asset fully visible with 12% genuine transparent padding. Compact ground footprint, legible at 150px. No other scenery, text, labels, letters, people, animals, logo, UI, border or terrain tile.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-07739006-2f37-4b59-bbae-79af8e94bc8b.png"
+    },
+    {
+      "id": "wildflower_crescent",
+      "file": "res://assets/colorful_garden/wildflower_crescent.png",
+      "prompt": "Production game sprite: ONE isolated one broad low crescent-shaped garden flower bed, honey wood and lavender-gray stone rim, dense sculpted emerald foliage with vivid pink, lavender, cornflower blue, golden yellow and small white flowers, no tall trees. Colorful cozy fantasy Living Garden farming game, premium 3D stylized handpainted illustration, richly saturated joyful colors, rounded sculpted forms, warm sunlight upper left and soft ambient occlusion. Orthographic isometric front/right view, 30 degree downward camera. Full asset fully visible with 12% genuine transparent padding. Compact ground footprint, legible at 150px. No other scenery, text, labels, letters, people, animals, logo, UI, border or terrain tile.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-0ad3ded1-bea0-4e92-b847-4e1134180115.png"
+    },
+    {
+      "id": "orange_tree",
+      "file": "res://assets/colorful_garden/orange_tree.png",
+      "prompt": "Production game asset, ONE isolated one compact ripe orange orchard tree with a warm honey-brown twisted trunk, layered sculpted rounded emerald and lime foliage and numerous glossy bright orange citrus fruits naturally nestled in leaves, tiny pink and blue flowers at roots. Richly colorful cozy fantasy Living Garden game aesthetic, 3D stylized handpainted premium mobile farm art, rounded warm forms, rich detailed materials readable small, warm sunlight upper left, soft ambient occlusion. Orthographic isometric front/right view 30 degrees downward. Whole asset fully visible with 12% genuine transparent padding, compact ground footprint. No large ground tile, background, people, animals, text, labels, UI or extra scenery.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-84b87df0-d062-41d0-8d68-ca22ac92892c.png"
+    },
+    {
+      "id": "garden_grass_clump",
+      "file": "res://assets/colorful_garden/garden_grass_clump.png",
+      "prompt": "Production game asset, ONE isolated one small low soft clump of lush meadow grass and clover, many short curved sculpted lime and emerald blades mixed with tiny pink, lavender-blue, white and golden flowers, no soil base or stone, broad low irregular silhouette. Richly colorful cozy fantasy Living Garden game aesthetic, 3D stylized handpainted premium mobile farm art, rounded warm forms, rich detailed materials readable small, warm sunlight upper left, soft ambient occlusion. Orthographic isometric front/right view 30 degrees downward. Whole asset fully visible with 12% genuine transparent padding, compact ground footprint. No large ground tile, background, people, animals, text, labels, UI or extra scenery.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-4ecbcd05-5f10-4c8a-8108-9dc58e357c05.png"
+    },
+    {
+      "id": "gazebo",
+      "file": "res://assets/colorful_garden/gazebo.png",
+      "prompt": "Production game asset, ONE isolated one small cozy open-sided six-post garden gazebo, warm honey carved wood posts and railings, cobalt-blue and violet tiled peaked roof with brass finial, turquoise cushions on a little built-in bench and magenta flowering vines on two posts, no people. Richly colorful cozy fantasy Living Garden game aesthetic, 3D stylized handpainted premium mobile farm art, rounded warm forms, rich detailed materials readable small, warm sunlight upper left, soft ambient occlusion. Orthographic isometric front/right view 30 degrees downward. Whole asset fully visible with 12% genuine transparent padding, compact ground footprint. No large ground tile, background, people, animals, text, labels, UI or extra scenery.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-4cb4a68c-b0e4-474f-ab44-b7bdf57f426f.png"
+    },
+    {
+      "id": "colorful_barrel",
+      "file": "res://assets/colorful_garden/colorful_barrel.png",
+      "prompt": "Production game asset, ONE isolated one small rainwater barrel with bright turquoise painted curved wooden staves, warm golden brass hoops and tap, honey brown carved lid slightly ajar to show clear sapphire water, a tiny pink flower pot at base. Richly colorful cozy fantasy Living Garden game aesthetic, 3D stylized handpainted premium mobile farm art, rounded warm forms, rich detailed materials readable small, warm sunlight upper left, soft ambient occlusion. Orthographic isometric front/right view 30 degrees downward. Whole asset fully visible with 12% genuine transparent padding, compact ground footprint. No large ground tile, background, people, animals, text, labels, UI or extra scenery.",
+      "source": "C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-347d6d92-4991-4bca-a542-14818fa41109.png"
+    }
+  ]
+}

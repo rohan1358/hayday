@@ -8,6 +8,8 @@ signal coop_pressed
 signal cow_pressed
 signal barn_pressed
 signal factory_pressed
+signal bakery_pressed
+signal dairy_pressed
 signal feed_mill_pressed
 signal missions_pressed
 signal market_pressed
@@ -21,14 +23,16 @@ signal decoration_placed(key: String, at: Vector2)
 signal roads_changed
 signal placement_rejected
 signal wild_tree_chopped(tree_id: int)
+signal wild_tree_quota_reached(tree_id: int)
 signal wild_tree_started
 signal wild_tree_struck
 signal animal_tapped(kind: String)
+signal region_pressed(id: String)
 
 const VIRTUAL_SIZE := Vector2(720, 780)
-const WORLD_SIZE := Vector2(3600, 2900)
-const MIN_ZOOM := 0.62
-const MAX_ZOOM := 1.75
+const WORLD_SIZE := Vector2(4320, 7680)
+const MIN_ZOOM := 0.12
+const MAX_ZOOM := 1.15
 const DRAG_THRESHOLD := 13.0
 const OBJECT_SNAP_DISTANCE := 26.0
 const OBJECT_SNAP_GAP := 6.0
@@ -49,6 +53,13 @@ const SCENERY_CACHE_CHUNK_SIZE := 800
 const SCENERY_CACHE_MAX_CHUNKS := 12
 const PLOT_CACHE_TEXTURE_SIZE := Vector2i(240, 280)
 const PLOT_CACHE_TEXTURE_CENTER := Vector2(120, 180)
+const CROP_PLANTS: Texture2D = preload("res://assets/crop_illustrations/plants.png")
+const CROP_PLANT_CELLS := {
+	"gandum": 0, "jagung": 1, "wortel": 2, "tebu": 3,
+	"stroberi": 4, "kedelai": 5, "kentang": 6, "labu": 7,
+	"padi": 8, "tomat": 9, "cabai": 10, "kopi": 11,
+	"nanas": 12, "stroberi_kristal": 13
+}
 const ANIMAL_CACHE_TEXTURE_SIZE := Vector2i(240, 192)
 const ANIMAL_CACHE_TEXTURE_CENTER := Vector2(120, 115)
 const ANIMAL_CACHE_POSES := 4
@@ -72,33 +83,52 @@ const PIG_PEN_CENTER := Vector2(395, 1480)
 const GOAT_PEN_CENTER := Vector2(710, 1650)
 const PIG_PEN_BOUNDS := Rect2(250, 1350, 290, 230)
 const GOAT_PEN_BOUNDS := Rect2(565, 1520, 290, 230)
-const WILD_TREES := [
-	Vector2(300, 310), Vector2(260, 1050), Vector2(340, 1650),
-	Vector2(740, 180), Vector2(1100, 180), Vector2(1540, 195),
-	Vector2(1990, 340), Vector2(2120, 890), Vector2(2010, 1660),
+var WILD_TREES := [
+	Vector2(300, 3110), Vector2(260, 1050), Vector2(340, 1650),
+	Vector2(740, 2980), Vector2(1100, 2980), Vector2(1540, 2995),
+	Vector2(1990, 3140), Vector2(2120, 890), Vector2(2010, 1660),
 	Vector2(1800, 1850), Vector2(1190, 2010), Vector2(570, 1890),
-	Vector2(2520, 350), Vector2(2700, 550), Vector2(2910, 390),
-	Vector2(3160, 720), Vector2(3370, 480), Vector2(2740, 1150),
+	Vector2(2520, 3150), Vector2(2700, 3350), Vector2(2910, 3190),
+	Vector2(3160, 1020), Vector2(3370, 3280), Vector2(2740, 1150),
 	Vector2(3050, 1380), Vector2(3400, 1570), Vector2(2420, 1820),
 	Vector2(2780, 2090), Vector2(3100, 2300), Vector2(3380, 2460),
 	Vector2(2260, 2550), Vector2(1750, 2530), Vector2(870, 2590),
-	Vector2(390, 2430), Vector2(2850, 2670)
+	Vector2(390, 2430), Vector2(2850, 2670),
+	Vector2(350, 2850), Vector2(920, 2860), Vector2(2150, 2820),
+	Vector2(3560, 870), Vector2(3520, 1910), Vector2(3650, 2680),
+	Vector2(550, 1280), Vector2(1940, 1510), Vector2(2330, 840), Vector2(1510, 2070),
+	Vector2(680, 1550), Vector2(1970, 2200), Vector2(1160, 2340),
+	Vector2(2580, 2920), Vector2(3240, 2910), Vector2(3700, 1450),
+	Vector2(3850, 2270), Vector2(2470, 1320),
+	# Append new trees so the saved indices of existing felled trees remain stable.
+	Vector2(4200, 3110), Vector2(4740, 3080), Vector2(5540, 3060), Vector2(6190, 3110),
+	Vector2(4050, 930), Vector2(4840, 1010), Vector2(5580, 1010), Vector2(6210, 950),
+	Vector2(4090, 1740), Vector2(4790, 1920), Vector2(5480, 1970), Vector2(6160, 1880),
+	Vector2(4050, 2420), Vector2(4790, 2240), Vector2(5560, 2300), Vector2(6170, 2270),
+	Vector2(4120, 3180), Vector2(4780, 3190), Vector2(5510, 3250), Vector2(6210, 3190),
+	Vector2(4080, 3910), Vector2(4720, 3810), Vector2(5630, 3890), Vector2(6190, 3910),
+	Vector2(4300, 4450), Vector2(5080, 4460), Vector2(5860, 4480), Vector2(6240, 4500)
 ]
+const MAX_REGROWN_WILD_TREES := FarmGameState.DEFAULT_MAX_STANDING_TREES
+static var shared_wild_tree_slots: Array = []
+var original_wild_tree_count := 0
 const OBJECT_DEFAULTS := {
 	"sapi": Vector2(500, 1200), "ayam": Vector2(1355, 370),
 	"dapur": Vector2(500, 545), "gudang": Vector2(840, 355),
 	"pasar": Vector2(1380, 685), "babi": PIG_PEN_CENTER,
-	"kambing": GOAT_PEN_CENTER, "roti": Vector2(673, 590),
-	"susu": Vector2(1510, 510), "pakan": Vector2(2130, 1180), "buah_0": Vector2(930, 1490),
-	"buah_1": Vector2(1260, 1490)
+	"kambing": GOAT_PEN_CENTER, "roti": Vector2(2500, 1520),
+	"susu": Vector2(2850, 1520), "pakan": Vector2(3200, 1520), "buah_0": Vector2(930, 1490),
+	"buah_1": Vector2(1260, 1490),
+	"delivery_depot": Vector2(1224,1210), "delivery_truck": Vector2(1550,1320)
 }
 const OBJECT_HALF_SIZES := {
 	"sapi": Vector2(188, 132), "ayam": Vector2(158, 148),
-	"dapur": Vector2(97, 94), "gudang": Vector2(95, 100),
+	"dapur": Vector2(145, 125), "gudang": Vector2(125, 118),
 	"pasar": Vector2(120, 83), "babi": Vector2(138, 110),
-	"kambing": Vector2(138, 110), "roti": Vector2(56, 46),
-	"susu": Vector2(56, 46), "pakan": Vector2(95, 83), "buah_0": Vector2(65, 75),
-	"buah_1": Vector2(65, 75)
+	"kambing": Vector2(138, 110), "roti": Vector2(125, 105),
+	"susu": Vector2(125, 105), "pakan": Vector2(130, 110), "buah_0": Vector2(65, 75),
+	"buah_1": Vector2(65, 75),
+	"delivery_depot": Vector2(145,75), "delivery_truck": Vector2(108,63)
 }
 # Existing map illustrations get stable IDs so players can arrange them and
 # their positions persist through layout_positions without duplicating purchases.
@@ -202,6 +232,7 @@ var edit_mode := false
 var road_tool := "object"
 var road_stroke_active := false
 var road_stroke_changed := false
+var road_stock_warning := false
 var road_last_cell := Vector2i.ZERO
 var edit_selected := ""
 var drag_key := ""
@@ -231,6 +262,8 @@ var terrain_contours: Array[PackedVector2Array] = []
 var terrain_insets: Array[PackedVector2Array] = []
 var visual_feedback: Array[Dictionary] = []
 var delivery_elapsed := -1.0
+var delivery_route_signature=""
+var delivery_route_points=PackedVector2Array()
 var panel_obscured := false
 # Small Android renderers struggle with thousands of tiny decorative strokes.
 # Keep the same layout, production buildings, crops and touch targets, while
@@ -310,11 +343,23 @@ var mobile_animation_profile_ready_us := 0
 var mobile_animation_profile_character_us := 0
 var mobile_animation_profile_visitor_us := 0
 var mobile_animation_profile_feedback_us := 0
+var last_painted_camera=Transform2D.IDENTITY
+var world_paint_count=0
 var mobile_tick_profile_frames := 0
 var mobile_tick_profile_us := PackedInt64Array([0, 0, 0, 0, 0, 0, 0])
 
 
+func _on_language_changed(_code: String) -> void:
+	queue_redraw()
+	if scenery_only and get_parent() is SubViewport:
+		get_parent().render_target_update_mode = SubViewport.UPDATE_ONCE
+
+
 func _ready() -> void:
+	var language := get_node_or_null("/root/GardenLanguage")
+	if language != null:
+		language.language_changed.connect(_on_language_changed)
+	farm_art.ranch_game=game
 	if animation_only or windmill_blades_only or visitor_render_only or ujang_render_only or truck_render_only or livestock_only or animal_render_only or butterfly_render_only or plot_render_only or plot_selection_only or buildings_only or world_details_only or ready_markers_only:
 		mouse_filter = Control.MOUSE_FILTER_IGNORE
 		set_process(false)
@@ -330,6 +375,21 @@ func _ready() -> void:
 	prepare_terrain_contours()
 	set_process(true)
 	reset_camera()
+	var hd_terrain=preload("res://scripts/hd_world_terrain.gd").new()
+	hd_terrain.farm=self
+	add_child(hd_terrain)
+	var river := preload("res://scripts/river_waterfall.gd").new()
+	river.name = "FarEdgeWaterfall"
+	river.farm = self
+	add_child(river)
+	var reference_flow=preload("res://scripts/reference_water_flow.gd").new()
+	reference_flow.name="ReferenceRiverFlow"
+	reference_flow.farm=self
+	add_child(reference_flow)
+	var island_life=preload("res://scripts/island_ambience.gd").new()
+	island_life.name="IslandAmbience"
+	island_life.farm=self
+	add_child(island_life)
 	if mobile_scenery_lite:
 		scenery_cache_root = Control.new()
 		scenery_cache_root.name = "SceneryCache"
@@ -577,7 +637,7 @@ func mobile_animation_is_active() -> bool:
 	if not edit_mode and guide_plot_index >= 0 and guide_plot_index < game.plots.size():
 		if visible_world_rect(190.0).has_point(plot_center(guide_plot_index)):
 			return true
-	if chopping_tree >= 0 and visible_world_rect(190.0).has_point(WILD_TREES[chopping_tree]):
+	if chopping_tree >= 0 and visible_world_rect(190.0).has_point(wild_tree_position(chopping_tree)):
 		return true
 	return not visual_feedback.is_empty()
 
@@ -744,8 +804,12 @@ func sync_mobile_world_details() -> void:
 	for index in FarmGameState.ORCHARD_SIZE:
 		if game.orchard[index]["fruit"] != "" and not game.tree_ready(index, now):
 			has_growing_tree = true
-	var signature := "%s|%d|%d" % [
-		str(game.orchard), game.daily_claimed_count(), now if has_growing_tree else 0
+	mobile_world_details_layer.drag_key=drag_key
+	mobile_world_details_layer.drag_preview=drag_preview
+	mobile_world_details_layer.drag_original=drag_original
+	var signature := "%s|%d|%d|%s" % [
+		str(game.orchard), game.daily_claimed_count(), now if has_growing_tree else 0,
+		str(game.layout_positions)
 	]
 	if signature != mobile_world_details_signature:
 		mobile_world_details_layer.queue_redraw()
@@ -811,7 +875,7 @@ func sync_mobile_ujang_layer(delta: float) -> void:
 	) * scaler
 	mobile_ujang_layer.scale = Vector2.ONE * camera_zoom * scaler
 	var swinging := chopping_tree >= 0 and chop_progress > 0.0 and chop_progress < 1.2
-	var signature := "%s|%s|%s" % [str(ujang_walking), str(ujang_facing), str(swinging)]
+	var signature := "%s|%s|%s|%s" % [str(ujang_walking), str(ujang_facing), str(swinging), JSON.stringify(game.seasonal)]
 	var is_animated := ujang_walking or swinging
 	mobile_ujang_redraw_timer += delta
 	var interval := 0.05 if swinging else 0.12
@@ -921,10 +985,13 @@ func _process(delta: float) -> void:
 	var moving := (
 		camera_center.distance_to(camera_target) > 0.3 or absf(camera_zoom - zoom_target) > 0.0003
 	)
+	var old_camera_center=camera_center
+	var old_camera_zoom=camera_zoom
 	var factor := 1.0 - exp(-delta * 12.0)
 	camera_center = camera_center.lerp(camera_target, factor)
 	camera_zoom = lerpf(camera_zoom, zoom_target, factor)
 	camera_center = clamp_camera_center(camera_center, camera_zoom)
+	if not old_camera_center.is_equal_approx(camera_center) or not is_equal_approx(old_camera_zoom,camera_zoom):queue_redraw()
 	var profile_camera := Time.get_ticks_usec() if profile_start > 0 else 0
 	if mobile_scenery_lite:
 		sync_scenery_cache()
@@ -969,7 +1036,7 @@ func _process(delta: float) -> void:
 	# Limit ambient animation updates while leaving the UI at native frame rate.
 	# Static crops/buildings need updating only when state or the camera changes.
 	# Moving characters and feedback use their own retained CanvasItem below.
-	var paint_interval := (0.067 if moving else 0.90) if mobile_scenery_lite else (0.033 if moving else 0.05)
+	var paint_interval := (0.067 if moving or delivery_elapsed >= 0.0 or chopping_tree >= 0 else 0.90) if mobile_scenery_lite else (0.033 if moving else 0.05)
 	if mobile_animation_overlay != null:
 		update_mobile_windmill_blades()
 		var animation_active := mobile_animation_is_active()
@@ -1273,7 +1340,9 @@ func finish_decoration_placement(screen_at: Vector2) -> void:
 
 
 func road_cell_from_world(at: Vector2) -> Vector2i:
-	return Vector2i(floori(at.x / ROAD_GRID_SIZE), floori(at.y / ROAD_GRID_SIZE))
+	if game==null or int(game.ftue.get("cheerful_layout",0))<3: return Vector2i(floori(at.x/ROAD_GRID_SIZE),floori(at.y/ROAD_GRID_SIZE))
+	var local=at-Vector2(1800,-1200)
+	return Vector2i(floori(local.x/75.0+local.y/44.0),floori(-local.x/75.0+local.y/44.0))
 
 
 func road_key(cell: Vector2i) -> String:
@@ -1298,42 +1367,43 @@ func road_segment_overlaps_rect(start: Vector2, finish: Vector2,
 
 
 func road_overlaps_rect(footprint: Rect2) -> bool:
+	if int(game.world_regions.get("reference_terrain_version",0))>=1: return false
 	# Only roads explicitly placed by the player reserve land.
 	if game == null:
 		return false
 	# Only inspect road tiles near this footprint, including neighboring links.
 	var search := footprint.grow(float(ROAD_GRID_SIZE) + ROAD_HALF_WIDTH + 5.0)
-	var from_cell := road_cell_from_world(search.position)
-	var to_cell := road_cell_from_world(search.end)
-	for y in range(from_cell.y, to_cell.y + 1):
-		for x in range(from_cell.x, to_cell.x + 1):
-			var cell := Vector2i(x, y)
-			if not game.road_tiles.has(road_key(cell)):
-				continue
-			var center := road_visual_center(cell)
-			if road_segment_overlaps_rect(center, center, footprint, ROAD_HALF_WIDTH):
-				return true
-			for offset in [Vector2i.RIGHT, Vector2i.DOWN]:
-				if game.road_tiles.has(road_key(cell + offset)) and \
-						road_segment_overlaps_rect(center, road_visual_center(cell + offset),
-							footprint, ROAD_HALF_WIDTH):
-					return true
+	for road_id in game.road_tiles:
+		var parts=str(road_id).split(",")
+		var cell=Vector2i(int(parts[0]),int(parts[1]))
+		var center=road_visual_center(cell)
+		if not search.has_point(center): continue
+		if road_segment_overlaps_rect(center,center,footprint,ROAD_HALF_WIDTH): return true
 	return false
 
 
 func road_surface_clear_of_objects(start: Vector2, finish: Vector2,
 		half_width: float) -> bool:
 	for key in editable_keys():
+		# The cottage's front step may meet paving, but its interior stays blocked.
+		if key=="dapur" and not game.ftue.is_empty():
+			var porch=object_position("dapur")
+			# The starter path meets the lower-right edge of the cottage porch.
+			# Keep the interior blocked while allowing its saved connecting tile.
+			var porch_lane: bool = start.y>=porch.y+20 and finish.y>=porch.y+20 and absf(start.x-porch.x)<110 and absf(finish.x-porch.x)<110
+			var porch_corner: bool = start.y>=porch.y+90 and finish.y>=porch.y+90 and absf(start.x-porch.x)<170 and absf(finish.x-porch.x)<170
+			if porch_lane or porch_corner: continue
+
 		var at := object_position(key)
 		var half := object_half_size(key)
 		if road_segment_overlaps_rect(start, finish,
 				Rect2(at - half, half * 2.0), half_width):
 			return false
 	for index in WILD_TREES.size():
-		if game.cleared_wild_trees.has(index):
+		if not wild_tree_active(index):
 			continue
 		if road_segment_overlaps_rect(start, finish,
-				Rect2(WILD_TREES[index] - Vector2(65, 138), Vector2(130, 154)),
+				Rect2(wild_tree_position(index) - Vector2(65, 138), Vector2(130, 154)),
 				half_width):
 			return false
 	return true
@@ -1355,13 +1425,14 @@ func can_paint_road(cell: Vector2i) -> bool:
 
 func paint_road_cell(cell: Vector2i) -> void:
 	var key := road_key(cell)
-	if road_tool == "erase":
-		if game.road_tiles.erase(key):
-			road_stroke_changed = true
-	elif road_tool == "draw" and can_paint_road(cell):
-		if not game.road_tiles.has(key):
-			game.road_tiles[key] = true
-			road_stroke_changed = true
+	var catalog=preload("res://scripts/road_catalog.gd")
+	if road_tool=="erase":
+		if catalog.erase(game,key): road_stroke_changed=true
+	elif road_tool=="draw" and can_paint_road(cell):
+		if catalog.place(game,key): road_stroke_changed=true
+		elif int(catalog.prepare(game).stock[catalog.prepare(game).selected])<=0 and not road_stock_warning:
+			road_stock_warning=true
+			if has_meta("hybrid_system"): get_meta("hybrid_system").host.show_toast("Stok jalan habis. Beli jalan lewat TOKO / JALAN.")
 
 
 func begin_road_stroke(screen_at: Vector2) -> void:
@@ -1369,6 +1440,7 @@ func begin_road_stroke(screen_at: Vector2) -> void:
 		return
 	road_stroke_active = true
 	road_stroke_changed = false
+	road_stock_warning = false
 	road_last_cell = road_cell_from_world(screen_to_world(screen_at))
 	paint_road_cell(road_last_cell)
 	queue_redraw()
@@ -1402,6 +1474,18 @@ func finish_road_stroke() -> void:
 
 
 func default_position(key: String) -> Vector2:
+	if key.begins_with("bridge_"):
+		var terrain=preload("res://scripts/reference_terrain.gd");var paths=terrain.bridge_paths()
+		var line=terrain.BRIDGES[int(key.trim_prefix("bridge_"))]
+		return (line[0]+line[1])*.5/terrain.SOURCE*terrain.SIZE
+	var planned: Vector2=load("res://scripts/island_layout.gd").preferred(key)
+	if planned!=Vector2.INF:return planned
+	if key.begins_with("buah_") and int(key.trim_prefix("buah_")) >= 2:
+		var index := int(key.trim_prefix("buah_")) - 2
+		return Vector2(2520 + (index % 4) * 240, 2150 + floori(float(index) / 4.0) * 255)
+	if key.begins_with("region_"):
+		return preload("res://scripts/four_seasons.gd").SITES.get(key.trim_prefix("region_"),preload("res://scripts/world_regions.gd").DATA.get(key.trim_prefix("region_"), {}).get("position", Vector2.ZERO))
+	if key.begins_with("starter_"): return preload("res://scripts/first_farm_world.gd").SCENERY[int(key.trim_prefix("starter_"))][1]
 	if key.begins_with("scenery_"):
 		var index := int(key.trim_prefix("scenery_"))
 		if index >= 0 and index < MOVABLE_SCENERY.size():
@@ -1415,8 +1499,14 @@ func default_position(key: String) -> Vector2:
 
 
 func object_position(key: String) -> Vector2:
+	if preload("res://scripts/asset_edit.gd").special(key):
+		if drag_key==key:return drag_preview
+		var point=preload("res://scripts/asset_edit.gd").position(game,key)
+		if point!=Vector2.INF:return point
 	if key == drag_key:
 		return drag_preview
+	if key.begins_with("road_"):
+		return road_visual_center(preload("res://scripts/road_mover.gd").cell(key))
 	if key.begins_with("dekor_"):
 		var position: Array = game.decoration_by_key(key).get("position", [])
 		if position.size() == 2:
@@ -1446,6 +1536,10 @@ func scenery_visible_at(key: String, at: Vector2, footprint: Rect2) -> bool:
 
 
 func object_half_size(key: String) -> Vector2:
+	if key.begins_with("region_"):
+		return preload("res://scripts/world_regions.gd").DATA.get(key.trim_prefix("region_"), {}).get("half", Vector2(90, 70))
+	if key.begins_with("starter_"): return preload("res://scripts/first_farm_world.gd").SCENERY[int(key.trim_prefix("starter_"))][3]
+	if key.begins_with("road_"): return Vector2.ONE*ROAD_HALF_WIDTH
 	if key.begins_with("scenery_"):
 		var index := int(key.trim_prefix("scenery_"))
 		if index >= 0 and index < MOVABLE_SCENERY.size():
@@ -1455,11 +1549,36 @@ func object_half_size(key: String) -> Vector2:
 		var kind := str(game.decoration_by_key(key).get("kind", ""))
 		if FarmGameState.DECORATIONS.has(kind):
 			return FarmGameState.DECORATIONS[kind]["half"]
+	if key in preload("res://scripts/ranch_state.gd").SPECIES:
+		return Vector2(.39,.22)*preload("res://scripts/ranch_state.gd").pen_width(game,key)
 	return Vector2(77, 43) if key.begins_with("petak_") else OBJECT_HALF_SIZES.get(key, Vector2(80, 80))
 
 
 func editable_keys() -> Array[String]:
-	var keys: Array[String] = ["sapi", "ayam", "dapur", "gudang", "pasar"]
+	if preload("res://scripts/first_farm.gd").compact(game):
+		var result: Array[String]=["dapur","gudang"]
+		for index in game.orchard.size():
+			if not str(game.orchard[index].fruit).is_empty(): result.append("buah_%d" % index)
+		for id in preload("res://scripts/world_regions.gd").ORDER:
+			if preload("res://scripts/world_regions.gd").purchased(game,id): result.append("region_" + id)
+		if preload("res://scripts/first_farm.gd").feature(game,"orders"): result.append_array(["delivery_depot","delivery_truck","pasar"])
+		if bool(game.ftue.get("cow_built",false)): result.append("sapi")
+		for pair in [["kandang_babi","babi"],["kandang_kambing","kambing"],["toko_roti","roti"],["pabrik_susu","susu"],["pabrik_pakan","pakan"]]:
+			if game.has_construction(pair[0]): result.append(pair[1])
+		for i in preload("res://scripts/first_farm_world.gd").SCENERY.size(): result.append("starter_%d" % i)
+		for i in game.plots.size():
+			if game.plots[i].unlocked: result.append("petak_%d" % i)
+		if preload("res://scripts/first_coop.gd").built(game): result.append("ayam")
+		for item in game.decorations:
+			if (item.get("position",[]) as Array).size()==2: result.append(str(item.key))
+		for extra in preload("res://scripts/asset_edit.gd").extra_keys(self):
+			if extra not in result and (edit_mode or not preload("res://scripts/asset_edit.gd").special(extra)):result.append(extra)
+		return result
+	var keys: Array[String] = ["sapi", "ayam", "dapur", "gudang", "pasar", "delivery_depot", "delivery_truck"]
+	for id in preload("res://scripts/world_regions.gd").ORDER:
+		if preload("res://scripts/world_regions.gd").purchased(game,id): keys.append("region_" + id)
+	if not game.ftue.is_empty():
+		for i in preload("res://scripts/first_farm_world.gd").SCENERY.size(): keys.append("starter_%d" % i)
 	for index in game.plots.size():
 		keys.append("petak_%d" % index)
 	for index in FarmGameState.ORCHARD_SIZE:
@@ -1481,13 +1600,29 @@ func editable_keys() -> Array[String]:
 
 
 func editable_at(at: Vector2) -> String:
+	var all_keys=editable_keys();all_keys.reverse()
+	for key in all_keys:
+		var projected=preload("res://scripts/asset_projection.gd").info(self,key,object_position(key))
+		if not projected.is_empty() and projected.bounds.has_point(at):return key
+	if preload("res://scripts/first_farm.gd").compact(game):
+		for item in [["dapur","kitchen_cottage",300.0],["buah_0","apple_tree",175.0],["ayam","chicken_coop",260.0]]:
+			if item[0]=="ayam" and not preload("res://scripts/first_coop.gd").built(game): continue
+			if farm_art.ground_bounds(item[1],object_position(item[0]),item[2]).has_point(at): return item[0]
+
+	for key in (["delivery_truck","delivery_depot"] if preload("res://scripts/first_farm.gd").feature(game,"orders") else []):
+		if key=="delivery_truck" and delivery_elapsed>=0.0: continue
+		if delivery_sprite_rect(key,object_position(key)).has_point(at): return key
 	var keys := editable_keys()
 	keys.reverse()
 	for key in keys:
+		if key=="delivery_truck" and delivery_elapsed>=0.0: continue
 		var center := object_position(key)
 		var radius := object_half_size(key)
 		var delta := at - center
-		if key.begins_with("scenery_"):
+		if key.begins_with("starter_"):
+			var item=preload("res://scripts/first_farm_world.gd").SCENERY[int(key.trim_prefix("starter_"))]
+			if farm_art.ground_bounds(item[0],center,item[2]).has_point(at): return key
+		elif key.begins_with("scenery_"):
 			var item: Array = MOVABLE_SCENERY[int(key.trim_prefix("scenery_"))]
 			if farm_art.ground_bounds(str(item[0]), center, float(item[2])).has_point(at):
 				return key
@@ -1496,11 +1631,37 @@ func editable_at(at: Vector2) -> String:
 				return key
 		elif Rect2(center - radius, radius * 2.0).has_point(at):
 			return key
-	return ""
+	return preload("res://scripts/road_mover.gd").pick(self,at)
 
 
 func can_place(key: String, at: Vector2) -> bool:
+	if not preload("res://scripts/mainland_layout.gd").allowed(self,key,at):return false
+	if preload("res://scripts/asset_edit.gd").special(key):return preload("res://scripts/asset_edit.gd").valid(self,key,at)
+	if preload("res://scripts/four_seasons.gd").blocked(game,at): return false
+	if not preload("res://scripts/reference_terrain.gd").asset_clear(at): return false
+	if key.begins_with("road_"): return preload("res://scripts/road_mover.gd").valid(self,key,at)
+	var projection=preload("res://scripts/asset_projection.gd")
+	var artwork=projection.info(self,key,at)
+	if key.begins_with("region_") or key in ["dapur","gudang","roti","susu","pakan","pasar","delivery_depot","delivery_truck","ayam","sapi","babi","kambing"]:
+		if key in ["region_pemancingan","region_pelabuhan"]:
+			if not preload("res://scripts/waterfront.gd").supported(key,at):return false
+		elif not preload("res://scripts/reference_terrain.gd").scene_supported(at,object_half_size(key)):return false
+	elif not artwork.is_empty() and not preload("res://scripts/reference_terrain.gd").bounds_clear(artwork.bounds.grow(24)):return false
+	if not artwork.is_empty() and not projection.nature_clear(self,artwork.bounds): return false
+	if not artwork.is_empty() and not projection.region_sites_clear(self,artwork.bounds,key): return false
+	if key.begins_with("region_") and not preload("res://scripts/world_regions_painter.gd").visual_clear(self,key.trim_prefix("region_"),at): return false
+	if key in ["delivery_depot","delivery_truck"]:
+		if key=="delivery_truck" and delivery_elapsed>=0.0: return false
+		var other="delivery_truck" if key=="delivery_depot" else "delivery_depot"
+		if delivery_sprite_rect(key,at).grow(12).intersects(delivery_sprite_rect(other,object_position(other))): return false
+	if key.begins_with("dekor_"):
+		var owned:=game.decoration_by_key(key)
+		if not owned.is_empty() and game.level<int(FarmGameState.DECORATIONS[str(owned.kind)].get("level",1)): return false
 	var half := object_half_size(key)
+	if key.begins_with("region_"):
+		var walkable_bounds := accessible_world().intersection(Rect2(Vector2(80, 80), WORLD_SIZE - Vector2(160, 160))).grow(-80)
+		if not walkable_bounds.encloses(Rect2(at - half, half * 2.0)):
+			return false
 	if key.begins_with("scenery_"):
 		var item: Array = MOVABLE_SCENERY[int(key.trim_prefix("scenery_"))]
 		if not scenery_clear_of_farm(at, farm_art.ground_bounds(str(item[0]), at, float(item[2]))):
@@ -1510,12 +1671,13 @@ func can_place(key: String, at: Vector2) -> bool:
 	if road_overlaps_rect(Rect2(at - half, half * 2.0)):
 		return false
 	for index in WILD_TREES.size():
-		if game.cleared_wild_trees.has(index):
+		if not wild_tree_active(index):
 			continue
-		var trunk: Vector2 = WILD_TREES[index]
+		var trunk: Vector2 = wild_tree_position(index)
 		if Rect2(at - half, half * 2.0).intersects(Rect2(trunk - Vector2(34, 42), Vector2(68, 60))):
 			return false
 	for other in editable_keys():
+		if preload("res://scripts/asset_edit.gd").special(other):continue
 		if other == key:
 			continue
 		var other_at := object_position(other)
@@ -1530,6 +1692,9 @@ func can_place(key: String, at: Vector2) -> bool:
 
 
 func snap_edit_position(key: String, raw: Vector2) -> Vector2:
+	if preload("res://scripts/asset_edit.gd").special(key):return raw.round()
+	if key.begins_with("road_"): return road_visual_center(road_cell_from_world(raw))
+	if key.begins_with("region_"): return (raw / 80.0).round() * 80.0
 	# Snapping only affects the preview. Invalid targets never displace objects.
 	if game == null:
 		return raw
@@ -1608,6 +1773,7 @@ func begin_edit_drag(screen_at: Vector2) -> void:
 	drag_original = object_position(picked)
 	drag_key = picked
 	drag_preview = drag_original
+	game.set_meta("asset_preview",{"key":picked,"point":drag_original})
 	drag_grab_offset = drag_original - screen_to_world(screen_at)
 	drag_was_moved = false
 	drag_snapped = false
@@ -1619,6 +1785,7 @@ func move_edit_drag(screen_at: Vector2) -> void:
 		return
 	var raw := (screen_to_world(screen_at) + drag_grab_offset).round()
 	drag_preview = snap_edit_position(drag_key, raw)
+	game.set_meta("asset_preview",{"key":drag_key,"point":drag_preview})
 	drag_snapped = drag_preview != raw
 	drag_was_moved = true
 	queue_redraw()
@@ -1636,9 +1803,14 @@ func finish_edit_drag() -> void:
 	drag_snapped = false
 	# One gesture moves one object. Deselect it on release so the next
 	# gesture can immediately select another plot while ATUR stays active.
-	edit_selected = ""
+	edit_selected = key
+	game.remove_meta("asset_preview")
 	if changed and valid:
-		layout_changed.emit(key, at)
+		if key.begins_with("road_"):
+			if preload("res://scripts/road_catalog.gd").move(game,key.trim_prefix("road_"),road_key(road_cell_from_world(at))):
+				roads_changed.emit()
+		else:
+			layout_changed.emit(key, at)
 		show_world_feedback("move", at)
 	elif changed:
 		placement_rejected.emit()
@@ -1647,6 +1819,7 @@ func finish_edit_drag() -> void:
 
 
 func cancel_edit_drag() -> void:
+	game.remove_meta("asset_preview")
 	drag_key = ""
 	drag_was_moved = false
 	drag_snapped = false
@@ -1683,14 +1856,50 @@ func zoom_at(screen_at: Vector2, new_zoom: float) -> void:
 	var view_size := get_virtual_size()
 	var pivot := screen_at * view_size / size - view_size * 0.5
 	var anchor := camera_target + pivot / zoom_target
-	zoom_target = clampf(new_zoom, MIN_ZOOM, MAX_ZOOM)
+	zoom_target = clampf(new_zoom, minimum_camera_zoom(), MAX_ZOOM)
 	camera_target = anchor - pivot / zoom_target
 	clamp_camera_target()
 
 
+func frame_world_bounds(bounds: Rect2, immediate: bool=false) -> void:
+	# Reserve HUD and bottom navigation; framing the ground anchor alone clips tall art.
+	var viewport_size=get_virtual_size()
+	var safe=Rect2(Vector2(112,190),viewport_size-Vector2(144,340))
+	var wanted=minf(zoom_target,minf(safe.size.x/maxf(1,bounds.size.x),safe.size.y/maxf(1,bounds.size.y)))
+	zoom_target=clampf(wanted,minimum_camera_zoom(),MAX_ZOOM)
+	camera_target=bounds.get_center()-(safe.get_center()-viewport_size*0.5)/zoom_target
+	clamp_camera_target()
+	if immediate:
+		camera_center=camera_target;camera_zoom=zoom_target
+
+func frame_asset(key: String, immediate: bool=false) -> void:
+	var ranch=preload("res://scripts/ranch_state.gd")
+	if ranch.INFO.has(key):
+		var projected=farm_art.ground_bounds(str(ranch.INFO[key].asset),object_position(key),ranch.pen_width(game,key))
+		frame_world_bounds(projected.grow(22),immediate)
+	else:
+		var art=preload("res://scripts/asset_projection.gd").info(self,key,object_position(key))
+		if not art.is_empty():frame_world_bounds(art.bounds.grow(50),immediate)
+
+
 func reset_camera() -> void:
+	if game!=null and preload("res://scripts/first_farm.gd").compact(game):
+		camera_target=preload("res://scripts/cheerful_layout.gd").CAMERA
+		zoom_target=preload("res://scripts/cheerful_layout.gd").ZOOM
+		camera_center=camera_target
+		camera_zoom=zoom_target
+		# A purchased pen can be safely relocated beyond the original starter framing.
+		var framing=Rect2(object_position("dapur")-Vector2(170,280),Vector2(340,280))
+		for i in mini(3,game.plots.size()): framing=framing.merge(Rect2(plot_center(i)-Vector2(100,60),Vector2(200,120)))
+		var ranch=preload("res://scripts/ranch_state.gd")
+		for species in ranch.SPECIES:
+			if not ranch.available(game,species): continue
+			var item=farm_art.ground_bounds(str(ranch.INFO[species].asset),object_position(species),ranch.pen_width(game,species))
+			framing=framing.merge(item.grow(22))
+		frame_world_bounds(framing,true)
+		return
 	# Frame the farmhouse, barn, chickens, plots and orchard together on mobile.
-	camera_target = Vector2(930, 950)
+	camera_target = Vector2(930, 2402)
 	zoom_target = 0.62
 	camera_center = clamp_camera_center(camera_target, zoom_target)
 	camera_target = camera_center
@@ -1727,7 +1936,17 @@ func clamp_camera_center(center: Vector2, zoom: float) -> Vector2:
 	)
 
 
+func minimum_camera_zoom() -> float:
+	# Even unusually tall portrait windows must stay inside actual farm ground.
+	var bounds=accessible_world()
+	var viewport_size=get_virtual_size()
+	return minf(MAX_ZOOM,maxf(MIN_ZOOM,maxf(viewport_size.x/bounds.size.x,viewport_size.y/bounds.size.y)+0.001))
+
+
 func clamp_camera_target() -> void:
+	var minimum=minimum_camera_zoom()
+	zoom_target=clampf(zoom_target,minimum,MAX_ZOOM)
+	camera_zoom=maxf(camera_zoom,minimum)
 	camera_target = clamp_camera_center(camera_target, zoom_target)
 
 
@@ -1756,11 +1975,16 @@ func activate_at(screen_at: Vector2) -> void:
 	if edit_mode:
 		return
 	var at := screen_to_world(screen_at)
+	var region_id: String = preload("res://scripts/world_regions_painter.gd").hit(self, at)
+	if not region_id.is_empty():
+		region_pressed.emit(region_id)
+		accept_event()
+		return
 	if not game.visitor_request.is_empty() and Rect2(visitor_world_position() - Vector2(65, 120), Vector2(130, 150)).has_point(at):
 		visitor_pressed.emit()
 		accept_event()
 		return
-	if delivery_depot_bounds().has_point(at):
+	if delivery_depot_bounds().has_point(at) or delivery_truck_bounds().has_point(at):
 		orders_pressed.emit()
 		accept_event()
 		return
@@ -1871,14 +2095,14 @@ func handle_shortcut_touch(at: Vector2) -> bool:
 		animal_tapped.emit("kambing")
 		livestock_pressed.emit()
 		return true
-	if game.has_construction("pabrik_pakan") and FEED_MILL_TOUCH_BOUNDS.has_point(at - object_position("pakan")):
+	if game.has_construction("pabrik_pakan") and farm_art.ground_bounds("feed_mill_building",object_position("pakan"),275.0).has_point(at):
 		feed_mill_pressed.emit()
 		return true
-	if (
-		(game.has_construction("toko_roti") and BAKERY_TOUCH_BOUNDS.has_point(at - object_position("roti")))
-		or (game.has_construction("pabrik_susu") and DAIRY_TOUCH_BOUNDS.has_point(at - object_position("susu")))
-	):
-		factory_pressed.emit()
+	if game.has_construction("toko_roti") and farm_art.ground_bounds("bakery_building",object_position("roti"),265.0).has_point(at):
+		bakery_pressed.emit()
+		return true
+	if game.has_construction("pabrik_susu") and farm_art.ground_bounds("dairy_building",object_position("susu"),265.0).has_point(at):
+		dairy_pressed.emit()
 		return true
 	return false
 
@@ -1891,27 +2115,42 @@ func orchard_center(index: int) -> Vector2:
 	return object_position("buah_%d" % index)
 
 
+func wild_tree_active(index: int) -> bool:
+	if game == null or index < 0 or index >= WILD_TREES.size():
+		return false
+	if index >= original_wild_tree_count:
+		var regrown: Dictionary = game.building_upgrades.get("regrown_wild_trees", {})
+		if not regrown.has(str(index)):
+			return false
+	return index not in game.cleared_wild_trees and not bool(game.building_upgrades.get("hidden_trees",{}).get(str(index),false))
+
 func wild_tree_at(at: Vector2) -> int:
 	for index in range(WILD_TREES.size() - 1, -1, -1):
-		if game.cleared_wild_trees.has(index):
+		if not wild_tree_active(index):
 			continue
-		var center: Vector2 = WILD_TREES[index]
-		if Rect2(center - Vector2(54, 112), Vector2(108, 135)).has_point(at):
+		var center: Vector2 = wild_tree_position(index)
+		if preload("res://scripts/reference_terrain.gd").tree_bounds(center,index).grow(-8).has_point(at):
 			return index
 	return -1
 
 
 func start_chopping(index: int) -> bool:
-	if index < 0 or index >= WILD_TREES.size() or game.cleared_wild_trees.has(index):
+	if index < 0 or index >= WILD_TREES.size() or not wild_tree_active(index):
 		return false
 	if chopping_tree >= 0:
+		return false
+	if game.wild_tree_chop_cooling_down():
+		wild_tree_quota_reached.emit(index)
+		return false
+	if not game.can_chop_wild_tree():
+		wild_tree_quota_reached.emit(index)
 		return false
 	chopping_tree = index
 	if mobile_scenery_lite:
 		invalidate_scenery()
 	chop_progress = 0.0
 	ujang_pause = 0.0
-	show_world_feedback("target", WILD_TREES[index])
+	show_world_feedback("target", wild_tree_position(index))
 	wild_tree_started.emit()
 	queue_redraw()
 	return true
@@ -1933,8 +2172,30 @@ func ujang_patrol_points() -> Array[Vector2]:
 
 
 func ujang_obstacle_rects() -> Array[Rect2]:
+	if preload("res://scripts/first_farm.gd").compact(game):
+		var bounds: Array[Rect2]=[]
+		for key in editable_keys():
+			if key.begins_with("road_") or key.begins_with("petak_") or preload("res://scripts/asset_edit.gd").special(key): continue
+			var half=object_half_size(key)+Vector2(12,12)
+			bounds.append(Rect2(object_position(key)-half,half*2))
+		for id in preload("res://scripts/world_regions.gd").ORDER:
+			var data=preload("res://scripts/world_regions.gd").DATA[id]
+			if data.has("cost") and not preload("res://scripts/world_regions.gd").purchased(game,id):
+				var at=object_position("region_"+id)
+				bounds.append(Rect2(at-data.half,data.half*2))
+		for key in ["ayam","sapi","babi","kambing","pakan","pasar","delivery_depot","delivery_truck"]:
+			if key not in editable_keys():
+				var at=object_position(key);var half=object_half_size(key)
+				bounds.append(Rect2(at-half,half*2))
+		return bounds
+
 	var obstacles: Array[Rect2] = []
-	for key in ["dapur", "gudang", "pasar"]:
+	for id in preload("res://scripts/world_regions.gd").ORDER:
+		if preload("res://scripts/world_regions.gd").purchased(game,id):
+			var region_key: String = "region_" + str(id)
+			var region_half := object_half_size(region_key) + UJANG_BUILDING_MARGIN
+			obstacles.append(Rect2(object_position(region_key) - region_half, region_half * 2.0))
+	for key in ["dapur", "gudang", "pasar", "delivery_depot", "delivery_truck"]:
 		var half := object_half_size(key) + UJANG_BUILDING_MARGIN
 		obstacles.append(Rect2(object_position(key) - half, half * 2.0))
 	for item in [["toko_roti", "roti"], ["pabrik_susu", "susu"], ["pabrik_pakan", "pakan"]]:
@@ -1946,8 +2207,8 @@ func ujang_obstacle_rects() -> Array[Rect2]:
 	]:
 		var key: String = item[0]
 		var bounds: Rect2 = item[1]
-		var shifted := bounds.grow(12.0)
-		shifted.position += object_position(key) - default_position(key)
+		var factor=preload("res://scripts/ranch_state.gd").scale(game,key)
+		var shifted:=Rect2(object_position(key)+(bounds.position-default_position(key))*factor,bounds.size*factor).grow(12.0)
 		obstacles.append(shifted)
 	for item in [
 		["kandang_babi", "babi", PIG_PEN_BOUNDS, PIG_PEN_CENTER],
@@ -1955,8 +2216,8 @@ func ujang_obstacle_rects() -> Array[Rect2]:
 	]:
 		if game.has_construction(item[0]):
 			var bounds: Rect2 = item[2]
-			var shifted := bounds.grow(12.0)
-			shifted.position += object_position(item[1]) - Vector2(item[3])
+			var factor=preload("res://scripts/ranch_state.gd").scale(game,str(item[1]))
+			var shifted:=Rect2(object_position(item[1])+(bounds.position-Vector2(item[3]))*factor,bounds.size*factor).grow(12.0)
 			obstacles.append(shifted)
 	return obstacles
 
@@ -1971,7 +2232,7 @@ func ujang_point_blocked(at: Vector2, cached_obstacles: Array[Rect2] = []) -> bo
 		if rect.has_point(at):
 			return true
 	for index in WILD_TREES.size():
-		if not game.cleared_wild_trees.has(index) and at.distance_squared_to(WILD_TREES[index]) < UJANG_TREE_RADIUS * UJANG_TREE_RADIUS:
+		if wild_tree_active(index) and at.distance_squared_to(wild_tree_position(index)) < UJANG_TREE_RADIUS * UJANG_TREE_RADIUS:
 			return true
 	for index in FarmGameState.ORCHARD_SIZE:
 		if at.distance_squared_to(orchard_center(index)) < UJANG_ORCHARD_RADIUS * UJANG_ORCHARD_RADIUS:
@@ -2019,9 +2280,9 @@ func ujang_segment_clear(start: Vector2, finish: Vector2) -> bool:
 	var direction := finish - start
 	var segment_length_squared := direction.length_squared()
 	for index in WILD_TREES.size():
-		if game.cleared_wild_trees.has(index):
+		if not wild_tree_active(index):
 			continue
-		var tree: Vector2 = WILD_TREES[index]
+		var tree: Vector2 = wild_tree_position(index)
 		var ratio := clampf((tree - start).dot(direction) / maxf(segment_length_squared, 0.00001), 0.0, 1.0)
 		if (start + direction * ratio).distance_squared_to(tree) < UJANG_TREE_RADIUS * UJANG_TREE_RADIUS:
 			return false
@@ -2151,7 +2412,7 @@ func update_ujang(delta: float) -> void:
 		return
 	var target := Vector2.ZERO
 	if chopping_tree >= 0:
-		target = WILD_TREES[chopping_tree] + Vector2(57, 24)
+		target = wild_tree_position(chopping_tree) + Vector2(57, 24)
 	else:
 		var patrol := ujang_patrol_points()
 		target = patrol[ujang_patrol_index % patrol.size()]
@@ -2200,15 +2461,18 @@ func update_ujang(delta: float) -> void:
 		# Check crossings so a low frame rate does not skip an impact.
 		for strike_time in [0.18, 0.54, 0.90]:
 			if previous_chop_progress < strike_time and chop_progress >= strike_time:
-				show_world_feedback("chop_hit", WILD_TREES[chopping_tree] + Vector2(0, -33))
+				show_world_feedback("chop_hit", wild_tree_position(chopping_tree) + Vector2(0, -33))
 				wild_tree_struck.emit()
 		if chop_progress >= 1.9:
 			var completed := chopping_tree
 			chopping_tree = -1
 			chop_progress = 0.0
 			ujang_pause = 1.0
-			show_world_feedback("chop_done", WILD_TREES[completed], "+6")
-			wild_tree_chopped.emit(completed)
+			if not game.wild_tree_chop_cooling_down() and game.can_chop_wild_tree() and wild_tree_active(completed):
+				show_world_feedback("chop_done", wild_tree_position(completed), "+6")
+				wild_tree_chopped.emit(completed)
+			elif game.wild_tree_chop_cooling_down() or not game.can_chop_wild_tree():
+				wild_tree_quota_reached.emit(completed)
 	else:
 		ujang_pause = 1.7
 		ujang_patrol_index += 1
@@ -2216,6 +2480,14 @@ func update_ujang(delta: float) -> void:
 
 func _draw() -> void:
 	if game == null:
+		return
+	if has_node("HDWorldTerrain"):
+		get_node("HDWorldTerrain").sync_camera()
+		last_painted_camera=get_node("HDWorldTerrain").transform
+		world_paint_count+=1
+	if preload("res://scripts/first_farm.gd").compact(game):
+		if scenery_only or buildings_only or world_details_only or ready_markers_only or plot_render_only or plot_selection_only or animation_only or windmill_blades_only or visitor_render_only or ujang_render_only or truck_render_only or livestock_only or animal_render_only or butterfly_render_only: return
+		preload("res://scripts/first_farm_world.gd").paint(self)
 		return
 	if animal_render_only:
 		match animal_kind:
@@ -2228,8 +2500,7 @@ func _draw() -> void:
 		LivestockPainter.paint_butterfly_shape(self)
 		return
 	if windmill_blades_only:
-		for blade in 4:
-			draw_line(Vector2.ZERO, Vector2.RIGHT.rotated(blade * TAU / 4.0) * 46.0, Color("a37348"), 9.0, true)
+		preload("res://scripts/colorful_environment.gd").windmill_rotor(self,Vector2.ZERO,0.0)
 		return
 	if plot_render_only:
 		paint_plot(plot_render_index, Vector2.ZERO)
@@ -2282,6 +2553,7 @@ func _draw() -> void:
 		paint_movable_scenery_props()
 		paint_spacious_buildings()
 		paint_spacious_constructions()
+		preload("res://scripts/world_regions_painter.gd").paint(self)
 		paint_owned_decorations()
 		return
 	var profile_start := Time.get_ticks_usec() if mobile_scenery_lite and OS.has_feature("debug") else 0
@@ -2292,6 +2564,8 @@ func _draw() -> void:
 	var profile_landscape := Time.get_ticks_usec() if profile_start > 0 else 0
 	if not mobile_scenery_lite:
 		paint_spacious_buildings()
+	if not mobile_scenery_lite:
+		preload("res://scripts/world_regions_painter.gd").paint(self)
 	var profile_buildings := Time.get_ticks_usec() if profile_start > 0 else 0
 	var visible_objects := visible_world_rect(160.0)
 	if not mobile_scenery_lite:
@@ -2337,6 +2611,7 @@ func _draw() -> void:
 		paint_ujang()
 		paint_visitor()
 		paint_visual_feedback()
+	preload("res://scripts/road_mover.gd").preview(self)
 	if edit_mode and edit_selected != "":
 		var center := object_position(edit_selected)
 		var half := object_half_size(edit_selected)
@@ -2407,8 +2682,8 @@ func paint_live_animation() -> void:
 	if not mobile_scenery_lite:
 		paint_ready_markers(visible)
 	var profile_ready := Time.get_ticks_usec() if profile_start > 0 else 0
-	if chopping_tree >= 0 and visible.has_point(WILD_TREES[chopping_tree]):
-		paint_wild_tree(chopping_tree, WILD_TREES[chopping_tree])
+	if chopping_tree >= 0 and visible.has_point(wild_tree_position(chopping_tree)):
+		paint_wild_tree(chopping_tree, wild_tree_position(chopping_tree))
 	var profile_ujang := Time.get_ticks_usec() if profile_start > 0 else 0
 	# Ujang is now rendered by his own CanvasItem, which moves every frame.
 	var profile_visitor := Time.get_ticks_usec() if profile_start > 0 else 0
@@ -2445,6 +2720,7 @@ func paint_live_animation() -> void:
 
 
 func show_world_feedback(kind: String, at: Vector2, text_value: String = "") -> void:
+	if is_inside_tree(): get_tree().call_group("garden_audio","play",kind)
 	# Purely presentational; never stored in the save game or used for hit testing.
 	if visual_feedback.size() >= 12:
 		visual_feedback.pop_front()
@@ -2485,7 +2761,7 @@ func paint_swipe_preview(visible: Rect2) -> void:
 		draw_circle(badge, 20, tint)
 		draw_arc(badge, 18.5, 0, TAU, 24, Color("fff9dd", 0.80), 2.5, true)
 		var ordinal := str(position + 1)
-		var number_width := ThemeDB.fallback_font.get_string_size(ordinal, HORIZONTAL_ALIGNMENT_LEFT, -1, 23).x
+		var number_width := preload("res://assets/fonts/styles/fredoka_bold.tres").get_string_size(preload("res://scripts/garden_language.gd").text(ordinal), HORIZONTAL_ALIGNMENT_LEFT, -1, 23).x
 		label(ordinal, badge + Vector2(-number_width * 0.5, 7), 23, Color("305543"))
 
 
@@ -2512,7 +2788,7 @@ func paint_tutorial_plot(visible: Rect2) -> void:
 	for i in 4:
 		draw_circle(corners[i], 4.2, Color("fff9d6", strength))
 	var bob := sin(shimmer * 4.0) * 5.0
-	var badge_at := center + Vector2(0, -147 + bob)
+	var badge_at := center + Vector2(0, (-75.0 if not game.ftue.is_empty() else -147.0) + bob)
 	draw_circle(badge_at + Vector2(0, 5), 29, Color("3d653b", 0.36))
 	draw_circle(badge_at, 28, Color("ffce64"))
 	draw_arc(badge_at, 25, 0.0, TAU, 28, Color("fff8d9"), 2.0, true)
@@ -2521,8 +2797,9 @@ func paint_tutorial_plot(visible: Rect2) -> void:
 		badge_at + Vector2(0, 12)
 	])
 	draw_colored_polygon(arrow, Color("3e7647"))
+	if not game.ftue.is_empty(): return
 	var caption := "PANEN" if guide_plot_action == "harvest" else "TANAM"
-	var text_width := ThemeDB.fallback_font.get_string_size(caption, HORIZONTAL_ALIGNMENT_LEFT, -1, 19).x
+	var text_width := preload("res://assets/fonts/styles/fredoka_bold.tres").get_string_size(preload("res://scripts/garden_language.gd").text(caption), HORIZONTAL_ALIGNMENT_LEFT, -1, 19).x
 	var ribbon := Rect2(badge_at.x - text_width * 0.5 - 14, badge_at.y - 63, text_width + 28, 27)
 	draw_rect(ribbon.grow(2), Color("3c6742", 0.5))
 	draw_rect(ribbon, Color("fff1bb"))
@@ -2588,13 +2865,13 @@ func paint_visual_feedback() -> void:
 			var caption_color := Color("fff5d7")
 			caption_color.a = opacity
 			var text_at := at + Vector2(0, -57.0 - progress * 18.0)
-			var text_width := ThemeDB.fallback_font.get_string_size(caption, HORIZONTAL_ALIGNMENT_LEFT, -1, 24).x
+			var text_width := preload("res://assets/fonts/styles/fredoka_bold.tres").get_string_size(preload("res://scripts/garden_language.gd").text(caption), HORIZONTAL_ALIGNMENT_LEFT, -1, 24).x
 			var label_at := text_at - Vector2(text_width * 0.5, 0)
 			var shadow := Color("426343", opacity * 0.68)
-			draw_string(ThemeDB.fallback_font, label_at + Vector2(1.8, 2.1),
-				caption, HORIZONTAL_ALIGNMENT_LEFT, -1, 24, shadow)
-			draw_string(ThemeDB.fallback_font, label_at,
-				caption, HORIZONTAL_ALIGNMENT_LEFT, -1, 24, caption_color)
+			draw_string(preload("res://assets/fonts/styles/fredoka_bold.tres"), label_at + Vector2(1.8, 2.1),
+				preload("res://scripts/garden_language.gd").text(caption), HORIZONTAL_ALIGNMENT_LEFT, -1, 24, shadow)
+			draw_string(preload("res://assets/fonts/styles/fredoka_bold.tres"), label_at,
+				preload("res://scripts/garden_language.gd").text(caption), HORIZONTAL_ALIGNMENT_LEFT, -1, 24, caption_color)
 
 
 func paint_camera_hint() -> void:
@@ -2605,10 +2882,12 @@ func paint_camera_hint() -> void:
 	if edit_mode:
 		hint_width = 510.0
 		match road_tool:
-			"draw": hint = "JALAN: SENTUH & SERET UNTUK MEMBUAT JALAN"
+			"draw":
+				var roads=preload("res://scripts/road_catalog.gd").prepare(game)
+				hint="%s · STOK %d · SERET UNTUK PASANG" % [preload("res://scripts/road_catalog.gd").ITEMS[roads.selected].name,int(roads.stock[roads.selected])]
 			"erase": hint = "HAPUS: SENTUH & SERET UNTUK MENGHAPUS JALAN"
 			"pan": hint = "GESER: JELAJAHI PETA DAN CUBIT UNTUK ZOOM"
-			_: hint = "OBJEK: GESER BANGUNAN ATAU PETAK"
+			_: hint = "OBJEK: GESER BANGUNAN, PETAK, ATAU JALAN"
 	elif swipe_active:
 		var total := swipe_indices.size()
 		hint = ("USAP PANEN" if swipe_mode == "harvest" else "USAP TANAM") + "  •  %d PETAK  •  LEPAS UNTUK PROSES" % total
@@ -2656,65 +2935,14 @@ func prepare_terrain_contours() -> void:
 
 
 func road_visual_center(cell: Vector2i) -> Vector2:
-	# Small persistent offsets break up ruler-straight roads while retaining tile adjacency.
-	var jitter := ((cell.x * 73856093) ^ (cell.y * 19349663)) & 0x7fffffff
-	return (Vector2(cell) + Vector2(0.5, 0.5)) * ROAD_GRID_SIZE + Vector2(
-		float(jitter % 9 - 4), float((jitter >> 6) % 9 - 4)
-	)
+	# Stable centers keep placed roads aligned; paving fills their connections.
+	if game==null or int(game.ftue.get("cheerful_layout",0))<3: return (Vector2(cell)+Vector2(0.5,0.5))*ROAD_GRID_SIZE
+	return Vector2(1800,-1200)+Vector2((cell.x-cell.y)*37.5,(cell.x+cell.y+1)*22.0)
 
 
 func paint_roads() -> void:
-	var visible := visible_world_rect(float(ROAD_GRID_SIZE) + 75.0)
-	# Player roads use the old village footpath's layered, worn dirt finish.
-	# The underlying grid is unchanged so existing player layouts still load.
-	for layer in [
-		[ROAD_WIDTH, Color("b7a16f")],
-		[ROAD_WIDTH * 0.83, Color("d1ac77")],
-		[ROAD_WIDTH * 0.53, Color("f0c98f", 0.32)]
-	]:
-		var width: float = layer[0]
-		var tone: Color = layer[1]
-		for id in game.road_tiles:
-			var parts := str(id).split(",")
-			if parts.size() != 2:
-				continue
-			var cell := Vector2i(int(parts[0]), int(parts[1]))
-			var center := road_visual_center(cell)
-			if not visible.has_point(center):
-				continue
-			for offset in [Vector2i.RIGHT, Vector2i.DOWN]:
-				if game.road_tiles.has(road_key(cell + offset)) and \
-						road_surface_clear_of_objects(center, road_visual_center(cell + offset), ROAD_HALF_WIDTH):
-					line(center, road_visual_center(cell + offset), tone, width)
-			if road_surface_clear_of_objects(center, center, ROAD_HALF_WIDTH):
-				draw_circle(center, width * 0.5, tone)
-	# Sparse dust, worn patches and small stones make the surface less uniform.
-	if camera_zoom >= 0.81:
-		for id in game.road_tiles:
-			var parts := str(id).split(",")
-			if parts.size() != 2:
-				continue
-			var cell := Vector2i(int(parts[0]), int(parts[1]))
-			var center := road_visual_center(cell)
-			if not visible.has_point(center):
-				continue
-			var seed := ((cell.x * 27644437) ^ (cell.y * 908317)) & 0x7fffffff
-			for j in 3:
-				var spot := center + Vector2(
-					float((seed >> (j * 5)) % 47 - 23),
-					float((seed >> (j * 3 + 8)) % 43 - 21)
-				)
-				draw_circle(spot, 2.0 + float((seed >> j) % 3), Color("c69f6e", 0.36))
-			if seed % 4 == 0:
-				line(center + Vector2(-12, 7), center + Vector2(13, 3), Color("f9e0b0", 0.35), 2.0)
-	if edit_mode and (road_tool == "draw" or road_tool == "erase"):
-		for id in game.road_tiles:
-			var parts := str(id).split(",")
-			if parts.size() == 2:
-				var cell := Vector2i(int(parts[0]), int(parts[1]))
-				var center := (Vector2(cell) + Vector2(0.5, 0.5)) * ROAD_GRID_SIZE
-				if visible.has_point(center):
-					draw_circle(center, 2.5, Color("f9e5b8", 0.65))
+	if int(game.world_regions.get("reference_terrain_version",0))>=1: return
+	preload("res://scripts/road_painter.gd").paint(self)
 
 
 func paint_meadow_detail(visible: Rect2) -> void:
@@ -2781,9 +3009,9 @@ func scenery_clear_of_farm(at: Vector2, sprite_footprint := Rect2()) -> bool:
 		if footprint.intersects(Rect2(center - half, half * 2.0)):
 			return false
 	for index in WILD_TREES.size():
-		if game.cleared_wild_trees.has(index):
+		if not wild_tree_active(index):
 			continue
-		if footprint.intersects(Rect2(WILD_TREES[index] - Vector2(78, 78),
+		if footprint.intersects(Rect2(wild_tree_position(index) - Vector2(78, 78),
 				Vector2(156, 156))):
 			return false
 	return not road_overlaps_rect(footprint.grow(5.0))
@@ -2811,6 +3039,7 @@ func paint_meadow_clusters(visible: Rect2) -> void:
 				continue
 			if not visible.grow(65.0).has_point(at) or not scenery_clear_of_farm(at):
 				continue
+			if seed%3==0: farm_art.paint(self,"garden_grass_clump",at,88.0+float(seed%30))
 			var radius := 31.0 + float(seed % 22)
 			ellipse(at + Vector2(0, 7), radius * 1.16, 17.0, Color("64b45e", 0.12), 16)
 			ellipse(at, radius, 12.0, Color("b9e88d", 0.24), 16)
@@ -2828,7 +3057,7 @@ func paint_meadow_clusters(visible: Rect2) -> void:
 				else:
 					for j in 3:
 						var flower_at := at + Vector2(-22 + j * 19, -7 + (j % 2) * 12)
-						var petal := Color("fff3cf") if variant == 0 else Color("efa8a7")
+						var petal: Color = [Color("ffce4c"),Color("fa80c2"),Color("ad80f3"),Color("6fceff")][seed % 4]
 						paint_flower(flower_at, petal)
 			elif variant == 1:
 				# A low stone pile adds contrast without creating a new hit target.
@@ -2896,21 +3125,29 @@ func paint_wild_meadow_bands(visible: Rect2) -> void:
 				paint_flower(at + Vector2(width - 9, 2), Color("f3b4c4"))
 
 
+func delivery_sprite_rect(key: String,at: Vector2) -> Rect2:
+	return farm_art.ground_bounds(key,at,290.0 if key=="delivery_depot" else 210.0)
+
+
 func delivery_depot_bounds() -> Rect2:
-	# Include the isometric depot awning and the parked truck in the touch target.
-	return Rect2(DELIVERY_DOCK + Vector2(-298, -199), Vector2(449, 260))
+	return delivery_sprite_rect("delivery_depot",object_position("delivery_depot"))
+
+
+func delivery_truck_bounds() -> Rect2:
+	return delivery_sprite_rect("delivery_truck",delivery_truck_position())
 
 
 func start_delivery_animation() -> void:
-	# A new successful order restarts the courier journey. Game rewards are
-	# already settled by FarmGameState; this presentation is never saved.
+	if delivery_elapsed >= 0.0:
+		return
+	# Rewards are settled once by FarmGameState, never by this animation.
 	delivery_elapsed = 0.0
-	show_world_feedback("harvest", DELIVERY_DOCK + Vector2(0, -90), "TERKIRIM!")
+	show_world_feedback("harvest", object_position("delivery_depot") + Vector2(0, -90), "TERKIRIM!")
 
 
 func delivery_truck_position() -> Vector2:
 	if delivery_elapsed < 0.0:
-		return DELIVERY_DOCK
+		return object_position("delivery_truck")
 	var progress := 0.0
 	if delivery_elapsed < 2.85:
 		progress = clampf(delivery_elapsed / 2.85, 0.0, 1.0)
@@ -2918,18 +3155,22 @@ func delivery_truck_position() -> Vector2:
 		progress = 1.0 - clampf((delivery_elapsed - 3.75) / 2.75, 0.0, 1.0)
 	else:
 		progress = 1.0
-	return DELIVERY_DOCK + Vector2(940.0 * progress, 155.0 * progress)
+	var signature=str([object_position("delivery_truck"),object_position("delivery_depot"),preload("res://scripts/reference_terrain.gd").bridge_paths(),scenery_revision])
+	if delivery_route_signature!=signature:
+		delivery_route_signature=signature
+		delivery_route_points=preload("res://scripts/delivery_route.gd").terrain_route(self)
+	return preload("res://scripts/delivery_route.gd").point(delivery_route_points,progress)
 
 
 func paint_delivery_depot() -> void:
-	if not world_details_only and not visible_world_rect(220.0).has_point(DELIVERY_DOCK):
+	if not world_details_only and not visible_world_rect(220.0).has_point(object_position("delivery_depot")):
 		return
-	var at := DELIVERY_DOCK
+	var at := object_position("delivery_depot")+Vector2(136,25)
 	# Ground the depot separately from the truck; its larger roof anchors
 	# the loading yard while the transparent PNG keeps the 3/4-view shape.
-	var depot_ground := at + Vector2(-136, -25)
+	var depot_ground := object_position("delivery_depot")
 	paint_grounding(depot_ground + Vector2(0, 6), 142.0, 30.0)
-	if farm_art.paint(self, "delivery_depot", depot_ground, 350.0):
+	if farm_art.paint(self, "delivery_depot", depot_ground, 290.0):
 		return
 	# A small loading apron separates the truck from the planted diamonds.
 	ellipse(at + Vector2(-19, 14), 188, 59, Color("629846", 0.24))
@@ -2954,12 +3195,12 @@ func paint_delivery_depot() -> void:
 func paint_delivery_yard_details() -> void:
 	# Original Blender 3/4-view props echo the depot palette and use ground anchors.
 	# Keep both footprints away from the traversable truck route and tap target.
-	if not world_details_only and not visible_world_rect(240.0).has_point(DELIVERY_DOCK):
+	if not world_details_only and not visible_world_rect(240.0).has_point(object_position("delivery_depot")):
 		return
-	var sorting_at := DELIVERY_DOCK + Vector2(-316, 42)
+	var sorting_at := object_position("delivery_depot") + Vector2(-180,67)
 	paint_grounding(sorting_at + Vector2(0, 5), 65, 13)
 	farm_art.paint(self, "sorting_trolley", sorting_at, 128.0)
-	var waypost_at := DELIVERY_DOCK + Vector2(225, 180)
+	var waypost_at := object_position("delivery_depot") + Vector2(361,205)
 	paint_grounding(waypost_at + Vector2(0, 6), 45, 11)
 	farm_art.paint(self, "village_waypost", waypost_at, 98.0)
 
@@ -3079,13 +3320,16 @@ func paint_roadside_flower_borders(visible: Rect2) -> void:
 func paint_wide_landscape() -> void:
 	# All scenery is rendered in world coordinates; contours are cached across frames.
 	var visible := visible_world_rect(105.0)
-	draw_rect(Rect2(Vector2.ZERO, WORLD_SIZE), Color("95d56f"))
+	if not preload("res://scripts/colorful_environment.gd").ground(self,WORLD_SIZE):
+		draw_rect(Rect2(Vector2.ZERO, WORLD_SIZE), Color("64ab5e"))
+
+	preload("res://scripts/four_seasons.gd").paint(self)
 	for i in TERRAIN_PATCH_RECTS.size():
 		var patch: Rect2 = TERRAIN_PATCH_RECTS[i]
 		if not patch.grow(110.0).intersects(visible):
 			continue
-		poly(terrain_contours[i], Color("a6df7b"))
-		poly(terrain_insets[i], Color("b5e68c", 0.52))
+		poly(terrain_contours[i], Color("80cb63",0.10))
+		poly(terrain_insets[i], Color("e2ef9a",0.07))
 	paint_meadow_detail(visible)
 	paint_meadow_clusters(visible)
 	paint_wild_meadow_bands(visible)
@@ -3093,8 +3337,8 @@ func paint_wide_landscape() -> void:
 	paint_roadside_flower_borders(visible)
 	# Nature remains behind interactive buildings and plots, and costs nothing offscreen.
 	for index in WILD_TREES.size():
-		if visible.has_point(WILD_TREES[index]) and not game.cleared_wild_trees.has(index) and (not scenery_only or index != chopping_tree):
-			paint_wild_tree(index, WILD_TREES[index])
+		if visible.has_point(wild_tree_position(index)) and wild_tree_active(index) and (not scenery_only or index != chopping_tree):
+			paint_wild_tree(index, wild_tree_position(index))
 	for pos in [
 		Vector2(325, 960), Vector2(560, 320), Vector2(1150, 355),
 		Vector2(1950, 690), Vector2(1980, 1200), Vector2(1380, 1840),
@@ -3106,24 +3350,11 @@ func paint_wide_landscape() -> void:
 	for i in 20:
 		var flower := Vector2(880 + (i % 10) * 67, 1220 + (i / 10) * 32)
 		if visible.has_point(flower) and scenery_clear_of_farm(flower):
-			paint_flower(flower, Color("fff0c3"))
+			paint_flower(flower, [Color("ffc95d"),Color("ed87cc"),Color("a38bfa"),Color("fcebd4")][i % 4])
 	for i in 32:
 		var flower := Vector2(2300 + (i % 8) * 78, 1750 + (i / 8) * 90)
 		if visible.has_point(flower) and scenery_clear_of_farm(flower):
-			paint_flower(flower, Color("fff0c3"))
-	# Keep the fence attached to unlocked land bounds, but draw only visible posts.
-	var accessible := accessible_world()
-	draw_rect(accessible, Color("5ba44d", 0.70), false, 8.0)
-	for x in range(int(accessible.position.x) + 16, int(accessible.end.x), 73):
-		if visible.has_point(Vector2(x, accessible.position.y)):
-			paint_fence(Vector2(x, accessible.position.y))
-		if visible.has_point(Vector2(x, accessible.end.y)):
-			paint_fence(Vector2(x, accessible.end.y))
-	for y in range(int(accessible.position.y) + 72, int(accessible.end.y), 73):
-		if visible.has_point(Vector2(accessible.position.x, y)):
-			paint_fence(Vector2(accessible.position.x, y))
-		if visible.has_point(Vector2(accessible.end.x, y)):
-			paint_fence(Vector2(accessible.end.x, y))
+			paint_flower(flower, [Color("ffc95d"),Color("ed87cc"),Color("a38bfa"),Color("fcebd4")][i % 4])
 
 
 func paint_movable_scenery_props() -> void:
@@ -3160,7 +3391,7 @@ func paint_spacious_buildings() -> void:
 		paint_grounding(barn, 104.0, 37.0)
 		paint_barn(barn)
 	var coop := object_position("ayam")
-	if visible.has_point(coop):
+	if game.feature_unlocked("ranch") and (game.ftue.is_empty() or preload("res://scripts/first_coop.gd").built(game)) and visible.has_point(coop):
 		paint_grounding(coop + Vector2(0, 54), 148.0, 61.0)
 		paint_coop(coop)
 	var market := object_position("pasar")
@@ -3179,7 +3410,7 @@ func paint_spacious_buildings() -> void:
 			Rect2(945, 390, 60, 80)):
 		paint_barrel(Vector2(975, 455))
 	var cow_pen := object_position("sapi")
-	if visible.has_point(cow_pen):
+	if (game.ftue.is_empty() or bool(game.ftue.get("cow_built",false))) and visible.has_point(cow_pen):
 		paint_grounding(cow_pen + Vector2(0, 36), 195.0, 118.0)
 		draw_offset = cow_pen - default_position("sapi")
 		set_world_transform()
@@ -3224,6 +3455,7 @@ func paint_ready_markers(visible: Rect2) -> void:
 
 
 func paint_owned_decorations() -> void:
+	if not game.ftue.is_empty() and not preload("res://scripts/first_farm.gd").compact(game): preload("res://scripts/first_farm_world.gd").paint_landscaping(self)
 	var visible := Rect2(Vector2.ZERO, WORLD_SIZE).grow(180.0) if buildings_only else visible_world_rect(180.0)
 	for item in game.decorations:
 		var position: Array = item.get("position", [])
@@ -3257,20 +3489,20 @@ func paint_spacious_constructions() -> void:
 	if game.has_construction("toko_roti"):
 		var at := object_position("roti")
 		if visible.has_point(at):
-			paint_grounding(at + Vector2(0, 10), 86.0, 30.0)
-			if not farm_art.paint(self, "bakery_building", at, 190.0):
+			paint_grounding(at + Vector2(0, 10), 118.0, 38.0)
+			if not farm_art.paint(self, "bakery_building", at, 265.0):
 				paint_small_workshop(at, Color("e4a35d"), "ROTI")
 	if game.has_construction("pabrik_susu"):
 		var at := object_position("susu")
 		if visible.has_point(at):
-			paint_grounding(at + Vector2(0, 10), 88.0, 32.0)
-			if not farm_art.paint(self, "dairy_building", at, 195.0):
+			paint_grounding(at + Vector2(0, 10), 118.0, 38.0)
+			if not farm_art.paint(self, "dairy_building", at, 265.0):
 				paint_small_workshop(at, Color("8dccd4"), "SUSU")
 	if game.has_construction("pabrik_pakan"):
 		var at := object_position("pakan")
 		if visible.has_point(at):
-			paint_grounding(at + Vector2(0, 13), 92.0, 32.0)
-			if not farm_art.paint(self, "feed_mill_building", at, 195.0):
+			paint_grounding(at + Vector2(0, 13), 123.0, 40.0)
+			if not farm_art.paint(self, "feed_mill_building", at, 275.0):
 				paint_small_workshop(at, Color("c9aa73"), "PAKAN")
 	for i in game.construction_count("petak_bunga"):
 		var flower_at := Vector2(430 + i * 164, 775)
@@ -3283,27 +3515,25 @@ func paint_spacious_constructions() -> void:
 					)
 	if game.has_construction("gazebo"):
 		var at := Vector2(1610, 1500)
-		ellipse(at, 45, 14, Color("c49b61"))
-		for side in [-28, 28]:
-			line(at + Vector2(side, 0), at + Vector2(side, -48), Color("80552f"), 7)
-		poly(
-			PackedVector2Array(
-				[at + Vector2(-53, -48), at + Vector2(0, -87), at + Vector2(53, -48)]
-			),
-			Color("bb7441")
-		)
+		if not farm_art.paint(self,"gazebo",at,160.0):
+			ellipse(at, 45, 14, Color("c49b61"))
+			for side in [-28, 28]:
+				line(at + Vector2(side, 0), at + Vector2(side, -48), Color("80552f"), 7)
+			poly(
+				PackedVector2Array(
+					[at + Vector2(-53, -48), at + Vector2(0, -87), at + Vector2(53, -48)]
+				),
+				Color("bb7441")
+			)
+
 	if game.has_construction("kincir_angin"):
 		var at := Vector2(1860, 365)
-		poly(
-			PackedVector2Array([at + Vector2(-19, 30), at + Vector2(0, -80), at + Vector2(19, 30)]),
-			Color("f1e2b7")
-		)
-		if not mobile_scenery_lite:
-			paint_windmill_blades()
+		preload("res://scripts/colorful_environment.gd").windmill_tower(self,at)
+		if not mobile_scenery_lite: paint_windmill_blades()
+
 	if game.has_construction("kolam"):
 		var pond := Vector2(1550, 1660)
-		ellipse(pond, 63, 31, Color("e1d4aa"))
-		ellipse(pond + Vector2(0, -4), 54, 23, Color("6bc7d9"))
+		farm_art.paint(self,"decorative_pond",pond,135.0)
 
 
 func poly(points: PackedVector2Array, color: Color) -> void:
@@ -3316,9 +3546,7 @@ func paint_windmill_blades() -> void:
 	var at := Vector2(1860, 365)
 	if not visible_world_rect(120.0).has_point(at):
 		return
-	for i in 4:
-		var angle := shimmer * 0.8 + i * TAU / 4.0
-		line(at + Vector2(0, -80), at + Vector2(cos(angle), sin(angle)) * 46 + Vector2(0, -80), Color("a37348"), 9)
+	preload("res://scripts/colorful_environment.gd").windmill_rotor(self,at+Vector2(0,-80),shimmer*0.8)
 
 
 func ellipse(center: Vector2, rx: float, ry: float, color: Color, steps: int = 24) -> void:
@@ -3392,7 +3620,8 @@ func paint_roaming_animal(
 
 
 func paint_landscape() -> void:
-	draw_rect(Rect2(0, 0, 720, 780), GRASS)
+	if not preload("res://scripts/colorful_environment.gd").ground(self,Vector2(720,780)):
+		draw_rect(Rect2(0, 0, 720, 780), GRASS)
 	poly(
 		PackedVector2Array(
 			[
@@ -3473,6 +3702,7 @@ func paint_grass_detail() -> void:
 
 
 func paint_hedge(at: Vector2, width: float) -> void:
+	if farm_art.paint(self,"flowering_hedge",at,width*1.6): return
 	ellipse(at + Vector2(0, 8), width * 0.55, 10, Color("4f9a47", 0.3))
 	for i in 3:
 		var pos := at + Vector2((i - 1) * width * 0.28, -i % 2 * 3)
@@ -3482,6 +3712,7 @@ func paint_hedge(at: Vector2, width: float) -> void:
 
 
 func paint_fruit_tree(at: Vector2, fruit_color: Color = Color("ffd161"), ripe: bool = true) -> void:
+	if farm_art.paint(self,"orange_tree" if fruit_color.g>0.5 else "apple_tree",at,116.0): return
 	ellipse(at + Vector2(3, 19), 47, 14, Color("4a9950", 0.32))
 	poly(
 		PackedVector2Array(
@@ -3510,19 +3741,20 @@ func paint_orchard(index: int, at: Vector2) -> void:
 
 
 func paint_fence(at: Vector2) -> void:
-	draw_rect(Rect2(at.x - 4, at.y - 19, 9, 40), Color("b8794e"))
-	draw_rect(Rect2(at.x - 5, at.y - 21, 9, 34), Color("e9ba78"))
+	draw_rect(Rect2(at.x - 4, at.y - 19, 9, 40), Color("bb762b"))
+	draw_rect(Rect2(at.x - 5, at.y - 21, 9, 34), Color("ffd278"))
 	poly(
 		PackedVector2Array(
 			[Vector2(at.x - 5, at.y - 21), Vector2(at.x, at.y - 28), Vector2(at.x + 4, at.y - 21)]
 		),
-		Color("f5d294")
+		Color("fff1ad")
 	)
-	line(at + Vector2(-25, -6), at + Vector2(25, -6), Color("f1c88c"), 6)
-	line(at + Vector2(-25, 12), at + Vector2(25, 12), Color("db9c6b"), 5)
+	line(at + Vector2(-25, -6), at + Vector2(25, -6), Color("ffc966"), 6)
+	line(at + Vector2(-25, 12), at + Vector2(25, 12), Color("e9a044"), 5)
 
 
 func paint_bush(at: Vector2) -> void:
+	if farm_art.paint(self,"flowering_bushes",at,86.0): return
 	ellipse(at + Vector2(1, 5), 34, 14, Color("66ae61"))
 	for off in [Vector2(-18, -6), Vector2(5, -16), Vector2(22, -5)]:
 		draw_circle(at + off, 16, Color("439b57"))
@@ -3559,16 +3791,22 @@ func paint_wild_tree(index: int, at: Vector2) -> void:
 		var scaler := size / view_size
 		var screen_at := (view_size * 0.5 + (at - camera_center) * camera_zoom) * scaler
 		draw_set_transform(screen_at, angle, scaler * camera_zoom)
-	ellipse(Vector2(5, 12), 44, 13, Color("3c974d", 0.32))
-	draw_rect(Rect2(-12, -65, 24, 78), Color("845535"))
-	draw_rect(Rect2(-7, -64, 7, 69), Color("c18a4f"))
-	line(Vector2(-3, -38), Vector2(-34, -64), Color("875a3b"), 8.0)
-	line(Vector2(3, -52), Vector2(33, -82), Color("875a3b"), 8.0)
-	var foliage := Color("38884f") if index % 3 == 0 else Color("438f49")
-	for leaf in [Vector2(-29, -68), Vector2(25, -70), Vector2(-7, -101), Vector2(7, -53)]:
-		draw_circle(leaf, 30, foliage)
-		draw_circle(leaf + Vector2(-8, -7), 21, Color("65ba5f"))
-		draw_circle(leaf + Vector2(-13, -17), 6, Color("8dd876", 0.7))
+	var tree_asset="colorful_oak" if index%5<3 else ("lg_blossom_tree" if index%5==3 else "lg_lantern_tree")
+	var district=preload("res://scripts/four_seasons.gd").active_id
+	if district=="spring" and index>=80: tree_asset="lg_blossom_tree"
+	elif district=="autumn": tree_asset="autumn_maple"
+	elif district=="winter": tree_asset="snow_pine"
+	if not preload("res://scripts/reference_terrain.gd").paint_tree(self,district,index):
+		ellipse(Vector2(5, 12), 44, 13, Color("3c974d", 0.32))
+		draw_rect(Rect2(-12, -65, 24, 78), Color("845535"))
+		draw_rect(Rect2(-7, -64, 7, 69), Color("c18a4f"))
+		line(Vector2(-3, -38), Vector2(-34, -64), Color("875a3b"), 8.0)
+		line(Vector2(3, -52), Vector2(33, -82), Color("875a3b"), 8.0)
+		var foliage := Color("38884f") if index % 3 == 0 else Color("438f49")
+		for leaf in [Vector2(-29, -68), Vector2(25, -70), Vector2(-7, -101), Vector2(7, -53)]:
+			draw_circle(leaf, 30, foliage)
+			draw_circle(leaf + Vector2(-8, -7), 21, Color("65ba5f"))
+			draw_circle(leaf + Vector2(-13, -17), 6, Color("8dd876", 0.7))
 	set_world_transform()
 	if chopping:
 		# Flying woodchips mark the axe strikes.
@@ -3586,45 +3824,26 @@ func paint_ujang() -> void:
 	var scaler := size / view_size
 	var screen_at := Vector2.ZERO if ujang_render_only else (view_size * 0.5 + (ujang_position - camera_center) * camera_zoom) * scaler
 	# Scale the entire character around the feet; keep the name readable.
-	draw_set_transform(screen_at, 0.0, Vector2.ONE * UJANG_SCALE if ujang_render_only else scaler * camera_zoom * UJANG_SCALE)
-	var at := Vector2.ZERO
-	var stepping := sin(shimmer * 11.0) * 7.0 if ujang_walking else 0.0
-	var swinging := chopping_tree >= 0 and chop_progress > 0.0 and chop_progress < 1.2
-	var axe_swing := sin(chop_progress * 17.0) if swinging else 0.0
-	ellipse(at + Vector2(0, 5), 24, 8, Color("367d45", 0.34))
-	# Boots, trousers and walking animation.
-	line(at + Vector2(-9, -31), at + Vector2(-9 + stepping, -1), Color("3c5786"), 10)
-	line(at + Vector2(9, -31), at + Vector2(9 - stepping, -1), Color("3c5786"), 10)
-	line(at + Vector2(-10 + stepping, -1), at + Vector2(-2 + stepping, 1), Color("674532"), 9)
-	line(at + Vector2(8 - stepping, -1), at + Vector2(17 - stepping, 1), Color("674532"), 9)
-	draw_rect(Rect2(at + Vector2(-17, -65), Vector2(34, 37)), Color("f4ad4b"))
-	draw_rect(Rect2(at + Vector2(-4, -65), Vector2(7, 37)), Color("e48b36"))
-	var hand_l := at + Vector2(-23, -39)
-	var hand_r := at + Vector2(24, -37)
-	line(at + Vector2(-15, -59), hand_l + Vector2(0, stepping * 0.5), Color("b97a43"), 9)
-	var raised_hand := hand_r + Vector2(axe_swing * 20.0, -absf(axe_swing) * 22.0)
-	line(at + Vector2(14, -59), raised_hand, Color("b97a43"), 9)
-	if swinging:
-		var handle_top := raised_hand + Vector2(17 * ujang_facing, -32)
-		line(raised_hand, handle_top, Color("986139"), 6)
-		poly(PackedVector2Array([
-			handle_top + Vector2(-15, -12), handle_top + Vector2(8, -14),
-			handle_top + Vector2(10, 4), handle_top + Vector2(-17, 8)
-		]), Color("dbe6e8"))
-	# Friendly, recognizable farm worker with straw hat.
-	draw_circle(at + Vector2(0, -82), 20, Color("d49b66"))
-	draw_circle(at + Vector2(ujang_facing * 8, -84), 2.6, Color("49352e"))
-	draw_arc(at + Vector2(ujang_facing * 6, -75), 5.0, 0.1, PI - 0.1, 8, Color("805134"), 2.0)
-	draw_rect(Rect2(at + Vector2(-19, -107), Vector2(38, 10)), Color("bf8c41"))
-	draw_rect(Rect2(at + Vector2(-30, -100), Vector2(60, 8)), Color("e7bc69"))
-	draw_rect(Rect2(at + Vector2(-17, -103), Vector2(34, 5)), Color("6c9b59"))
+	var pose: Dictionary = get_meta("hybrid_pose", {})
+	var actor_scale: Vector2 = Vector2.ONE * UJANG_SCALE if ujang_render_only else scaler * camera_zoom * UJANG_SCALE
+	var move_direction: Vector2 = pose.get("direction", Vector2.RIGHT)
+	if move_direction.x < -0.1: actor_scale.x *= -1
+	draw_set_transform(screen_at, 0.0, actor_scale)
+	var bounce := sin(shimmer * 10.0) * 2.0 if ujang_walking else 0.0
+	if str(pose.get("activity", "")) == "sit": bounce = 14.0
+	preload("res://scripts/wardrobe_assets.gd").paint(self, Rect2(-47, -151 + bounce, 94, 151), game.seasonal, pose)
+	preload("res://scripts/hybrid/character_animation.gd").tool(self, pose)
+	if chopping_tree >= 0:
+		var swing := sin(chop_progress * 17.0) * 0.6
+		var tip := Vector2(52 + swing * 20, -87)
+		line(Vector2(31, -45), tip, Color("986139"), 5)
+		draw_rect(Rect2(tip - Vector2(10, 8), Vector2(27, 15)), Color("dbe6e8"))
 	if ujang_render_only:
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
-		bubble("UJANG", Vector2(0, -116), Color("fff3c9"), Color("4d6e39"))
+		bubble(str(game.seasonal.get("name", "Ujang")), Vector2(0, -125), Color("fff3c9"), Color("4d6e39"), false)
 	else:
 		set_world_transform()
-		bubble("UJANG", ujang_position + Vector2(0, -116), Color("fff3c9"), Color("4d6e39"))
-
+		if not preload("res://scripts/first_farm.gd").active(game): bubble(str(game.seasonal.get("name", "Ujang")), ujang_position + Vector2(0, -170 if preload("res://scripts/first_farm.gd").compact(game) else -125), Color("fff3c9"), Color("4d6e39"), false)
 
 func paint_visitor() -> void:
 	if game.visitor_request.is_empty():
@@ -3639,28 +3858,7 @@ func paint_visitor() -> void:
 	draw_set_transform(screen_at, 0.0, Vector2.ONE * 0.88 if visitor_render_only else scaler * camera_zoom * 0.88)
 	var bounce := 0.0 if visitor_render_only else sin(shimmer * 2.6) * 1.7
 	ellipse(Vector2(0, 5), 29, 9, Color("367d45", 0.35))
-	line(Vector2(-10, -34), Vector2(-10, -4), Color("58688f"), 12)
-	line(Vector2(10, -34), Vector2(10, -4), Color("58688f"), 12)
-	ellipse(Vector2(-12, -1), 13, 6, Color("724839"))
-	ellipse(Vector2(12, -1), 13, 6, Color("724839"))
-	poly(PackedVector2Array([
-		Vector2(-20, -70 + bounce), Vector2(19, -70 + bounce),
-		Vector2(25, -33 + bounce), Vector2(-24, -33 + bounce)
-	]), Color("de7290"))
-	draw_rect(Rect2(-4, -68 + bounce, 8, 35), Color("f2a3a8"))
-	line(Vector2(-19, -63 + bounce), Vector2(-29, -41 + bounce), Color("d59a67"), 10)
-	line(Vector2(19, -63 + bounce), Vector2(32, -43 + bounce), Color("d59a67"), 10)
-	# Woven basket shows that the character is here to buy farm goods.
-	draw_rect(Rect2(22, -40 + bounce, 26, 23), Color("c48b48"))
-	draw_arc(Vector2(35, -40 + bounce), 11, PI, TAU, 12, Color("89633e"), 4)
-	for i in 3:
-		line(Vector2(26 + 9 * i, -37 + bounce), Vector2(26 + 9 * i, -19 + bounce), Color("e6bc73"), 2)
-	draw_circle(Vector2(0, -88 + bounce), 21, Color("dca675"))
-	draw_circle(Vector2(-8, -91 + bounce), 2.6, Color("453b35"))
-	draw_circle(Vector2(9, -91 + bounce), 2.6, Color("453b35"))
-	draw_arc(Vector2(0, -82 + bounce), 7, 0.15, PI - 0.15, 9, Color("995f50"), 2)
-	draw_arc(Vector2(0, -101 + bounce), 22, PI, TAU, 15, Color("664f43"), 9)
-	draw_circle(Vector2(19, -102 + bounce), 7, Color("664f43"))
+	farm_art.paint(self, "neighbor", Vector2(0, bounce), 100.0)
 	if visitor_render_only:
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 		bubble("ADA PESANAN!", Vector2(0, -125), Color("fff0b9"), Color("81562e"))
@@ -3705,6 +3903,7 @@ func paint_farm_buildings() -> void:
 
 
 func paint_well(at: Vector2) -> void:
+	if farm_art.paint(self,"wishing_well",at,140.0): return
 	# Stone well with wooden crank and a tiled canopy.
 	ellipse(at + Vector2(0, 11), 51, 16, Color("3c9253", 0.34))
 	ellipse(at + Vector2(0, 2), 32, 16, Color("7b827a"))
@@ -3738,6 +3937,7 @@ func paint_well(at: Vector2) -> void:
 
 
 func paint_hay_bale(at: Vector2, scale_factor: float) -> void:
+	if farm_art.paint(self,"hay_stack",at,94.0*scale_factor): return
 	var sx := scale_factor
 	ellipse(at + Vector2(0, 6) * sx, 28 * sx, 10 * sx, Color("6d8d4e", 0.30))
 	poly(
@@ -3785,6 +3985,7 @@ func paint_hay_bale(at: Vector2, scale_factor: float) -> void:
 
 
 func paint_barrel(at: Vector2) -> void:
+	if farm_art.paint(self,"colorful_barrel",at,67.0): return
 	ellipse(at + Vector2(1, 8), 26, 9, Color("4d8c4f", 0.28))
 	draw_rect(Rect2(at.x - 19, at.y - 29, 38, 37), Color("99613e"))
 	poly(
@@ -3859,7 +4060,7 @@ func paint_market_cart(at: Vector2) -> void:
 
 
 func paint_house(at: Vector2) -> void:
-	if farm_art.paint(self, "kitchen_cottage", at + Vector2(0, 20), 220.0):
+	if farm_art.paint(self, "kitchen_cottage", at + Vector2(0, 20), 300.0):
 		return
 	ellipse(at + Vector2(0, 70), 109, 25, Color("478f4b", 0.34))
 	poly(
@@ -3940,7 +4141,7 @@ func paint_house(at: Vector2) -> void:
 
 
 func paint_barn(at: Vector2) -> void:
-	if farm_art.paint(self, "village_barn", at + Vector2(0, 20), 194.0):
+	if farm_art.paint(self, "village_barn", at + Vector2(0, 20), 260.0):
 		return
 	ellipse(at + Vector2(0, 70), 91, 22, Color("478f4b", 0.35))
 	poly(
@@ -4100,9 +4301,8 @@ func paint_plot(index: int, at: Vector2) -> void:
 	var is_selected := selected_plot == index
 	var p := at + Vector2(0, 7)
 	var locked_grass: Color = [Color("86c478"), Color("91cb7e"), Color("7ebd72")][index % 3]
-	diamond(p + Vector2(0, 12), 76, 42, Color("458b4d", 0.25))
-	diamond(p + Vector2(0, 8), 76, 42, Color("8b5632") if unlocked else Color("649e5f"))
-	diamond(p, 74, 40, Color("bd7847") if unlocked else locked_grass)
+	ellipse(p+Vector2(0,5),68,27,Color("458b4d",.16))
+	if not unlocked: preload("res://scripts/colorful_environment.gd").grass_tile(self,p)
 	if unlocked:
 		diamond(p, 66, 35, Color("a76139"))
 		var crop: String = plot["crop"]
@@ -4111,16 +4311,10 @@ func paint_plot(index: int, at: Vector2) -> void:
 		if crop != "":
 			var growing := maxi(1, int(plot["ready_at"]) - int(plot["planted_at"]))
 			elapsed = clampf(float(game.now() - int(plot["planted_at"])) / float(growing), 0.0, 1.0)
-		var art_name := "soil_plot_empty"
-		if ready:
-			match crop:
-				"gandum": art_name = "wheat_plot_ready"
-				"jagung": art_name = "corn_plot_ready"
-				"wortel": art_name = "carrot_plot_ready"
-		elif crop != "" and elapsed >= 0.20 and elapsed < 0.45:
-			art_name = "young_seedlings"
-		var painted_crop_art := farm_art.paint(self, art_name, p, 149.0)
-		if not painted_crop_art:
+		# The wooden bed is permanent. Crop images with baked-in soil have
+		# different anchors, making the plot change size as growth advances.
+		var painted_base := farm_art.paint(self, "soil_plot_empty", p, 149.0)
+		if not painted_base:
 			for stripe in range(-2, 3):
 				line(
 					p + Vector2(stripe * 17 - 21, -10),
@@ -4128,28 +4322,21 @@ func paint_plot(index: int, at: Vector2) -> void:
 					Color("c7814d"),
 					2
 				)
-		if crop == "":
-			# Faint furrows and flecks help empty plots look like worked soil.
-			for ridge in 3:
-				var dx := float(ridge - 1) * 19.0
-				line(p + Vector2(dx - 15, -10), p + Vector2(dx + 12, 13), Color("f2b573", 0.48), 1.8)
-				ellipse(p + Vector2(dx + 4, 6 - ridge * 3), 2.3, 1.2, Color("e2a16a", 0.54), 8)
 		if crop != "":
-			if art_name == "soil_plot_empty" or not painted_crop_art:
-				for offset in [Vector2(-27, -6), Vector2(0, -17), Vector2(25, -5), Vector2(-5, 13)]:
-					paint_crop(crop, p + offset, elapsed)
+			paint_illustrated_crop(crop, p, elapsed)
 			if ready:
-				var bubble_y := -96 if art_name != "soil_plot_empty" else -52
+				var bubble_y := -103
 				ellipse(p + Vector2(1, bubble_y), 34, 16, Color("fff9d8"))
 				label("SIAP!", p + Vector2(-22, bubble_y + 5), 16, Color("657542"))
 			else:
 				var ratio := clampf(elapsed, 0.0, 1.0)
-				draw_rect(Rect2(p.x - 30, p.y - 47, 60, 9), Color("5e6d42"))
-				draw_rect(Rect2(p.x - 28, p.y - 45, 56 * ratio, 5), Color("fff29d"))
+				var progress_y := -54.0 if elapsed < 0.65 else -89.0
+				draw_rect(Rect2(p.x - 30, p.y + progress_y, 60, 9), Color("5e6d42"))
+				draw_rect(Rect2(p.x - 28, p.y + progress_y + 2, 56 * ratio, 5), Color("fff29d"))
 				# Three quiet stage ticks help read growth even at small zoom.
 				for marker in [0.22, 0.48, 0.80]:
 					var marker_color := Color("f9e5ab") if elapsed >= marker else Color("926d48")
-					draw_circle(p + Vector2(-28.0 + 56.0 * marker, -50.0), 2.3, marker_color)
+					draw_circle(p + Vector2(-28.0 + 56.0 * marker, progress_y - 3.0), 2.3, marker_color)
 	else:
 		# Grass creeps across the locked beds without implying planted crops.
 		for tuft in 7:
@@ -4166,7 +4353,8 @@ func paint_plot(index: int, at: Vector2) -> void:
 		line(p + Vector2(-2, -27), p + Vector2(-2, 0), Color("bc8756"), 2.0)
 		ellipse(p + Vector2(0, -31), 21, 16, Color("b88950"))
 		ellipse(p + Vector2(0, -34), 19, 14, Color("f4d69c"))
-		label("+", p + Vector2(-7, -24), 24, Color("816245"))
+		var land_icon=preload("res://scripts/colorful_icons.gd").texture("bibit")
+		if land_icon!=null: draw_texture_rect(land_icon,Rect2(p+Vector2(-18,-52),Vector2(36,36)),false)
 	if is_selected and not plot_render_only:
 		var pulse := 0.65 + 0.24 * sin(shimmer * 4.1)
 		var corners := PackedVector2Array(
@@ -4179,6 +4367,29 @@ func paint_plot(index: int, at: Vector2) -> void:
 			]
 		)
 		draw_polyline(corners, Color(1.0, 0.97, 0.70, pulse), 5, true)
+
+
+func paint_illustrated_crop(id: String, at: Vector2, elapsed: float) -> void:
+	# The permanent soil_plot_empty bed stays in place. Only the plant artwork
+	# changes, so growth never changes the plot footprint or its tap target.
+	var cell: int = int(CROP_PLANT_CELLS.get(id, 15))
+	var plant_width := 110.0
+	var plant_height := 105.0
+	if elapsed < 0.22:
+		cell = 15 # Tiny sprouts.
+		plant_width = 57.0
+		plant_height = 54.0
+	elif elapsed < 0.62:
+		cell = 14 # Young leaves.
+		plant_width = 76.0
+		plant_height = 73.0
+	var source_size := CROP_PLANTS.get_size() / 4.0
+	var source := Rect2(Vector2(float(cell % 4), float(floori(float(cell) / 4.0))) * source_size, source_size)
+	var destination := Rect2(
+		at + Vector2(-plant_width * 0.5, 19.0 - plant_height),
+		Vector2(plant_width, plant_height)
+	)
+	draw_texture_rect_region(CROP_PLANTS, destination, source)
 
 
 func paint_crop(id: String, at: Vector2, elapsed: float) -> void:
@@ -4194,22 +4405,25 @@ func paint_crop(id: String, at: Vector2, elapsed: float) -> void:
 		ellipse(at + Vector2(6, -seedling_height * 0.8), 7.0, 3.5, Color("a4dc70"), 12)
 		return
 	var grow := 0.3 + elapsed * 0.7
-	var height := 19.0 * grow
+	var height := 40.0 * grow
 	ellipse(at + Vector2(0, 3), 12, 4, Color("6c462d", 0.33))
 	if elapsed >= 0.82:
 		# A warm crown communicates that the crop is nearing harvest.
 		draw_circle(at + Vector2(2, -height - 8), 2.7, Color("ffe99b", 0.74))
 	match id:
 		"gandum":
-			for off in [-7, 0, 8]:
-				var top := at + Vector2(off, -height - (abs(off) % 3))
-				line(at + Vector2(off * 0.65, 0), top, Color("5b9d4b"), 3)
+			for off in [-8, 0, 9]:
+				var top := at + Vector2(off, -height - (abs(off) % 4))
+				line(at + Vector2(off * 0.65, 0), top, Color("4e9c4b"), 3.2)
+				line(at + Vector2(off * 0.6, -height * 0.32), at + Vector2(off - 7, -height * 0.55), Color("7ac75d"), 2.6)
 				if elapsed > 0.48:
-					for leaf in 3:
-						var y := float(leaf * 5)
-						draw_circle(
-							top + Vector2(-3 if leaf % 2 == 0 else 3, y), 3.4, Color("f9cf67")
-						)
+					for grain in 4:
+						var y := float(grain * 5)
+						for side in [-1, 1]:
+							var center := top + Vector2(side * 3.5, y)
+							ellipse(center + Vector2(0.8, 0.7), 3.5, 5.1, Color("bc842a"), 10)
+							ellipse(center, 3.1, 4.6, Color("ffcf53"), 10)
+					line(top + Vector2(0, -2), top + Vector2(0, 23), Color("ffdf70"), 1.6)
 		"jagung":
 			line(at, at + Vector2(0, -height - 5), Color("368e4f"), 4)
 			poly(
@@ -4251,13 +4465,13 @@ func paint_crop(id: String, at: Vector2, elapsed: float) -> void:
 					Color("5cbb60"),
 					4
 				)
-		"stroberi":
+		"stroberi", "stroberi_kristal":
 			for off in [-9, 0, 9]:
 				line(at, at + Vector2(off * 1.4, -height), Color("3e9b4e"), 4)
 				draw_circle(at + Vector2(off * 1.4, -height), 7, Color("50b459"))
 			if elapsed > 0.6:
 				for off in [-8, 8]:
-					draw_circle(at + Vector2(off, -height * 0.5), 5, Color("e8585f"))
+					draw_circle(at + Vector2(off, -height * 0.5), 5, Color("57d3f5") if id=="stroberi_kristal" else Color("e8585f"))
 		"kedelai":
 			for off in [-8, 0, 8]:
 				line(at + Vector2(off * 0.5, 2), at + Vector2(off, -height), Color("4c9b4b"), 3)
@@ -4402,7 +4616,7 @@ func paint_shortcut_sign(at: Vector2, title: String, fill: Color) -> void:
 	draw_rect(Rect2(at + Vector2(8, 8), Vector2(140, 3)), Color("fff3cf", 0.7))
 	draw_circle(at + Vector2(12, 25), 3, Color("ab784e"))
 	draw_circle(at + Vector2(144, 25), 3, Color("ab784e"))
-	var width := ThemeDB.fallback_font.get_string_size(title, HORIZONTAL_ALIGNMENT_LEFT, -1, 18).x
+	var width := preload("res://assets/fonts/styles/fredoka_bold.tres").get_string_size(preload("res://scripts/garden_language.gd").text(title), HORIZONTAL_ALIGNMENT_LEFT, -1, 18).x
 	label(title, at + Vector2((156 - width) * 0.5, 31), 18, Color("70462e"))
 
 
@@ -4441,15 +4655,62 @@ func paint_flower(at: Vector2, color: Color) -> void:
 
 
 func label(value: String, at: Vector2, font_size: int, color: Color) -> void:
-	draw_string(ThemeDB.fallback_font, at, value, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, color)
+	draw_string(preload("res://assets/fonts/styles/fredoka_bold.tres"), at, preload("res://scripts/garden_language.gd").text(value), HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, color)
 
 
-func bubble(value: String, at: Vector2, background: Color, ink: Color) -> void:
+func bubble(value: String, at: Vector2, background: Color, ink: Color, translate: bool = true) -> void:
 	ellipse(at + Vector2(0, -12), 62, 23, Color("588e53", 0.2))
 	ellipse(at + Vector2(0, -18), 61, 23, background)
 	poly(
 		PackedVector2Array([at + Vector2(-9, 0), at + Vector2(0, 15), at + Vector2(11, 0)]),
 		background
 	)
-	var width := ThemeDB.fallback_font.get_string_size(value, HORIZONTAL_ALIGNMENT_LEFT, -1, 17).x
-	label(value, at + Vector2(-width * 0.5, -12), 17, ink)
+	var caption := preload("res://scripts/garden_language.gd").text(value) if translate else value
+	var font := preload("res://assets/fonts/styles/fredoka_bold.tres")
+	var font_size := 17
+	while font.get_string_size(caption, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x > 116 and font_size > 11:
+		font_size -= 1
+	var width := font.get_string_size(caption, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
+	draw_string(font, at + Vector2(-width * 0.5, -12), caption, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, ink)
+
+func wild_tree_position(index: int) -> Vector2:
+	if drag_key=="wild_%d"%index:return drag_preview
+	var saved: Array = game.building_upgrades.get("tree_positions", {}).get(str(index), []) if game != null else []
+	if saved.size()!=2 and index >= original_wild_tree_count and game != null:
+		saved = game.building_upgrades.get("regrown_wild_trees", {}).get(str(index), [])
+	return Vector2(float(saved[0]),float(saved[1])) if saved.size()==2 else WILD_TREES[index]
+
+func _init() -> void:
+	# Append IDs so old cleared trees remain cleared after the world expansion.
+	for district in ["spring","summer","autumn","winter"]:
+		var origin=Vector2(350,1950) if district=="spring" else (Vector2(2550,1100) if district=="summer" else (Vector2(350,4600) if district=="autumn" else Vector2(2550,4600)))
+		for row in (3 if district=="spring" else 6):
+			for col in 3:
+				var point=origin+Vector2(col*610+sin(float(row*5+col))*65,row*480)
+				WILD_TREES.append(point)
+	original_wild_tree_count = WILD_TREES.size()
+	# Reserved, inactive slots keep the original tree IDs stable across saves
+	# and across all FarmView instances (including render-only overlays).
+	if shared_wild_tree_slots.is_empty():
+		shared_wild_tree_slots = WILD_TREES
+	WILD_TREES = shared_wild_tree_slots
+	reserve_wild_tree_slots(MAX_REGROWN_WILD_TREES)
+
+
+func reserve_wild_tree_slots(maximum: int) -> void:
+	var required := mini(original_wild_tree_count + maximum, FarmGameState.WILD_TREE_ID_CAPACITY)
+	while WILD_TREES.size() < required:
+		WILD_TREES.append(Vector2(-10000, -10000))
+
+
+func restore_wild_tree_slots() -> void:
+	if game == null:
+		return
+	reserve_wild_tree_slots(game.max_standing_trees)
+	var regrown: Dictionary = game.building_upgrades.get("regrown_wild_trees", {})
+	for key in regrown:
+		if not str(key).is_valid_int():
+			continue
+		var index := int(key)
+		if index >= original_wild_tree_count and index < FarmGameState.WILD_TREE_ID_CAPACITY:
+			reserve_wild_tree_slots(index - original_wild_tree_count + 1)

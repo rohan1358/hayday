@@ -1,0 +1,12 @@
+Accessories worn fitting v3
+Built-in image_gen was used for the additional crossbody satchel atlas and spring cleanup. No CLI/API fallback. No APK was built.
+New project asset: hayday/assets/wardrobe/crossbody_bags_v3.png
+Three rows: woven flower, woven sunflower, brown leather acorn; five angles each.
+Crossbody prompt: Use the supplied worn-accessory reference for style/design. Exactly five equal columns by three equal rows; fifteen isolated bag-body cutouts, no mannequins, no hands, no handles and no long straps. Tiny upper strap-attachment rings only. Rows flower straw satchel, sunflower straw satchel, acorn leather satchel. Columns front, front-three-quarter, right profile, rear-three-quarter, back. Soft rendered chibi farming-game style; orthographic eye-level; real transparent alpha, no shadows/grid/text; generous per-cell margins.
+Spring cleanup prompt: Keep the exact 5x4 sprite atlas and object design/position/scale; remove cast shadows, blurry brown blobs and detached fragments, especially above-left of row 1 column 5 back-view straw hat; preserve crisp object silhouettes; all empty areas zero alpha; no text, mannequins or new objects.
+Runtime changes: bags mount at hips, physical loop positions define strap endpoints; shoulder straps wrap behind the body and cross in front. Backpack volume is behind the torso in front/profile views, with visible straps in front. Hat hides upper hair, forehead fills the beanie opening. Scarf is restored behind head/braids, and near arms occlude bags naturally. Partial body regions share the same animated deformation as the character.
+Saved ownership IDs, gender/costume selection, buy/equip/unequip and game progress remain compatible.
+
+Final spring asset: hayday/assets/wardrobe/accessories_spring_v3.png. Earlier v2 atlas is preserved for comparison. Cleaned with built-in image_gen. Final runtime uses only the hat row from spring v3 (eyewear keeps the transparent-lens spring v2 row), plus v2 summer/autumn/winter; the v3 crossbody atlas replaces three handbag rows.
+
+Rear eyewear correction: disconnected temple arms use separate ear anchors behind the head/hair; the single-arm sprite is not scaled as an entire pair. This removes the oversized floating fragment above the hat. Gold lens alpha regression and 64 optical fittings pass; 640 directional fittings and shoulder-strap loop checks pass; wardrobe buy/equip/unequip/save/load passes. Forty seasonal/gender views rendered without errors.

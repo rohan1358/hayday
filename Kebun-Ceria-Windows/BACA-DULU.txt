@@ -1,0 +1,18 @@
+﻿KEBUN CERIA — WINDOWS PORTABLE
+
+Klik dua kali KebunCeria.exe untuk bermain.
+Simpan ketiga file .exe/.pck dalam folder yang sama.
+Tidak perlu menginstal Git atau Godot.
+
+Simpanan berada di folder Data. Salin folder ini untuk backup progres.
+
+WASD: bergerak. Shift + WASD: berlari.
+Joystick virtual: berjalan; dorong penuh untuk berlari.
+Ketuk tanah: berjalan otomatis. Ketuk tanaman/hewan: mendekat dan beraksi.
+Geser peta: kamera bebas. Roda mouse / cubit: zoom.
+KONTROL & TUGAS: pilih alat, antrean, mode Kelola, hewan dan zona.
+EDIT KARAKTER: pilihan laki-laki/perempuan, kostum dan aksesori.
+BATALKAN TUGAS atau Esc: hentikan perintah otomatis.
+
+Untuk menggiring, buka gerbang zona asal dan tujuan.
+Pindahkan sisi gerbang bila pintu terhalang pohon/dekorasi.

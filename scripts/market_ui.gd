@@ -34,29 +34,8 @@ static func populate(
 		16,
 		MUTED
 	)
-	for index in FarmGameState.MARKET_MAX_SLOTS:
+	for index in game.market_listings.size():
 		var slot: Panel = ui.call("row_card", list, 119, Color("fff1d5"))
-		if index >= game.market_listings.size():
-			ui.call(
-				"label",
-				slot,
-				"LAPAK %d  •  KOSONG" % (index + 1),
-				Vector2(22, 17),
-				Vector2(555, 38),
-				23,
-				GREEN,
-				true
-			)
-			ui.call(
-				"label",
-				slot,
-				"Pilih hasil kebun di bawah untuk menjual.",
-				Vector2(22, 62),
-				Vector2(555, 29),
-				16,
-				MUTED
-			)
-			continue
 		var sale: Dictionary = game.market_listings[index]
 		var info: Dictionary = game.item_info(str(sale["item"]))
 		var quantity := int(sale["quantity"])
@@ -93,6 +72,7 @@ static func populate(
 		var item_id: String = id
 		var info: Dictionary = game.item_info(item_id)
 		var stock := int(game.inventory[item_id])
+		if stock<=0 or info.is_empty():continue
 		var price := int(info["sell"]) * 2
 		var card: Panel = ui.call("row_card", list, 113, Color("fff7e6"))
 		ui.call("label", card, str(info["name"]), Vector2(20, 10), Vector2(305, 34), 22, INK, true)
@@ -109,25 +89,27 @@ static func populate(
 		var one: Button = ui.call(
 			"button",
 			card,
-			"PASANG 1",
+			"JUAL 1",
 			Vector2(321, 27),
 			Vector2(124, 59),
 			GREEN if stock >= 1 and open_slots else Color("b8c5b5"),
 			Color.WHITE,
 			15
 		)
+		one.name="MarketSellOne_"+item_id
 		one.disabled = stock < 1 or not open_slots
 		one.pressed.connect(func() -> void: list_action.call(item_id, 1))
 		var three: Button = ui.call(
 			"button",
 			card,
-			"PASANG 3",
+			"JUAL 3",
 			Vector2(455, 27),
 			Vector2(125, 59),
 			GREEN if stock >= 3 and open_slots else Color("b8c5b5"),
 			Color.WHITE,
 			15
 		)
+		three.name="MarketSellThree_"+item_id
 		three.disabled = stock < 3 or not open_slots
 		three.pressed.connect(func() -> void: list_action.call(item_id, 3))
 	refresh_timers(game, timers)

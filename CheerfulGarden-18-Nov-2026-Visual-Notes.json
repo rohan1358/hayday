@@ -1,0 +1,58 @@
+{
+  "date": "2026-11-18",
+  "tool": "built-in image_gen",
+  "terrain": "summer_island_v2.png",
+  "native_pixels": [
+    941,
+    1672
+  ],
+  "world_units": [
+    4320,
+    7680
+  ],
+  "grass": "res://assets/cheerful/grass.png, repeats every 480 world units; seasonal shader tint",
+  "bridges": "five independent sprites from supplied jembatan-individual assets",
+  "animation": "Animated river displacement and flowing detail texture; independent moving waterfall white ribbons, foam/mist at both falls.",
+  "placement": "image-based occupancy, 100x70 ground clearance, full artwork bounding rectangle checks, saved layout migration 5",
+  "limits": "Base riverbanks/cliffs are raster art, not true 3D or native 4K. Extreme zoom cannot invent missing geometry detail. Mobile physical-device performance not tested.",
+  "prompt_set": [
+    "Reference-based portrait Four Seasons terrain, central circular plaza, four biomes and winding rivers; no UI/characters/buildings.",
+    "Remove only five baked wooden bridges, retain riverbanks and path endpoints, preserve layout.",
+    "Replace only flat land textures with simple old-game grass style: green spring/summer, gold autumn, pale blue-white winter; preserve paths, plaza, rivers, banks, sky and mountains.",
+    "Create one huge continuous summer-green island in portrait, narrow ocean perimeter, simple plain grass, inland waterfall/lake near upper right, narrow river along right side, circular stone plaza left-center, winding paths; no bridges, trees, buildings, characters or UI. Other seasons use local ground palette, nature and regional weather.",
+    "Remove only central circular stone paving; simplify tan paths to one winding north-south main path and two short river spurs, preserving one-island silhouette, coastline, river/lake and both waterfalls. Built-in image_gen, no CLI."
+  ],
+  "regional_weather": {
+    "spring": "world-space drifting blossom petals",
+    "summer": "sparse warm sunlight motes",
+    "autumn": "windblown orange leaves",
+    "winter": "falling snowflakes",
+    "central": "neutral, no seasonal particles",
+    "entry": "compact fade-and-slide banner with particle intensity pulse, triggered by player region, boundary debounce 0.25s",
+    "legacy": "removed global 600-second season and 90-second weather rotation; clothing previews do not affect weather"
+  },
+  "world_design": {
+    "order": [
+      "Summer Meadow",
+      "Spring Valley",
+      "Autumn Hollow",
+      "Winter Peak"
+    ],
+    "layout": "Each season is a separate full 4320x7680 world. Summer is a single large island, not a map quadrant.",
+    "unlock": "All 25 districts of the previous island must be open according to its local city level. Purchases and tier 5 upgrades are optional for travel.",
+    "persistence": "District ownership, upgrades, cooldowns, decorations, tree clearing, resource nodes, placements, roads, and city XP are saved per island. Farmer level, inventory/currencies, animals, crops, and core farm facilities remain shared.",
+    "camera": "Main draw commands refresh for every changed camera transform. Background synchronizes again in the world draw.",
+    "collision": "Whole-foot ground support tests reject rock faces and water; only narrow bridge decks cross the river.",
+    "cow": "Saved cow placements are repaired within 1100 world units of the farmhouse."
+  },
+  "tests": [
+    "camera_ground_lock_test: 56 animated pan/zoom frames on desktop/mobile render profile, real cliff samples blocked, repaired cow near home",
+    "island_journey_test: 25/25 gate, independent city progress/XP/ownership, round-trip travel, saved world state",
+    "regional_weather_test: four regional effects, neutral hub, entry animations, no old global weather rotation",
+    "seed_pointer_input_test: actual viewport pointer clicks wheat and Plant, planting queued and completed",
+    "preview_ambience_test: 3 locked season previews without save changes, actual rendered seasonal screenshots, enlarged canopy hit, butterflies, waterfall pixel change over time"
+  ],
+  "paths": "One winding main path and two short river spurs; circular plaza removed.",
+  "nature": "Wild trees use non-uniform source atlas rows 0..310,310..620,620..1024, largest alpha component and trunk-ground anchors. Broadleaf width 280..304, pine 180..196; separate shadow and expanded canopy hitboxes. Starter pink tree appears only in Spring; Summer uses green oak. World-space fluttering butterflies visible near beds.",
+  "preview": "Pulau Musim > Lihat. Read-only local render material/nature/animation, supports drag and zoom. Locked islands remain gated; no currency, unlock, saved city or active world changes."
+}

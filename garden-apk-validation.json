@@ -1,0 +1,9 @@
+{
+  "apk": "KebunCeria-Aset-Jalan-Besar.apk",
+  "bytes": 130249883,
+  "sha256": "5924fe18f00b475df69d7011c51e1efeb6a3c2678a430b7aa8071f1fbc2194ab",
+  "crc": "pass",
+  "catalog_and_grass_included": true,
+  "build": "debug/offline",
+  "physical_android_device_tested": false
+}

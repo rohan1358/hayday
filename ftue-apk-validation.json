@@ -1,0 +1,16 @@
+{
+  "file": "KebunCeria-FTUE-Android.apk",
+  "bytes": 130237222,
+  "megabytes": 124.2,
+  "sha256": "9c37f2065b2cd760944f88b6e72e6aff05e532f5fef1596d897a3c51c4d32d35",
+  "zip_crc": "pass",
+  "ftue_modules": "included",
+  "opening_art": "included",
+  "tests_excluded": true,
+  "physical_android_device_tested": false,
+  "signature_v2": true,
+  "signature_v3": true,
+  "zip_alignment_16kb": "pass",
+  "build": "debug offline",
+  "native_ads_included": false
+}

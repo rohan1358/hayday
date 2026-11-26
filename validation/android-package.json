@@ -1,0 +1,27 @@
+{
+  "apk": "KebunCeria-Hybrid-Android.apk",
+  "bytes": 88617065,
+  "sha256": "4f538949efd47b9c06ef7d943e7d0b9924811da4d5234341e43279765303b41d",
+  "zip_crc": "pass",
+  "game_resources": "pass",
+  "tests_excluded": true,
+  "elf_load_alignments": {
+    "lib/arm64-v8a/libgodot_android.so": [
+      16384,
+      16384,
+      16384
+    ],
+    "lib/armeabi-v7a/libgodot_android.so": [
+      4096,
+      4096,
+      4096
+    ]
+  },
+  "signing": "APK v2 and v3 verified",
+  "zip_alignment": "16 KB passed",
+  "android_min_api": 24,
+  "target_api": 36,
+  "package": "com.kebunceria.hybrid",
+  "physical_device_tested": false,
+  "native_ads_included": false
+}

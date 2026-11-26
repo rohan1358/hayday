@@ -1,0 +1,57 @@
+[gd_resource type="Theme" load_steps=5 format=3]
+
+[ext_resource type="FontVariation" path="res://assets/fonts/styles/lilita_title.tres" id="1_title"]
+[ext_resource type="FontVariation" path="res://assets/fonts/styles/fredoka_bold.tres" id="2_bold"]
+[ext_resource type="FontVariation" path="res://assets/fonts/styles/fredoka_semibold.tres" id="3_semi"]
+[ext_resource type="FontVariation" path="res://assets/fonts/styles/nunito_semibold.tres" id="4_body"]
+
+[resource]
+default_font = ExtResource("4_body")
+default_font_size = 20
+Label/fonts/font = ExtResource("4_body")
+Button/fonts/font = ExtResource("2_bold")
+Button/font_sizes/font_size = 20
+CheckBox/fonts/font = ExtResource("3_semi")
+CheckButton/fonts/font = ExtResource("3_semi")
+OptionButton/fonts/font = ExtResource("3_semi")
+TabBar/fonts/font = ExtResource("3_semi")
+TabContainer/fonts/font = ExtResource("3_semi")
+LineEdit/fonts/font = ExtResource("4_body")
+TextEdit/fonts/font = ExtResource("4_body")
+PopupMenu/fonts/font = ExtResource("3_semi")
+Tree/fonts/font = ExtResource("3_semi")
+ItemList/fonts/font = ExtResource("3_semi")
+ProgressBar/fonts/font = ExtResource("2_bold")
+TooltipLabel/fonts/font = ExtResource("4_body")
+TooltipLabel/font_sizes/font_size = 18
+RichTextLabel/fonts/normal_font = ExtResource("4_body")
+RichTextLabel/fonts/bold_font = ExtResource("2_bold")
+RichTextLabel/fonts/italics_font = ExtResource("4_body")
+RichTextLabel/fonts/bold_italics_font = ExtResource("2_bold")
+RichTextLabel/fonts/mono_font = ExtResource("3_semi")
+GardenTitle/base_type = &"Label"
+GardenTitle/fonts/font = ExtResource("1_title")
+GardenTitle/font_sizes/font_size = 34
+GardenTitle/colors/font_outline_color = Color(0.34, 0.19, 0.08, 1)
+GardenTitle/constants/outline_size = 2
+GardenTitle/colors/font_shadow_color = Color(0.24, 0.14, 0.06, 0.22)
+GardenTitle/constants/shadow_offset_x = 0
+GardenTitle/constants/shadow_offset_y = 2
+GardenHeading/base_type = &"Label"
+GardenHeading/fonts/font = ExtResource("2_bold")
+GardenHeading/font_sizes/font_size = 24
+GardenSubtitle/base_type = &"Label"
+GardenSubtitle/fonts/font = ExtResource("3_semi")
+GardenSubtitle/font_sizes/font_size = 20
+GardenBody/base_type = &"Label"
+GardenBody/fonts/font = ExtResource("4_body")
+GardenBody/font_sizes/font_size = 18
+GardenPrice/base_type = &"Label"
+GardenPrice/fonts/font = ExtResource("2_bold")
+GardenPrice/font_sizes/font_size = 22
+GardenButton/base_type = &"Button"
+GardenButton/fonts/font = ExtResource("2_bold")
+GardenButton/font_sizes/font_size = 20
+GardenTab/base_type = &"Button"
+GardenTab/fonts/font = ExtResource("3_semi")
+GardenTab/font_sizes/font_size = 18

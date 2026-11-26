@@ -1,0 +1,114 @@
+{
+  "tool": "Built-in image_gen (transparent PNG)",
+  "reference": "User-provided Living Garden concept, colorful stylized 3D/isometric farm",
+  "asset_directory": "C:/Users/nuych/Documents/Codex/2026-11-09/atau-ke-chatgpt-suruh-clone-project/hayday/assets/colorful_garden",
+  "assets": [
+    {
+      "id": "kitchen_cottage",
+      "saved_path": "hayday/assets/colorful_garden/kitchen_cottage.png",
+      "prompt": "Create a production game asset: ONE isolated isometric cozy fantasy FARMHOUSE WITH KITCHEN, transparent background. Cheerful richly colorful 3D stylized handpainted mobile farm game, gorgeous living garden aesthetic, cobalt and periwinkle blue tiled roof, honey warm timber, cream plaster, glowing amber windows, tiny magenta bougainvillea and turquoise trim, charming rounded geometry and beautiful materials. Camera orthographic isometric 30-degree downward, view front and right side. Whole building completely within image with 10 percent transparent padding, square composition. Ground footprint a compact diamond at bottom, no large landscape, no background, no text, no people or animals, no UI. Keep silhouette clear at 250px display, crisp edges, soft ambient occlusion, warm sunlight from upper left. This is the kitchen cottage building sprite for an existing farming game.",
+      "generation": "Generated images are saved to C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b as C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-9c0db8b4-a9bb-429d-9ffb-16c1c57187b3.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+    },
+    {
+      "id": "village_barn",
+      "saved_path": "hayday/assets/colorful_garden/village_barn.png",
+      "prompt": "One isolated game building sprite: colorful red HARVEST STORAGE BARN for a cozy fantastical isometric farming game. Entire barn including tiny stone doorstep and flowers, 10% transparent padding. Warm red painted timber walls, dramatic teal and cobalt tiled gambrel roof, cream beams, golden hay visible through open door, turquoise shutters, small violet and yellow flowers at base, warm brass fixtures. 3D stylized handpainted polished mobile game art with rich saturated colors, soft ambient occlusion, beautifully detailed yet readable at 260px. Orthographic isometric camera 30 degrees downward, see front and right face, light upper left. Genuinely transparent background. No animals, no people, no text, no scenery outside compact diamond foundation, no UI. Match cheerful Living Garden fantasy aesthetic.",
+      "generation": "Generated images are saved to C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b as C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-5b77e20e-2534-41cf-855c-9b16bb127b0a.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+    },
+    {
+      "id": "bakery_building",
+      "saved_path": "hayday/assets/colorful_garden/bakery_building.png",
+      "prompt": "One isolated BAKERY BUILDING sprite on genuine transparent background for a colorful cozy fantasy isometric farming mobile game. Whole object with generous 10% transparent padding. Cream stucco and honey wood, terracotta orange and raspberry-red tiled roof, rich aqua door and window trim, brass chimney, golden bread display under striped turquoise-and-cream awning, tiny pots of pink and violet blossoms at base. 3D stylized handpainted premium game art, rounded chunky charming forms, rich saturated clean colors, luminous warm windows, warm sunlight from upper left, gentle ambient occlusion. Orthographic isometric view from above at 30 degrees showing front and right side. Compact foundation; no landscape, people, animals, text, UI, labels, border or scenery. Clear silhouette readable at 240px. Consistent Living Garden aesthetic.",
+      "generation": "Generated images are saved to C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b as C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-c6fb0156-b6e7-4a35-814a-fcf4dfffda4e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+    },
+    {
+      "id": "dairy_building",
+      "saved_path": "hayday/assets/colorful_garden/dairy_building.png",
+      "prompt": "Create one isolated DAIRY WORKSHOP building sprite, genuine transparent background, for a richly colorful cozy fantasy isometric farming game. A charming honey timber and cream plaster creamery with violet-purple and periwinkle tile roof, aqua turquoise shuttered windows, warm orange brass milk-churn chimney and several cream-and-gold milk cans outside, pink hydrangeas at base, one simple cheese wheel in doorway. Whole building completely visible with 10% transparent margin. Compact diamond foundation, no surrounding scene. 3D stylized handpainted premium mobile game art, rounded chunky forms, saturated joyful colors, soft ambient occlusion and sunlight upper left, detailed yet readable small. Orthographic isometric front and right view, camera 30 degrees downward. No letters, sign text, labels, UI, people or animals. Match colorful Living Garden game aesthetic.",
+      "generation": "Generated images are saved to C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b as C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-cbe96cd4-993d-48b5-85b8-715081acc793.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+    },
+    {
+      "id": "feed_mill_building",
+      "saved_path": "hayday/assets/colorful_garden/feed_mill_building.png",
+      "prompt": "One isolated colorful ANIMAL FEED MILL building sprite, genuine transparent background. Premium cozy fantasy farm mobile game, Living Garden aesthetic. Compact charming golden timber mill with sunny yellow stucco, jade-turquoise tiled gable roof, orange copper grain hopper, violet door, sacks of corn and wheat outside, tiny red and magenta flowers in window boxes. Entire building with 10% transparent margin, no background, no people, no animals, no text, no UI, no windmill rotor. Orthographic isometric front/right view camera 30 degrees downward, warm upper-left sunlight, rich saturated colors, softly rounded 3D stylized handpainted geometry, soft ambient occlusion, readable silhouette at 240px. Base footprint compact diamond.",
+      "generation": "Generated images are saved to C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b as C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-e97490ac-e34f-41a7-a8de-e5451304fbf2.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+    },
+    {
+      "id": "market_cart",
+      "saved_path": "hayday/assets/colorful_garden/market_cart.png",
+      "prompt": "One isolated colorful FARM MARKET CART asset, genuine transparent background. Premium 3D stylized handpainted cozy fantasy mobile farm game, Living Garden aesthetic. Charming honey-gold wooden market wagon stall with two visible wheels, a striped raspberry pink and ivory canvas canopy with turquoise scalloped trim, baskets of bright red strawberries, golden corn, orange carrots and purple grapes, tiny magenta flower pots. Rich saturated joyful color, warm sunlight upper left, soft ambient occlusion, clear readable silhouette at 230px. Orthographic isometric front and right view from 30 degrees above. Whole cart visible with 10% transparent margin, compact base, no landscape, no people, no animals, no lettering, no price tags, no UI.",
+      "generation": "Generated images are saved to C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b as C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-5018bd98-2fd6-4c81-9f3e-a749938c1d20.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+    },
+    {
+      "id": "colorful_oak",
+      "saved_path": "hayday/assets/colorful_garden/colorful_oak.png",
+      "prompt": "ONE isolated lush green OAK TREE game sprite on genuine transparent background, no other trees. Richly colorful cozy fantasy farm game Living Garden aesthetic. Rounded layered emerald and lime foliage with many charming small individual sculpted leaf clusters and softly illuminated golden-green tips, rich warm brown twisting trunk with exposed tiny roots, subtle tiny magenta and yellow flowers around compact root base. 3D stylized handpainted premium mobile game quality, excellent readable silhouette at 150px, soft ambient occlusion, warm sun upper left, orthographic isometric view camera 30 degrees downward. Whole tall tree completely inside frame with 10% transparent margin. No ground landscape, no fruit, no animals, people, text, UI or border.",
+      "generation": "Generated images are saved to C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b as C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-40327d07-ef4f-4675-9a27-808bec77dd3e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+    },
+    {
+      "id": "chicken_coop",
+      "saved_path": "hayday/assets/colorful_garden/chicken_coop.png",
+      "prompt": "Edit target: the provided EMPTY chicken coop sprite. Restyle it into a richly colorful cozy fantasy Living Garden mobile game asset. CRITICAL preserve exact canvas, orthographic perspective, silhouette, sizes, building and fence footprint, doorway and steps positions, feeder position and all open walking space. Change only art finish and colors: saturated raspberry-red and orange tiled roof, honey golden wood fence, cream walls, turquoise door and round trim, fresh emerald grass, small magenta and gold blossoms OUTSIDE fence. More detailed handpainted 3D stylized materials with warm sunlight, soft ambient occlusion. Keep genuinely transparent background. Do NOT add animals, people, labels or text. Do NOT add obstacles or furniture in the yard. Exact same composition and ground anchor.",
+      "generation": "Generated images are saved to C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b as C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-5ee3f64c-5b97-4994-823d-44aa9233a4fd.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+    },
+    {
+      "id": "cow_pen",
+      "saved_path": "hayday/assets/colorful_garden/cow_pen.png",
+      "prompt": "Edit target: the provided EMPTY cow pen sprite. Restyle into a richly colorful cozy fantasy Living Garden farming game asset. Preserve exact image canvas, orthographic perspective, silhouette, scale, fence and building footprint, doorway position, water trough and hay positions, ALL clear walking spaces. Change only finish/colors: vivid barn-red walls, cobalt and violet blue tiled roof, turquoise round window and door detail, honey-gold wood fence, fresh emerald grass, tiny magenta and golden flowers only outside fence. More polished detailed handpainted 3D stylized material with warm upper-left sunlight and soft ambient occlusion. Keep genuine transparent background. No animals, people, text, UI, new objects or obstacles inside the pen. Exact same geometry and ground anchor.",
+      "generation": "Generated images are saved to C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b as C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-b97c7155-065a-41c2-baa2-3158b8d6912e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+    },
+    {
+      "id": "pig_pen",
+      "saved_path": "hayday/assets/colorful_garden/pig_pen.png",
+      "prompt": "Edit target: provided EMPTY pig pen isometric sprite. Restyle colors/materials into colorful cozy fantasy Living Garden farm game. Preserve exact canvas, camera, orthographic perspective, silhouette, scale, fence footprint, house and gate positions, water trough and hay locations and muddy patch shape/location. Do not move or add any furniture, keep all walking space clear. Cheerful coral-pink plaster walls, saturated turquoise roof tiles, lavender-purple door with warm brass details, honey gold timber fences, emerald grass, rich chocolate mud, few bright pink/yellow flowers outside fence only. Premium handpainted 3D stylized finish, warm upper-left sunlight and ambient occlusion. Genuine transparent background. No animals, people, text, labels or UI. Same ground anchor and layout exactly.",
+      "generation": "Generated images are saved to C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b as C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-0d48b6c9-5070-45b5-a7f7-ab9a6a3c0c51.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+    },
+    {
+      "id": "goat_pen",
+      "saved_path": "hayday/assets/colorful_garden/goat_pen.png",
+      "prompt": "Edit target: provided EMPTY goat pen game sprite. Restyle into richly colorful cozy fantasy Living Garden game. Exact same canvas, camera angle, perspective, silhouette, scale, house and fence and gate footprint, water trough, hay and platform locations. Keep all open walking space and existing furnishing geometry unchanged. Sunny golden cream walls, saturated periwinkle-violet tiled roof, turquoise door and round window trim, warm honey golden timber fences, fresh emerald grass, small magenta and yellow blossoms OUTSIDE fence only. Premium detailed handpainted 3D stylized materials, sunlight upper left, soft ambient occlusion. Genuine transparent background. No goats or other animals, people, letters, UI, no new obstacles or furniture. Same ground anchor and composition.",
+      "generation": "Generated images are saved to C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b as C:\\Users\\nuych\\.codex\\generated_images\\01a1bf53-c896-7233-94b4-fbeb9e4e453b\\exec-dc9d1b24-bf29-4e68-9191-6d75992cbed8.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+    }
+  ],
+  "implementation": [
+    "11 regenerated primary sprites with alpha and preserved ground anchors",
+    "Bright category colors and cream card styles throughout feature menus",
+    "Native grass and flower palette update; green, pink-blossom and purple-lantern wild-tree variations",
+    "768px maximum imported primary textures and mipmaps for zoomed display",
+    "No economy, progression, character equipment, collision footprint or seasonal gameplay reset"
+  ],
+  "validation": [
+    "colorful_theme_test.gd: passed",
+    "smoke.gd: zero failures",
+    "ranch_system_test.gd: zero failures",
+    "building_upgrade_test.gd: zero failures",
+    "seed_picker_test.gd: passed",
+    "colorful_catalog_test.gd: passed",
+    "colorful_world_visual.gd: rendered and inspected"
+  ],
+  "limitations": [
+    "Android device frame rate has not been measured; tested in desktop Godot compatibility renderer."
+  ],
+  "latest_environment_update": {
+    "new_assets": 35,
+    "total_colorful_textures": 46,
+    "original_environment_ids_replaced": 40,
+    "prompts": "outputs/lush-environment-prompts.json",
+    "preview": "outputs/colorful-kebun.png",
+    "gallery": "outputs/colorful-environment-assets.png",
+    "tests": [
+      "environment coverage: zero failures",
+      "theme: zero failures",
+      "smoke: zero failures",
+      "ranch: zero failures"
+    ],
+    "implementation": [
+      "Authored seamless grass replaces flat ground on both main map and locked plots",
+      "35 additional PNG assets replace the remaining original environment sprites",
+      "Bush, hedge, well, barrel, gazebo and windmill primitive drawing now uses colorful assets or a new colorful drawing routine",
+      "Viewport scenery textures are graded only once",
+      "Original images are not loaded when replacement sprites exist",
+      "New environment textures are limited to 512px with mipmaps"
+    ]
+  }
+}

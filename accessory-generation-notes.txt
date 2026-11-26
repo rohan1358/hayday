@@ -1,0 +1,11 @@
+Directional accessories v2
+Generated with built-in image_gen (imagegen skill). Four transparent 5-column x 4-row atlases, 80 frames.
+Assets: hayday/assets/wardrobe/accessories_{spring,summer,autumn,winter}_v2.png
+Rows: hat, eyewear, neckwear, bag. Columns: front, front three-quarter, profile, rear three-quarter, back.
+Prompt template: Production game sprite atlas; exactly 5 equal columns by 4 equal rows; isolated transparent cutout sprites, matching a cute chibi farm child's soft rendered 3D style; identical object in five wearer directions; no characters, grid, text or exterior shadows. Hat crown sits on head; eyewear has temple/strap views; scarves wrap around neck; bags have true side and back views.
+Spring: flower straw hat, gold round glasses, sage floral neckerchief, woven flower handbag.
+Summer: turquoise ribbon straw hat, teal sunglasses, lemon neckerchief, sunflower handbag.
+Autumn: rust acorn beret, brown round glasses, orange knitted scarf, acorn leather handbag.
+Winter: teal pompom beanie, cream snow goggles, cream scarf, red snowflake backpack.
+Autumn follow-up prompt: Background extraction only; remove cream background/shadows while preserving all 20 objects and the exact grid, transparent alpha including lenses and handles.
+Integration: seasonal ownership and save IDs unchanged; five views selectable in character editor; equipped textures turn with character; near-hand anchors, capped bag height, body occlusion for rear eyewear/front backpack. No APK generated.
